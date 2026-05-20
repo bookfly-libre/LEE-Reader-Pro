@@ -585,7 +585,7 @@ function syncReaderFloatingChrome() {
   if (!controls || !configBar || !infoBar) return;
 
   const maximized = readerConfig.maximized;
-  controls.classList.toggle('hidden', !maximized);
+  controls.classList.toggle('hidden', !readerConfig.maximized);
   configBar.classList.toggle('hidden', maximized);
   infoBar.classList.toggle('hidden', false);
 }
@@ -1179,23 +1179,22 @@ function syncReaderFloatingChrome() {
 
         switchView("reader");
 
-        renderReaderContent();
+        renderReaderContent(book);
 
-        ensureReaderPriority();
-        setReaderMode(localStorage.getItem('reader-mode') || 'vertical');
-        syncReaderFloatingChrome();
+        requestAnimationFrame(() => {
+            const scroller = document.getElementById("reader-scroller");
+            if (scroller) {
+                scroller.scrollTop = 0;
+                scroller.scrollLeft = 0;
+            }
 
-        requestAnimationFrame(() => ensureReaderStartsAtTop());
-        setTimeout(() => ensureReaderStartsAtTop(), 50);
+            ensureReaderStartsAtTop();
+        });
 
-        const savedPage = localStorage.getItem(`or_pos_${activeBookId}`);
-        readerConfig.currentPage = savedPage ? parseInt(savedPage) : 0;
-
-        const titleEl = document.getElementById("reader-book-title");
-        if (titleEl) titleEl.textContent = `${book.title} - ${book.author}`;
-
-        populateChapters(book);
-        detectComplexity(book);
+        setTimeout(() => {
+            const scroller = document.getElementById("reader-scroller");
+            if (scroller) scroller.scrollTop = 0;
+        }, 100);
     }
 
     function populateChapters(book) {
