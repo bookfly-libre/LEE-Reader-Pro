@@ -1263,12 +1263,15 @@ function syncReaderFloatingChrome() {
 
         switchView("reader");
 
-        renderReaderContent(bookId);
+        renderReaderContent(book); // 🔥 CORREGIDO AQUÍ
+
         ensureReaderPriority();
         setReaderMode(localStorage.getItem('reader-mode') || 'vertical');
         syncReaderFloatingChrome();
+
         requestAnimationFrame(() => ensureReaderStartsAtTop());
         setTimeout(() => ensureReaderStartsAtTop(), 50);
+    }
 
         // El panel de IA GennIA permanece CERRADO por defecto al cargar cualquier libro
         document.getElementById("reader-ai-sidebar").classList.add("hidden");
