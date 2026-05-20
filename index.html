@@ -1902,848 +1902,982 @@ function renderBooks() {
         }
     }
 
-    // --- STREAMING_CHUNK:Lógica de selección de texto y subrayados con notas plegables ---
-    // --- MARCADORES, RESALTADORES Y NOTAS ---
-    function handleTextSelection(event) {
-        const selection = window.getSelection();
-        const text = selection.toString().trim();
+<script>
+/* =========================================================
+   ESTADO GLOBAL
+========================================================= */
 
-        if (text.length > 0) {
-            const range = selection.getRangeAt(0);
-            let containerNode = range.commonAncestorContainer;
-            if (containerNode.nodeType === Node.TEXT_NODE) {
-                containerNode = containerNode.parentNode;
-            }
+window.shelves = ["Favoritos", "Por Leer", "Manga", "Pendientes"];
+window.library = [];
+window.highlights = [];
+window.notes = [];
 
-            const paragraph = containerNode.closest(".paragraph-node");
-            if (paragraph) {
-                const pIdx = parseInt(paragraph.getAttribute("data-p-index"));
-                
-                selectedTextMetadata = {
-                    paragraphIndex: pIdx,
-                    text: text,
-                    fullText: paragraph.innerText
-                };
+window.currentShelf = "all";
+window.activeBookId = null;
+window.viewMode = "library";
 
-                const popup = document.getElementById("selection-popup");
-                popup.style.top = `${event.pageY + 12}px`;
-                popup.style.left = `${event.pageX - 60}px`;
-                popup.classList.remove("hidden");
-            }
-        } else {
-            document.getElementById("selection-popup").classList.add("hidden");
-        }
-    }
+window.selectedTextMetadata = null;
 
-    function applyHighlight(colorStyle) {
-        if (!selectedTextMetadata) return;
+window.touchStartX = 0;
+window.touchEndX = 0;
 
-        highlights = highlights.filter(h => !(h.bookId === activeBookId && h.paragraphIndex === selectedTextMetadata.paragraphIndex && h.text === selectedTextMetadata.text));
+window.readerConfig = {
+    theme: "dark",
+    grade: 0.8,
+    fontSize: 18,
+    margin: 32,
+    fontFamily: "serif",
+    readingMode: "vertical",
+    pcViewMode: "vertical",
+    maximized: false
+};
 
-        highlights.push({
-            bookId: activeBookId,
-            paragraphIndex: selectedTextMetadata.paragraphIndex,
-            text: selectedTextMetadata.text,
-            type: colorStyle === 'underline' ? 'underline' : 'highlight',
-            color: colorStyle,
-            timestamp: Date.now()
-        });
+/* =========================================================
+   HELPERS
+========================================================= */
 
-        saveToStorage();
-        renderReaderContent();
-        document.getElementById("selection-popup").classList.add("hidden");
-        window.getSelection().removeAllRanges();
-        showToast("Texto resaltado.");
-    }
-
-    function clearSelectionHighlight() {
-        if (!selectedTextMetadata) return;
-
-        highlights = highlights.filter(h => !(h.bookId === activeBookId && h.paragraphIndex === selectedTextMetadata.paragraphIndex && h.text === selectedTextMetadata.text));
-        
-        saveToStorage();
-        renderReaderContent();
-        document.getElementById("selection-popup").classList.add("hidden");
-        window.getSelection().removeAllRanges();
-        showToast("Se limpió la selección.");
-    }
-
-    function addNoteToSelection() {
-        if (!selectedTextMetadata) return;
-
-        const noteText = prompt("Escribe tu nota para esta selección:");
-        if (noteText === null) return;
-
-        notes.push({
-            id: `note-${Date.now()}`,
-            bookId: activeBookId,
-            paragraphIndex: selectedTextMetadata.paragraphIndex,
-            text: selectedTextMetadata.text,
-            noteText: noteText,
-            color: "teal",
-            collapsed: false
-        });
-
-        saveToStorage();
-        renderReaderContent();
-        document.getElementById("selection-popup").classList.add("hidden");
-        window.getSelection().removeAllRanges();
-        showToast("Nota agregada con éxito.");
-    }
-
-    function applySavedHighlights(pIdx, rawText) {
-        const pMarks = highlights.filter(h => h.bookId === activeBookId && h.paragraphIndex === pIdx);
-        if (pMarks.length === 0) return rawText;
-
-        let formatted = rawText;
-        pMarks.forEach(mark => {
-            const escapedText = mark.text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            const regex = new RegExp(`(${escapedText})`, 'g');
-            
-            if (mark.type === 'underline') {
-                formatted = formatted.replace(regex, `<span class="underline-text font-bold">$1</span>`);
-            } else {
-                formatted = formatted.replace(regex, `<span class="hl-${mark.color}">$1</span>`);
-            }
-        });
-
-        return formatted;
-    }
-
-    function renderSavedNotes(pIdx, container) {
-        const pNotes = notes.filter(n => n.bookId === activeBookId && n.paragraphIndex === pIdx);
-        pNotes.forEach(note => {
-            const noteDiv = document.createElement("div");
-            noteDiv.className = "my-2 p-3 bg-white text-slate-900 border-l-4 border-teal-500 rounded-r-lg shadow-md transition-all-300 pointer-events-auto";
-            noteDiv.id = note.id;
-
-            noteDiv.innerHTML = `
-                <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold mb-1">
-                    <span>📝 NOTA SOBRE: "${note.text.substring(0, 30)}..."</span>
-                    <div class="flex gap-2">
-                        <button onclick="toggleCollapseNote('${note.id}')" class="hover:text-teal-600">Minimizar</button>
-                        <button onclick="triggerDeleteNote('${note.id}')" class="hover:text-red-600">Eliminar</button>
-                    </div>
-                </div>
-                <div class="note-content text-xs text-slate-700 font-medium ${note.collapsed ? 'hidden' : ''}">
-                    ${note.noteText}
-                </div>
-            `;
-            container.appendChild(noteDiv);
-        });
-    }
-
-    function toggleCollapseNote(noteId) {
-        const note = notes.find(n => n.id === noteId);
-        if (note) {
-            note.collapsed = !note.collapsed;
-            saveToStorage();
-            renderReaderContent();
-        }
-    }
-
-    function triggerDeleteNote(noteId) {
-        customConfirm(
-            "Eliminar Nota",
-            "¿Deseas eliminar esta nota permanentemente?",
-            () => {
-                notes = notes.filter(n => n.id !== noteId);
-                saveToStorage();
-                renderReaderContent();
-                showToast("Nota eliminada.");
-            }
-        );
-    }
-
-    // --- STREAMING_CHUNK:Configurando opciones de personalización del visor ---
-    // --- OPCIONES DE CONFIGURACIÓN VISUAL ---
-    function setReaderTheme(themeName) {
-        readerConfig.theme = themeName;
-        applyConfigToUI();
-        saveToStorage();
-    }
-
-    function adjustThemeGrade() {
-        const slider = document.getElementById("theme-grade-slider");
-        if (slider) readerConfig.grade = parseFloat(slider.value);
-        const gradeDisplay = document.getElementById("grade-display");
-        if (gradeDisplay) gradeDisplay.textContent = `${Math.round(readerConfig.grade * 100)}%`;
-        applyConfigToUI();
-        saveToStorage();
-    }
-
-    function applyConfigToUI() {
-        const slider = document.getElementById("theme-grade-slider");
-        if (slider) slider.value = readerConfig.grade;
-        const gradeDisplay = document.getElementById("grade-display");
-        if (gradeDisplay) gradeDisplay.textContent = `${Math.round(readerConfig.grade * 100)}%`;
-
-        const wrapper = document.getElementById("reader-wrapper");
-        const scroller = document.getElementById("reader-scroller");
-        
-        let r, g, b;
-        let text = "#f1f5f9";
-
-        if (readerConfig.theme === 'light') {
-            const factor = 0.5 + (readerConfig.grade * 0.5);
-            r = Math.round(255 * factor);
-            g = Math.round(255 * factor);
-            b = Math.round(255 * factor);
-            text = "#0f172a";
-        } else if (readerConfig.theme === 'dark') {
-            const factor = 0.05 + (readerConfig.grade * 0.25);
-            r = Math.round(100 * factor);
-            g = Math.round(120 * factor);
-            b = Math.round(150 * factor);
-            text = "#f1f5f9";
-        } else if (readerConfig.theme === 'sepia') {
-            const factor = 0.6 + (readerConfig.grade * 0.5);
-            r = Math.min(255, Math.round(244 * factor));
-            g = Math.min(255, Math.round(236 * factor));
-            b = Math.min(255, Math.round(216 * factor));
-            text = "#4a3728";
-        } else if (readerConfig.theme === 'gray') {
-            const factor = 0.4 + (readerConfig.grade * 0.6);
-            r = Math.round(120 * factor);
-            g = Math.round(130 * factor);
-            b = Math.round(140 * factor);
-            text = "#ffffff";
-        }
-
-        const bg = `rgb(${r}, ${g}, ${b})`;
-        if (wrapper) wrapper.style.backgroundColor = bg;
-        if (scroller) scroller.style.color = text;
-
-        const scrollerText = document.getElementById("reader-text-container");
-        if (scrollerText) {
-            scrollerText.style.fontSize = `${readerConfig.fontSize}px`;
-            
-            const isMobile = window.innerWidth < 768;
-            const activeMargin = isMobile ? Math.min(24, readerConfig.margin / 2) : readerConfig.margin;
-            scrollerText.style.paddingLeft = `${activeMargin}px`;
-            scrollerText.style.paddingRight = `${activeMargin}px`;
-
-            if (readerConfig.fontFamily === 'serif') {
-                scrollerText.style.fontFamily = "'Georgia', serif";
-            } else if (readerConfig.fontFamily === 'sans') {
-                scrollerText.style.fontFamily = "'Inter', sans-serif";
-            } else if (readerConfig.fontFamily === 'mono') {
-                scrollerText.style.fontFamily = "'Fira Code', monospace";
-            } else if (readerConfig.fontFamily === 'playfair') {
-                scrollerText.style.fontFamily = "'Playfair Display', serif";
-            }
-        }
-
-        const fontSelect = document.getElementById("font-select");
-        if (fontSelect) fontSelect.value = readerConfig.fontFamily;
-        const fontSizeDisplay = document.getElementById("font-size-display");
-        if (fontSizeDisplay) fontSizeDisplay.textContent = `${readerConfig.fontSize}px`;
-    }
-
-    function adjustFontSize(delta) {
-        readerConfig.fontSize = Math.min(32, Math.max(12, readerConfig.fontSize + delta));
-        applyConfigToUI();
-        saveToStorage();
-        if (readerConfig.pcViewMode === 'pages') applyReadingLayout();
-    }
-
-    function adjustMargin(delta) {
-        readerConfig.margin = Math.min(80, Math.max(8, readerConfig.margin + delta));
-        applyConfigToUI();
-        saveToStorage();
-        if (readerConfig.pcViewMode === 'pages') applyReadingLayout();
-    }
-
-    function changeFontFamily() {
-        readerConfig.fontFamily = document.getElementById("font-select").value;
-        applyConfigToUI();
-        saveToStorage();
-        if (readerConfig.pcViewMode === 'pages') applyReadingLayout();
-    }
-
-    function setPCViewMode(mode) {
-        readerConfig.pcViewMode = mode;
-        const btnPages = document.getElementById("btn-view-pages");
-        const btnVert = document.getElementById("btn-view-vertical");
-
-        if (mode === 'pages') {
-            btnPages.className = "px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold";
-            btnVert.className = "px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold";
-        } else {
-            btnPages.className = "px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold";
-            btnVert.className = "px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold";
-        }
-
-        applyReadingLayout();
-        saveToStorage();
-    }
-
-    function toggleMaximizeReader() {
-  readerConfig.maximized = !readerConfig.maximized;
-
-  const wrapper = document.getElementById('reader-wrapper');
-  const btn = document.getElementById('btn-maximize');
-
-  if (wrapper) {
-    wrapper.classList.toggle('reader-maximized', readerConfig.maximized);
-  }
-
-  if (btn) {
-    btn.textContent = readerConfig.maximized ? 'Restaurar' : 'Maximizar';
-  }
-
-  syncReaderFloatingChrome();
+function getActiveBook() {
+    return library.find(b => b.id === activeBookId);
 }
 
+function getReaderScroller() {
+    return document.getElementById("reader-scroller");
+}
 
-    function exitReader() {
-        stopAudiobook();
-        if (readerConfig.maximized) {
-            toggleMaximizeReader();
+function showToast(message, type = "success") {
+    console.log(`[${type}] ${message}`);
+}
+
+function customConfirm(title, message, callback) {
+    const ok = confirm(`${title}\n\n${message}`);
+    if (ok) callback();
+}
+
+function syncReaderFloatingChrome() {}
+
+function nextPage() {}
+function prevPage() {}
+function applyReadingLayout() {}
+function renderRecoverButton() {}
+function renderShelves() {}
+function fetchGemini() {}
+function setReaderMode() {}
+
+/* =========================================================
+   RENDER LIBROS
+========================================================= */
+
+function renderBooks() {
+    const container = document.getElementById("library-grid");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    let filtered = library;
+
+    if (currentShelf !== "all") {
+        filtered = library.filter(book => book.shelf === currentShelf);
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full text-center py-10 text-slate-500">
+                No hay libros en esta estantería.
+            </div>
+        `;
+        return;
+    }
+
+    filtered.forEach(book => {
+        const card = document.createElement("div");
+
+        card.className =
+            "bg-slate-950 border border-slate-800/80 p-4 rounded-xl flex flex-col justify-between hover:border-teal-500/40 transition-all shadow-lg group relative overflow-hidden";
+
+        card.innerHTML = `
+            <div 
+                class="absolute top-0 left-0 w-2 h-full"
+                style="background-color: ${book.color || "#14b8a6"}">
+            </div>
+
+            <div class="pl-4 space-y-3">
+
+                <div class="flex justify-between items-start">
+
+                    <div>
+                        <span class="text-[9px] uppercase font-black text-teal-400 bg-teal-950/60 border border-teal-900/30 px-2 py-0.5 rounded tracking-wider">
+                            ${book.format || "Texto"}
+                        </span>
+
+                        <h4 
+                            class="text-sm font-bold text-slate-100 mt-1.5 line-clamp-1"
+                            title="${book.title}">
+                            ${book.title}
+                        </h4>
+
+                        <p class="text-[11px] text-slate-400">
+                            Por ${book.author}
+                        </p>
+                    </div>
+
+                    <button
+                        onclick="triggerDeleteBook('${book.id}')"
+                        class="text-slate-600 hover:text-red-400 transition-colors text-xs p-1"
+                        title="Eliminar Libro">
+                        🗑️
+                    </button>
+
+                </div>
+
+                <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-slate-500">
+                    <span>
+                        Progreso: ${book.progress || 0}%
+                    </span>
+
+                    <span class="bg-slate-900 px-2 py-1 rounded border border-slate-800">
+                        Estante: ${book.shelf}
+                    </span>
+                </div>
+
+                <div class="flex gap-2">
+
+                    <button
+                        onclick="loadBookToReader('${book.id}')"
+                        class="flex-1 py-2 bg-teal-500/10 hover:bg-teal-500 hover:text-slate-950 text-teal-300 text-xs font-bold rounded-lg transition-all text-center">
+                        📖 Leer ahora
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+/* =========================================================
+   ELIMINAR LIBRO
+========================================================= */
+
+function triggerDeleteBook(bookId) {
+    customConfirm(
+        "Eliminar Libro",
+        "¿Deseas eliminar este libro?",
+        () => {
+            library = library.filter(b => b.id !== bookId);
+
+            saveToStorage();
+            renderBooks();
+
+            showToast("Libro eliminado.");
         }
-        switchView("library");
+    );
+}
 
-    const scroller = getReaderScroller();
-        if (scroller) {
-              scroller.scrollTop = 0;
-              scroller.scrollLeft = 0;
+/* =========================================================
+   CARGAR LIBRO AL LECTOR
+========================================================= */
+
+function loadBookToReader(bookId) {
+    activeBookId = bookId;
+
+    localStorage.setItem("or_last_active_book", bookId);
+
+    const book = getActiveBook();
+
+    if (!book) return;
+
+    const titleEl = document.getElementById("reader-book-title");
+
+    if (titleEl) {
+        titleEl.textContent = `${book.title} - ${book.author}`;
     }
-            readerConfig.maximized = false;
-        syncReaderFloatingChrome();
 
+    renderReaderContent();
+
+    switchView("reader");
+}
+
+/* =========================================================
+   RENDER CONTENIDO LECTOR
+========================================================= */
+
+function renderReaderContent() {
+    const container = document.getElementById("reader-text-container");
+
+    if (!container) return;
+
+    const book = getActiveBook();
+
+    if (!book) {
+        container.innerHTML = "";
+        return;
     }
 
-    // --- SISTEMA DE AUDIOBOOK (TTS NATIVO) ---
-    let ttsUtterance = null;
-    let synth = window.speechSynthesis;
-    let readingRate = 1;
+    const paragraphs = book.content.split("\n\n");
 
-    function toggleAudiobook() {
-        const playBtn = document.getElementById("audio-play-btn");
-        if (synth.speaking) {
-            if (synth.paused) {
-                synth.resume();
-                if (playBtn) playBtn.textContent = "⏸ Pausar";
-            } else {
-                synth.pause();
-                if (playBtn) playBtn.textContent = "▶ Seguir";
-            }
-        } else {
-            const container = document.getElementById("reader-text-container");
-            if (!container) return;
-            const textToRead = container.innerText;
+    container.innerHTML = "";
 
-            if (!textToRead) {
-                showToast("No hay texto cargado para leer.", "error");
-                return;
-            }
+    paragraphs.forEach((paragraphText, pIdx) => {
+        const wrapper = document.createElement("div");
 
-            ttsUtterance = new SpeechSynthesisUtterance(textToRead);
-            ttsUtterance.lang = "es-ES";
-            ttsUtterance.rate = readingRate;
+        wrapper.className = "mb-6 paragraph-node";
+        wrapper.setAttribute("data-p-index", pIdx);
 
-            ttsUtterance.onstart = () => {
-                if (playBtn) playBtn.textContent = "⏸ Pausar";
+        const formatted = applySavedHighlights(pIdx, paragraphText);
+
+        wrapper.innerHTML = `
+            <p class="leading-8 text-sm md:text-base selection:bg-teal-500/30">
+                ${formatted}
+            </p>
+        `;
+
+        renderSavedNotes(pIdx, wrapper);
+
+        container.appendChild(wrapper);
+    });
+
+    container.removeEventListener("mouseup", handleTextSelection);
+    container.addEventListener("mouseup", handleTextSelection);
+
+    renderChapters(book);
+}
+
+/* =========================================================
+   SELECCIÓN DE TEXTO
+========================================================= */
+
+function handleTextSelection(event) {
+    const selection = window.getSelection();
+
+    const text = selection.toString().trim();
+
+    if (text.length > 0) {
+        const range = selection.getRangeAt(0);
+
+        let containerNode = range.commonAncestorContainer;
+
+        if (containerNode.nodeType === Node.TEXT_NODE) {
+            containerNode = containerNode.parentNode;
+        }
+
+        const paragraph = containerNode.closest(".paragraph-node");
+
+        if (paragraph) {
+            const pIdx = parseInt(
+                paragraph.getAttribute("data-p-index")
+            );
+
+            selectedTextMetadata = {
+                paragraphIndex: pIdx,
+                text: text,
+                fullText: paragraph.innerText
             };
 
-            ttsUtterance.onend = () => {
-                if (playBtn) playBtn.textContent = "▶ Reproducir";
-            };
+            const popup = document.getElementById("selection-popup");
 
-            synth.speak(ttsUtterance);
+            if (popup) {
+                popup.style.top = `${event.pageY + 12}px`;
+                popup.style.left = `${event.pageX - 60}px`;
+
+                popup.classList.remove("hidden");
+            }
         }
+    } else {
+        document
+            .getElementById("selection-popup")
+            ?.classList.add("hidden");
+    }
+}
+
+/* =========================================================
+   RESALTADOS
+========================================================= */
+
+function applyHighlight(colorStyle) {
+    if (!selectedTextMetadata) return;
+
+    highlights = highlights.filter(h => {
+        return !(
+            h.bookId === activeBookId &&
+            h.paragraphIndex === selectedTextMetadata.paragraphIndex &&
+            h.text === selectedTextMetadata.text
+        );
+    });
+
+    highlights.push({
+        bookId: activeBookId,
+        paragraphIndex: selectedTextMetadata.paragraphIndex,
+        text: selectedTextMetadata.text,
+        type: colorStyle === "underline"
+            ? "underline"
+            : "highlight",
+        color: colorStyle,
+        timestamp: Date.now()
+    });
+
+    saveToStorage();
+
+    renderReaderContent();
+
+    document
+        .getElementById("selection-popup")
+        ?.classList.add("hidden");
+
+    window.getSelection().removeAllRanges();
+
+    showToast("Texto resaltado.");
+}
+
+function clearSelectionHighlight() {
+    if (!selectedTextMetadata) return;
+
+    highlights = highlights.filter(h => {
+        return !(
+            h.bookId === activeBookId &&
+            h.paragraphIndex === selectedTextMetadata.paragraphIndex &&
+            h.text === selectedTextMetadata.text
+        );
+    });
+
+    saveToStorage();
+
+    renderReaderContent();
+
+    document
+        .getElementById("selection-popup")
+        ?.classList.add("hidden");
+
+    window.getSelection().removeAllRanges();
+
+    showToast("Se limpió la selección.");
+}
+
+/* =========================================================
+   NOTAS
+========================================================= */
+
+function addNoteToSelection() {
+    if (!selectedTextMetadata) return;
+
+    const noteText = prompt(
+        "Escribe tu nota para esta selección:"
+    );
+
+    if (noteText === null) return;
+
+    notes.push({
+        id: `note-${Date.now()}`,
+        bookId: activeBookId,
+        paragraphIndex: selectedTextMetadata.paragraphIndex,
+        text: selectedTextMetadata.text,
+        noteText: noteText,
+        color: "teal",
+        collapsed: false
+    });
+
+    saveToStorage();
+
+    renderReaderContent();
+
+    document
+        .getElementById("selection-popup")
+        ?.classList.add("hidden");
+
+    window.getSelection().removeAllRanges();
+
+    showToast("Nota agregada.");
+}
+
+function renderSavedNotes(pIdx, container) {
+    const pNotes = notes.filter(n => {
+        return (
+            n.bookId === activeBookId &&
+            n.paragraphIndex === pIdx
+        );
+    });
+
+    pNotes.forEach(note => {
+        const noteDiv = document.createElement("div");
+
+        noteDiv.className =
+            "my-2 p-3 bg-white text-slate-900 border-l-4 border-teal-500 rounded-r-lg shadow-md";
+
+        noteDiv.id = note.id;
+
+        noteDiv.innerHTML = `
+            <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold mb-1">
+
+                <span>
+                    📝 NOTA SOBRE:
+                    "${note.text.substring(0, 30)}..."
+                </span>
+
+                <div class="flex gap-2">
+
+                    <button
+                        onclick="toggleCollapseNote('${note.id}')"
+                        class="hover:text-teal-600">
+                        Minimizar
+                    </button>
+
+                    <button
+                        onclick="triggerDeleteNote('${note.id}')"
+                        class="hover:text-red-600">
+                        Eliminar
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="note-content text-xs text-slate-700 font-medium ${note.collapsed ? "hidden" : ""}">
+                ${note.noteText}
+            </div>
+        `;
+
+        container.appendChild(noteDiv);
+    });
+}
+
+function toggleCollapseNote(noteId) {
+    const note = notes.find(n => n.id === noteId);
+
+    if (!note) return;
+
+    note.collapsed = !note.collapsed;
+
+    saveToStorage();
+
+    renderReaderContent();
+}
+
+function triggerDeleteNote(noteId) {
+    customConfirm(
+        "Eliminar Nota",
+        "¿Deseas eliminar esta nota?",
+        () => {
+            notes = notes.filter(n => n.id !== noteId);
+
+            saveToStorage();
+
+            renderReaderContent();
+
+            showToast("Nota eliminada.");
+        }
+    );
+}
+
+/* =========================================================
+   APLICAR RESALTADOS
+========================================================= */
+
+function applySavedHighlights(pIdx, rawText) {
+    const pMarks = highlights.filter(h => {
+        return (
+            h.bookId === activeBookId &&
+            h.paragraphIndex === pIdx
+        );
+    });
+
+    if (pMarks.length === 0) {
+        return rawText;
     }
 
-    function stopAudiobook() {
-        if (synth.speaking) {
-            synth.cancel();
-        }
-        const playBtn = document.getElementById("audio-play-btn");
-        if (playBtn) playBtn.textContent = "▶ Reproducir";
-    }
+    let formatted = rawText;
 
-    function adjustVoiceSpeed() {
-        const select = document.getElementById("voice-speed");
-        if (select) readingRate = parseFloat(select.value);
-        if (synth.speaking) {
-            stopAudiobook();
-            toggleAudiobook();
-        }
-    }
+    pMarks.forEach(mark => {
+        const escapedText = mark.text.replace(
+            /[-\/\\^$*+?.()|[\]{}]/g,
+            "\\$&"
+        );
 
-    // --- STREAMING_CHUNK:Buscador de Rankings e Integración con Gemini IA ---
-    // --- BUSCADOR DE METADATOS & RANKINGS COMPLETO ---
-    function handleSearchInputChange() {
-        const toggle = document.getElementById("live-search-toggle");
-        if (!toggle.checked) {
-            executeGlobalSearch();
-        }
-    }
+        const regex = new RegExp(
+            `(${escapedText})`,
+            "g"
+        );
 
-    document.getElementById("live-search-toggle").addEventListener('change', function(e) {
-        const btn = document.getElementById("live-search-btn");
-        if (e.target.checked) {
-            btn.classList.remove("hidden");
+        if (mark.type === "underline") {
+            formatted = formatted.replace(
+                regex,
+                `<span class="underline-text font-bold">$1</span>`
+            );
         } else {
-            btn.classList.add("hidden");
-            executeGlobalSearch();
+            formatted = formatted.replace(
+                regex,
+                `<span class="hl-${mark.color}">$1</span>`
+            );
         }
     });
 
-    async function executeLiveAISearch() {
-        const query = document.getElementById("global-search-input").value.trim();
-        const category = document.getElementById("search-category").value;
-        const container = document.getElementById("search-results-container");
+    return formatted;
+}
 
-        if (!query) {
-            showToast("Escribe el nombre de la obra en el buscador.", "error");
-            return;
-        }
+/* =========================================================
+   CONFIG VISUAL
+========================================================= */
 
-        container.innerHTML = `
-            <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20 px-4">
-                <span class="text-3xl block animate-spin mb-3">🔍</span>
-                <p class="text-xs text-teal-400 font-bold">Investigando en internet y recopilando rankings con GennIA...</p>
-                <p class="text-[10px] text-slate-500 mt-1">Grounding activo con Google Search. Esperando datos estructurados.</p>
-            </div>
-        `;
+function setReaderTheme(themeName) {
+    readerConfig.theme = themeName;
 
-        const systemPrompt = `Eres un catalogador experto de literatura, manga y anime. Devuelve un objeto JSON estrictamente compatible con el esquema solicitado. No metas explicaciones de texto, únicamente el bloque JSON estructurado de forma limpia.`;
-        const userPrompt = `Investiga la obra real "${query}" en la categoría "${category}". Devuelve un objeto JSON estructurado con el siguiente formato exacto:
-        {
-          "title": "Nombre exacto de la obra",
-          "author": "Nombre del creador",
-          "category": "AnimeManga" o "Libros" o "LibrosPeliculas",
-          "genre": "Géneros clave",
-          "coverColor": "Color hexagonal representativo (ej. #b91c1c)",
-          "emoji": "Un emoji idóneo",
-          "description": "Breve sinopsis real de 2 líneas",
-          "rankings": {
-            "type": "anime_manga" o "books_only" o "books_movies",
-            "mal": "Calificación MyAnimeList",
-            "anilist": "Puntuación de AniList",
-            "eirin": "Clasificación Eirin",
-            "oricon": "Ventas de Oricon",
-            "goodreads": "Calificación en Goodreads",
-            "nyt": "Presencia en NYT",
-            "literary_awards": "Premios literarios obtenidos",
-            "imdb": "Calificación de IMDb",
-            "rotten": "Porcentaje Rotten Tomatoes",
-            "common_sense": "Calificación Common Sense"
-          }
-        }`;
+    applyConfigToUI();
 
-        try {
-            const result = await fetchGemini(userPrompt, systemPrompt, [{ "google_search": {} }]);
-            let text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-            text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-            const cleanData = JSON.parse(text);
+    saveToStorage();
+}
 
-            container.innerHTML = "";
-            renderSingleSearchResult(cleanData);
-        } catch (error) {
-            console.error(error);
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12 border border-red-900/40 rounded-2xl bg-red-950/10 px-4">
-                    <p class="text-xs text-red-400 font-bold">⚠️ No se pudo conectar con el servidor de GennIA para la búsqueda en vivo. Agrega tu API Key en la barra lateral.</p>
-                </div>
-            `;
-        }
+function applyConfigToUI() {
+    const wrapper = document.getElementById("reader-wrapper");
+
+    const textContainer = document.getElementById(
+        "reader-text-container"
+    );
+
+    if (!wrapper || !textContainer) return;
+
+    let background = "#020617";
+    let textColor = "#f1f5f9";
+
+    if (readerConfig.theme === "light") {
+        background = "#ffffff";
+        textColor = "#111827";
     }
 
-    function executeGlobalSearch() {
-        const query = document.getElementById("global-search-input").value.toLowerCase().trim();
-        const category = document.getElementById("search-category").value;
-        const container = document.getElementById("search-results-container");
+    if (readerConfig.theme === "sepia") {
+        background = "#f4ecd8";
+        textColor = "#4a3728";
+    }
 
-        container.innerHTML = "";
+    wrapper.style.backgroundColor = background;
 
-        const filtered = METADATA_CATALOG.filter(item => {
-            const matchesQuery = item.title.toLowerCase().includes(query) || item.author.toLowerCase().includes(query) || item.genre.toLowerCase().includes(query);
-            const matchesCategory = (category === 'all') || (item.category === category);
-            return matchesQuery && matchesCategory;
-        });
+    textContainer.style.color = textColor;
 
-        if (filtered.length === 0) {
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20 px-4">
-                    <p class="text-xs text-slate-500 font-bold font-mono">No se encontraron fichas de rankings correspondientes en el catálogo offline.</p>
-                </div>
-            `;
-            return;
+    textContainer.style.fontSize =
+        `${readerConfig.fontSize}px`;
+
+    textContainer.style.paddingLeft =
+        `${readerConfig.margin}px`;
+
+    textContainer.style.paddingRight =
+        `${readerConfig.margin}px`;
+
+    if (readerConfig.fontFamily === "serif") {
+        textContainer.style.fontFamily = "Georgia, serif";
+    }
+
+    if (readerConfig.fontFamily === "sans") {
+        textContainer.style.fontFamily = "Inter, sans-serif";
+    }
+
+    if (readerConfig.fontFamily === "mono") {
+        textContainer.style.fontFamily =
+            "'Fira Code', monospace";
+    }
+}
+
+function adjustFontSize(delta) {
+    readerConfig.fontSize = Math.min(
+        32,
+        Math.max(
+            12,
+            readerConfig.fontSize + delta
+        )
+    );
+
+    applyConfigToUI();
+
+    saveToStorage();
+}
+
+function adjustMargin(delta) {
+    readerConfig.margin = Math.min(
+        80,
+        Math.max(
+            8,
+            readerConfig.margin + delta
+        )
+    );
+
+    applyConfigToUI();
+
+    saveToStorage();
+}
+
+function changeFontFamily() {
+    const select = document.getElementById("font-select");
+
+    if (!select) return;
+
+    readerConfig.fontFamily = select.value;
+
+    applyConfigToUI();
+
+    saveToStorage();
+}
+
+/* =========================================================
+   AUDIOBOOK
+========================================================= */
+
+let synth = window.speechSynthesis;
+let ttsUtterance = null;
+let readingRate = 1;
+
+function toggleAudiobook() {
+    const playBtn = document.getElementById(
+        "audio-play-btn"
+    );
+
+    if (synth.speaking) {
+        if (synth.paused) {
+            synth.resume();
+
+            if (playBtn) {
+                playBtn.textContent = "⏸ Pausar";
+            }
+        } else {
+            synth.pause();
+
+            if (playBtn) {
+                playBtn.textContent = "▶ Seguir";
+            }
         }
 
-        filtered.forEach(item => {
-            renderSingleSearchResult(item);
-        });
+        return;
     }
 
-    // --- STREAMING_CHUNK:Pintando las fichas completas de rankings en la interfaz turquesa ---
-    function renderSingleSearchResult(item) {
-        const container = document.getElementById("search-results-container");
-        const card = document.createElement("div");
-        card.className = "bg-slate-950 border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col justify-between w-full max-w-full overflow-hidden";
-        
-        let rankingsHTML = "";
-        const r = item.rankings;
+    const container = document.getElementById(
+        "reader-text-container"
+    );
 
-        if (r.type === "anime_manga") {
-            rankingsHTML = `
-                <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
-                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block font-mono">Rankings Anime & Manga (MyAnimeList / AniList / Eirin / Oricon)</span>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">⭐ MAL: <span class="text-teal-400 font-bold">${r.mal || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📊 AniList: <span class="text-sky-400 font-bold">${r.anilist || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🎥 Eirin: <span class="text-emerald-400 font-bold">${r.eirin || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📈 Oricon: <span class="text-purple-400 font-bold">${r.oricon || 'N/A'}</span></div>
-                    </div>
-                </div>
-            `;
-        } else if (r.type === "books_only") {
-            rankingsHTML = `
-                <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
-                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block font-mono">Rankings Libros & Enciclopedias (Goodreads / NYT / Premios)</span>
-                    <div class="grid grid-cols-1 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📖 Goodreads: <span class="text-teal-400 font-bold">${r.goodreads || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📰 Best Sellers NYT: <span class="text-white font-bold">${r.nyt || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🏆 Comités / Premios: <span class="text-teal-400 font-bold">${r.literary_awards || 'N/A'}</span></div>
-                    </div>
-                </div>
-            `;
-        } else if (r.type === "books_movies") {
-            rankingsHTML = `
-                <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
-                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block font-mono">Adaptación Cine/Serie (Goodreads / NYT / IMDb / Rotten / Common Sense)</span>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">📖 Goodreads: <span class="text-teal-400 font-bold">${r.goodreads || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">📰 NYT: <span class="text-white font-bold">${r.nyt || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🎬 IMDb: <span class="text-yellow-400 font-bold">${r.imdb || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🍅 Rotten Tomatoes: <span class="text-red-400 font-bold">${r.rotten || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">👪 Common Sense: <span class="text-teal-400 font-bold">${r.common_sense || 'N/A'}</span></div>
-                    </div>
-                </div>
-            `;
+    if (!container) return;
+
+    const textToRead = container.innerText;
+
+    if (!textToRead) {
+        showToast(
+            "No hay texto para leer.",
+            "error"
+        );
+
+        return;
+    }
+
+    ttsUtterance = new SpeechSynthesisUtterance(
+        textToRead
+    );
+
+    ttsUtterance.lang = "es-ES";
+    ttsUtterance.rate = readingRate;
+
+    ttsUtterance.onstart = () => {
+        if (playBtn) {
+            playBtn.textContent = "⏸ Pausar";
         }
+    };
 
-        card.innerHTML = `
-            <div class="flex gap-4 w-full">
-                <div class="w-16 h-24 bg-gradient-to-tr rounded-xl flex flex-col justify-between p-2 shadow-inner text-center shrink-0 border border-slate-800" style="background-color: ${item.coverColor || '#14b8a6'}">
-                    <span class="text-2xl">${item.emoji || '📖'}</span>
-                    <span class="text-[8px] font-black uppercase text-slate-300 font-mono">Ranked</span>
-                </div>
-                <div class="space-y-1 min-w-0 flex-1">
-                    <span class="text-[8px] font-bold text-teal-400 bg-teal-950/60 border border-teal-900/40 px-2 py-0.5 rounded uppercase tracking-widest inline-block truncate max-w-full font-mono">${item.genre || 'Ficción'}</span>
-                    <h4 class="text-xs font-bold text-slate-100 mt-1 truncate">${item.title}</h4>
-                    <p class="text-[10px] text-slate-400 truncate">Por ${item.author || 'Desconocido'}</p>
-                    <p class="text-[10px] text-slate-400 italic leading-snug line-clamp-2">${item.description || ''}</p>
-                </div>
-            </div>
-            <div class="w-full mt-2">
-                ${rankingsHTML}
-            </div>
-            <div class="pt-3 w-full">
-                <button onclick="simulateAddFromSearch('${item.title.replace(/'/g, "\\'")}', '${item.author.replace(/'/g, "\\'")}')" class="w-full py-2 bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-slate-950 border border-teal-900/30 text-[10px] font-bold rounded-lg transition-all text-center">
-                    ⚡ Importar Plantilla con rankings
-                </button>
-            </div>
-        `;
-        container.appendChild(card);
+    ttsUtterance.onend = () => {
+        if (playBtn) {
+            playBtn.textContent = "▶ Reproducir";
+        }
+    };
+
+    synth.speak(ttsUtterance);
+}
+
+function stopAudiobook() {
+    if (synth.speaking) {
+        synth.cancel();
     }
 
-    function simulateAddFromSearch(title, author) {
-        const dummyContent = `[Capítulo: Ficha de Lectura - ${title}]\n\nEsta es una plantilla generada de forma automática para la lectura de la obra "${title}" escrita por ${author}.\n\nPara poder leer la obra original completa en su totalidad en tu LEE-READER, recuerda descargar el archivo original en tu dispositivo (.epub, .pdf, .txt, .html) e importarlo usando el botón superior de tu biblioteca virtual de manera segura.`;
-        
-        const newBook = {
-            id: `book-${Date.now()}`,
-            title: title,
-            author: author,
-            shelf: "Favoritos",
-            color: "#14b8a6",
-            format: "TXT",
-            progress: 0,
-            content: dummyContent
-        };
+    const playBtn = document.getElementById(
+        "audio-play-btn"
+    );
 
-        library.push(newBook);
-        saveToStorage();
-        renderBooks();
-        showToast(`Ficha de "${title}" agregada a tu Biblioteca.`);
+    if (playBtn) {
+        playBtn.textContent = "▶ Reproducir";
     }
+}
 
-    // --- STREAMING_CHUNK:Guardando y restaurando datos de LocalStorage de forma persistente ---
-    function saveToStorage() { 
-        try {
-            localStorage.setItem("or_library", JSON.stringify(library));
-            localStorage.setItem("or_shelves", JSON.stringify(shelves));
-            localStorage.setItem("or_reader_config", JSON.stringify(readerConfig));
-            localStorage.setItem("or_highlights", JSON.stringify(highlights));
-            localStorage.setItem("or_notes", JSON.stringify(notes));
-        } catch (err) {
+function adjustVoiceSpeed() {
+    const select = document.getElementById(
+        "voice-speed"
+    );
+
+    if (!select) return;
+
+    readingRate = parseFloat(select.value);
+
+    if (synth.speaking) {
+        stopAudiobook();
+        toggleAudiobook();
+    }
+}
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function saveToStorage() {
+    try {
+        localStorage.setItem(
+            "or_library",
+            JSON.stringify(library)
+        );
+
+        localStorage.setItem(
+            "or_shelves",
+            JSON.stringify(shelves)
+        );
+
+        localStorage.setItem(
+            "or_reader_config",
+            JSON.stringify(readerConfig)
+        );
+
+        localStorage.setItem(
+            "or_highlights",
+            JSON.stringify(highlights)
+        );
+
+        localStorage.setItem(
+            "or_notes",
+            JSON.stringify(notes)
+        );
+    } catch (err) {
         console.error(err);
-        showToast("Error guardando datos locales", "error");
-        }
+
+        showToast(
+            "Error guardando datos.",
+            "error"
+        );
     }
+}
 
 function loadFromStorage() {
     try {
-        const storedLibrary = localStorage.getItem("or_library");
-        const storedShelves = localStorage.getItem("or_shelves");
-        const storedReader = localStorage.getItem("reader_config");
+        const savedLibrary =
+            localStorage.getItem("or_library");
 
-        if (storedLibrary) {
-            library = JSON.parse(storedLibrary);
-        }
+        const savedShelves =
+            localStorage.getItem("or_shelves");
 
-        if (storedShelves) {
-            shelves = JSON.parse(storedShelves);
-        }
+        const savedReader =
+            localStorage.getItem("or_reader_config");
 
-        if (storedReader) {
-            readerConfig = {
-                ...readerConfig,
-                ...JSON.parse(storedReader)
-            };
-        }
-    } catch (err) {
-        console.error(err);
-    }
-    }
-    function initSystem() {
-        loadFromStorage();
+        const savedHighlights =
+            localStorage.getItem("or_highlights");
 
-        renderShelves();
-        renderBooks();
-        renderRecoverButton();
+        const savedNotes =
+            localStorage.getItem("or_notes");
 
-        setReaderTheme(readerConfig.theme);
-
-    document
-        .getElementById("font-size-display")
-        .textContent = `${readerConfig.fontSize}px`;
-
-    document
-        .getElementById("grade-display")
-        .textContent = `${Math.round(readerConfig.grade * 100)}%`;
-
-        setReaderMode(
-            localStorage.getItem("reader-mode") || "vertical"
-        );
-    }
-    
-    function initSystem() {
-        const savedLibrary = localStorage.getItem("or_library");
         if (savedLibrary) {
             library = JSON.parse(savedLibrary);
-        } else {
-            library = [
-                {
-                    id: "init-1",
-                    title: "Frieren: Beyond Journey's End (Simulación EPUB)",
-                    author: "Kanehito Yamada",
-                    shelf: "Manga",
-                    color: "#1e3a8a",
-                    format: "EPUB",
-                    progress: 0,
-                    content: `[Capítulo: 1. El fin de la aventura]\nLa maga Frieren y sus compañeros regresan triunfantes tras derrotar al Rey Demonio. Sin embargo, para una elfa cuya vida abarca milenios, una década de viaje es apenas un suspiro.\n\n[Capítulo: 2. El fluir del tiempo]\nTras la partida de sus amigos humanos, Frieren inicia un nuevo viaje para comprender mejor el valor de las conexiones humanas y el peso del tiempo efímero.\n\n[Capítulo: 3. El sendero de los sabios]\nLa elfa emprende rumbo para encontrar antiguas runas de archivo.`
-                },
-                {
-                    id: "init-2",
-                    title: "Cien años de soledad",
-                    author: "Gabriel García Márquez",
-                    shelf: "Favoritos",
-                    color: "#7c2d12",
-                    format: "TXT",
-                    progress: 0,
-                    content: `[Capítulo: 1. El origen de Macondo]\nMuchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota en que su padre lo llevó a conocer el hielo.\n\nMacondo era entonces una aldea de veinte casas de barro y cañabrava construidas a la orilla de un río de aguas diáfanas que se precipitaban por un lecho de piedras pulidas, blancas y enormes como huevos prehistóricos.\n\n[Capítulo: 2. La peste del olvido]\nAños más tarde, un extraño insomnio asoló a los habitantes de Macondo, borrando sus recuerdos y obligándolos a marcar con carteles las cosas para no olvidar su nombre.`
-                }
-            ];
-            localStorage.setItem("or_library", JSON.stringify(library));
         }
 
-        const savedShelves = localStorage.getItem("or_shelves");
         if (savedShelves) {
             shelves = JSON.parse(savedShelves);
         }
 
-        const savedConfig = localStorage.getItem("or_reader_config");
-        if (savedConfig) {
-            readerConfig = JSON.parse(savedConfig);
+        if (savedReader) {
+            readerConfig = {
+                ...readerConfig,
+                ...JSON.parse(savedReader)
+            };
         }
 
-        const savedHighlights = localStorage.getItem("or_highlights");
         if (savedHighlights) {
             highlights = JSON.parse(savedHighlights);
         }
-        const savedNotes = localStorage.getItem("or_notes");
+
         if (savedNotes) {
             notes = JSON.parse(savedNotes);
         }
-
-        renderShelves();
-        renderBooks();
-        applyConfigToUI();
-        executeGlobalSearch();
-        renderRecoverButton();
-
-        const lastBookId = localStorage.getItem("or_last_active_book");
-        if (lastBookId) {
-            const exists = library.some(b => b.id === lastBookId);
-            if (exists) {
-                activeBookId = lastBookId;
-                const book = library.find(b => b.id === activeBookId);
-                document.getElementById("reader-book-title").textContent = `${book.title} - ${book.author}`;
-            }
-        }
+    } catch (err) {
+        console.error(err);
     }
+}
 
-    // --- STREAMING_CHUNK:Control de cambio de pantallas y listeners ---
-    
-    function switchView(viewId) {
-    
-        viewMode = viewId;
+/* =========================================================
+   SWITCH VISTAS
+========================================================= */
 
-            document.getElementById("view-library")?.classList.add("hidden");
-            document.getElementById("view-reader")?.classList.add("hidden");
-            document.getElementById("view-search")?.classList.add("hidden");
+function switchView(viewId) {
+    viewMode = viewId;
 
-        const views = ["library", "reader", "search"];
+    const views = [
+        "library",
+        "reader",
+        "search"
+    ];
 
-            views.forEach(v => {
-        const nav = document.getElementById(`nav-${v}`);
+    views.forEach(v => {
+        document
+            .getElementById(`view-${v}`)
+            ?.classList.add("hidden");
+
+        const nav = document.getElementById(
+            `nav-${v}`
+        );
+
         if (nav) {
             nav.className =
-                "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
-            }
-        });
-
-    const activeView = document.getElementById(`view-${viewId}`);
-    if (activeView) activeView.classList.remove("hidden");
-
-    const activeNav = document.getElementById(`nav-${viewId}`);
-    if (activeNav) {
-        activeNav.className =
-            "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2";
-        }
-
-                if (viewId === "reader") {
-                    applyReadingLayout?.();
-                    applyConfigToUI?.();
-            }
-        }
-
-    // ESCUCHADORES DE EVENTOS DE TECLADO Y GESTOS TÁCTILES
-    window.addEventListener('keydown', (e) => {
-        if (viewMode === 'reader' && readerConfig.pcViewMode === 'pages' && window.innerWidth >= 768) {
-            if (e.key === 'ArrowRight') {
-                nextPage();
-            } else if (e.key === 'ArrowLeft') {
-                prevPage();
-            }
+                "px-4 py-2 rounded-lg text-xs font-semibold text-slate-400";
         }
     });
 
-    const scrollerEl = document.getElementById("reader-scroller");
-    
-    if (scrollerEl) {
-        scrollerEl.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
+    document
+        .getElementById(`view-${viewId}`)
+        ?.classList.remove("hidden");
 
-        scrollerEl.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
-        }, { passive: true });
+    const activeNav = document.getElementById(
+        `nav-${viewId}`
+    );
+
+    if (activeNav) {
+        activeNav.className =
+            "px-4 py-2 rounded-lg text-xs font-bold bg-teal-500 text-slate-950";
     }
 
-    function handleSwipeGesture() {
-        const isMobile = window.innerWidth < 768;
-        if (isMobile || readerConfig.pcViewMode === 'vertical') return;
-
-        const swipeThreshold = 50; 
-        const swipeDistance = touchStartX - touchEndX;
-
-        if (Math.abs(swipeDistance) > swipeThreshold) {
-            if (swipeDistance > 0) {
-                nextPage();
-            } else {
-                prevPage();
-            }
-        }
+    if (viewId === "reader") {
+        applyReadingLayout();
+        applyConfigToUI();
     }
+}
 
-    window.onload = () => {
-        initSystem();
-    };
+/* =========================================================
+   CAPÍTULOS
+========================================================= */
 
-    window.onresize = () => {
-        if (viewMode === 'reader') {
-            applyReadingLayout();
-            applyConfigToUI();
-        }
-    };
-</script>
+function extractChaptersFromText(text) {
+    const regex =
+        /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
 
-    <!-- TODO tu HTML arriba -->
+    const matches = [...text.matchAll(regex)];
 
-    <script>
-    window.shelves = ["Favoritos", "Por Leer", "Manga", "Pendientes"];
-    window.library = [];
-    window.currentShelf = "all";
-    window.activeBookId = null;
-    window.viewMode = "library";
-
-    window.readerConfig = {
-        readingMode: "vertical",
-        maximized: false
-    };
-    </script>
-
-    <script src="tu-app.js"></script>
-
-<script>
-    function extractChaptersFromText(text) {
-        const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
-        const matches = [...text.matchAll(regex)];
-        return matches.map(m => ({
-            title: m[0],
-            index: m.index
-        }));
-    }
+    return matches.map(m => ({
+        title: m[0],
+        index: m.index
+    }));
+}
 
 function renderChapters(book) {
-    const select = document.getElementById("reader-chapter-select");
+    const select = document.getElementById(
+        "reader-chapter-select"
+    );
 
-    if (!select) {
-        console.warn("reader-chapter-select no existe aún");
-        return;
-    }
+    if (!select) return;
 
     select.innerHTML = "";
 
     if (!book || !book.content) {
-        select.innerHTML = `<option>Sin contenido</option>`;
+        select.innerHTML =
+            `<option>Sin contenido</option>`;
+
         return;
     }
 
-    const chapters = extractChaptersFromText(book.content);
+    const chapters = extractChaptersFromText(
+        book.content
+    );
 
     if (chapters.length === 0) {
-        select.innerHTML = `<option>Sin capítulos detectados</option>`;
+        select.innerHTML =
+            `<option>Sin capítulos detectados</option>`;
+
         return;
     }
 
     chapters.forEach((ch, i) => {
         const opt = document.createElement("option");
+
         opt.value = i;
         opt.textContent = ch.title;
+
         select.appendChild(opt);
-            });
+    });
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+
+function initSystem() {
+    loadFromStorage();
+
+    if (library.length === 0) {
+        library = [
+            {
+                id: "init-1",
+                title: "Cien años de soledad",
+                author: "Gabriel García Márquez",
+                shelf: "Favoritos",
+                color: "#7c2d12",
+                format: "TXT",
+                progress: 0,
+                content:
+                    "[Capítulo 1]\nMuchos años después..."
+            }
+        ];
+
+        saveToStorage();
+    }
+
+    renderShelves();
+    renderBooks();
+    renderRecoverButton();
+
+    applyConfigToUI();
+
+    const lastBookId = localStorage.getItem(
+        "or_last_active_book"
+    );
+
+    if (lastBookId) {
+        const exists = library.some(
+            b => b.id === lastBookId
+        );
+
+        if (exists) {
+            activeBookId = lastBookId;
+        }
+    }
+}
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
+window.addEventListener("keydown", e => {
+    if (
+        viewMode === "reader" &&
+        readerConfig.pcViewMode === "pages" &&
+        window.innerWidth >= 768
+    ) {
+        if (e.key === "ArrowRight") {
+            nextPage();
         }
 
-    document.addEventListener("DOMContentLoaded", () => {
-            initSystem();
-        });
-    </script>
-    
-</body>
+        if (e.key === "ArrowLeft") {
+            prevPage();
+        }
+    }
+});
+
+window.addEventListener("resize", () => {
+    if (viewMode === "reader") {
+        applyReadingLayout();
+        applyConfigToUI();
+    }
+});
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+        initSystem();
+    }
+        );
+        </script>
+    </body>
 </html>
