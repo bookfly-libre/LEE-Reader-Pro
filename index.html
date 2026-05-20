@@ -365,7 +365,10 @@
          <script>
             function renderChapters(book) {
                 const select = document.getElementById("reader-chapter-select");
-                if (!select) return;
+                if (!select) {
+                    console.warn("reader-chapter-select aún no existe");
+                return;
+            }
 
                 select.innerHTML = "";
 
@@ -373,21 +376,18 @@
 
                 const chapters = extractChaptersFromText(book.content);
 
-    if (!chapters || chapters.length === 0) {
-        const opt = document.createElement("option");
-        opt.textContent = "Sin capítulos detectados";
-        opt.value = 0;
-        select.appendChild(opt);
-        return;
-    }
+                if (!chapters || chapters.length === 0) {
+                select.innerHTML = `<option value="0">Sin capítulos detectados</option>`;
+                return;
+            }
 
-    chapters.forEach((ch, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.textContent = ch.title || `Capítulo ${i + 1}`;
-        select.appendChild(opt);
-    });
-}
+                chapters.forEach((ch, i) => {
+                const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.textContent = ch.title || `Capítulo ${i + 1}`;
+                    select.appendChild(opt);
+            });
+        }
 
 function extractChaptersFromText(text) {
     const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
@@ -1223,36 +1223,25 @@ function syncReaderFloatingChrome() {
     // --- VISUALIZACIÓN DE LECTURA REAL DE LIBRO (AUTÉNTICA PRIORIDAD) ---
 
     function loadBookToReader(id) {
-    const book = library.find(b => b.id === id);
-    if (!book) return;
+        const book = library.find(b => b.id === id);
+        if (!book) return;
 
     activeBookId = id;
-    localStorage.setItem("or_last_active_book", id);
 
-    // ocultar IA si estaba abierta
-    document.getElementById("reader-ai-sidebar")?.classList.add("hidden");
-
-    // cambiar vista primero
     switchView("reader");
 
-    // 🔥 IMPORTANTE: esperar a que el DOM del reader exista
     setTimeout(() => {
-
         renderReaderContent(book);
-
-        // capítulos (después de que el select ya existe)
         renderChapters(book);
 
-        // reset scroll limpio
         const scroller = document.getElementById("reader-scroller");
         if (scroller) {
             scroller.scrollTop = 0;
             scroller.scrollLeft = 0;
+                }
+
+            }, 50);
         }
-
-        ensureReaderStartsAtTop();
-
-    }, 0);
 
     // backup de seguridad de scroll
     setTimeout(() => {
