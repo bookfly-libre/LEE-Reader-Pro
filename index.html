@@ -1221,7 +1221,9 @@ function syncReaderFloatingChrome() {
 
         activeBookId = id;
         localStorage.setItem("or_last_active_book", id);
-
+        
+        document.getElementById("reader-ai-sidebar")?.classList.add("hidden");
+        
         switchView("reader");
 
         renderReaderContent(book);
