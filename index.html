@@ -190,7 +190,16 @@
     <section id="view-reader" class="hidden flex-1 flex flex-col">
         
         <!-- Envoltorio principal de lectura -->
-        <div id="reader-wrapper" class="relative flex-grow rounded-2xl border border-slate-800 overflow-hidden flex flex-col min-h-[550px] bg-[#1a202c] transition-all duration-300">
+        
+            <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="text-10px text-slate-400 font-bold">Tema</span>
+    <div class="flex gap-1">
+      <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-10px font-bold border border-slate-200">Claro</button>
+      <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
+      <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
+      <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
+            </div>
             
             <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
             <div class="bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-20">
