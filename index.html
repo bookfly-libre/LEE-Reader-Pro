@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniReader Pro - Sistema Inteligente de Lectura & Biblioteca</title>
+    <title>LEE-READER - Sistema Inteligente de Lectura & Biblioteca</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght=0,400;0,700;1,400&family=Fira+Code:wght@400;500&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -59,27 +60,28 @@
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
 <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row gap-3 justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="p-2.5 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/20">
                 <span class="text-2xl">📚</span>
             </div>
             <div>
                 <h1 class="text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300 font-serif">
-                    OmniReader Pro
+                    LEE-READER
                 </h1>
                 <p class="text-[9px] text-indigo-400 font-semibold tracking-wider uppercase">Lector Universal & Biblioteca Inteligente</p>
             </div>
         </div>
 
-        <!-- Panel de Configuración de API Key -->
-        <div class="hidden md:flex items-center gap-2 bg-slate-900 px-3 py-1 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-indigo-400 font-bold">🔑 Gemini IA:</span>
-            <input type="password" id="gemini-api-key" placeholder="Auto-Key Activa (o ingresa una)" class="bg-slate-950 border-none outline-none text-[10px] text-slate-300 w-36 placeholder-slate-600 focus:ring-1 focus:ring-indigo-500 rounded px-1.5 py-0.5">
+        <!-- Sección de Buscador Rankings en el Header (Reemplaza a Gemini IA en PC) -->
+        <div class="hidden md:flex items-center gap-2">
+            <button onclick="switchView('search')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-indigo-300 hover:text-indigo-200 text-xs font-semibold rounded-xl border border-slate-800 transition-all flex items-center gap-2">
+                🏆 Buscador Rankings
+            </button>
         </div>
 
         <!-- Navegación de Vistas -->
-        <nav class="flex space-x-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
+        <nav class="flex space-x-1 bg-slate-900 p-1 rounded-xl border border-slate-800 w-full md:w-auto justify-center">
             <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm flex items-center gap-2">
                 🏛️ Mi Biblioteca
             </button>
@@ -93,22 +95,49 @@
     </div>
 </header>
 
+<!-- Notificación Flotante (Toast) Personalizada para Reemplazar alerts nativos -->
+<div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+<!-- Modal de Confirmación Personalizado -->
+<div id="confirm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
+        <h4 id="confirm-title" class="text-base font-bold text-slate-100">Confirmación</h4>
+        <p id="confirm-msg" class="text-xs text-slate-400"></p>
+        <div class="flex justify-end gap-2 pt-2">
+            <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300 transition-all">Cancelar</button>
+            <button id="confirm-ok-btn" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl text-white transition-all">Aceptar</button>
+        </div>
+    </div>
+</div>
+
 <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col">
 
     <!-- SECCIÓN: BIBLIOTECA -->
     <section id="view-library" class="space-y-6">
-        <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-indigo-950/20 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h2 class="text-xl font-bold text-slate-200">Mi Estantería de Libros</h2>
-                <p class="text-xs text-slate-400">Personaliza tus estantes, sube tus lecturas en formato Texto Plano, HTML o EPUB y guarda tus progresos.</p>
+        <!-- Dashboard / Buscador General de Biblioteca -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-indigo-950/20 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-200">Mi Estantería de Libros</h2>
+                    <p class="text-xs text-slate-400">Personaliza tus estantes, sube lecturas (Texto, HTML o EPUB), gestiona tus recursos y consulta rankings en tiempo real.</p>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <button onclick="openAddBookModal()" class="flex-1 md:flex-none px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5">
+                        ➕ Añadir Libro / EPUB
+                    </button>
+                    <button onclick="triggerResetLibrary()" class="flex-1 md:flex-none px-4 py-2 bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-300 text-xs font-bold rounded-xl transition-all border border-slate-700">
+                        🔄 Resetear Biblioteca
+                    </button>
+                </div>
             </div>
-            
-            <div class="flex flex-wrap gap-2">
-                <button onclick="openAddBookModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5">
-                    ➕ Añadir Libro / EPUB
-                </button>
-                <button onclick="resetLibrary()" class="px-4 py-2 bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-300 text-xs font-bold rounded-xl transition-all border border-slate-700">
-                    🔄 Resetear Biblioteca
+
+            <!-- BUSCADOR PRINCIPAL UNIFICADO -->
+            <div class="relative w-full">
+                <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
+                <input type="text" id="library-search-input" oninput="handleLibrarySearch()" placeholder="Buscar en mi biblioteca por título, autor o filtrar rankings externos..." class="w-full pl-10 pr-24 py-3 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl outline-none text-sm transition-all text-slate-200">
+                <button onclick="switchView('search')" class="absolute right-2 top-2 px-3 py-1.5 bg-indigo-950 hover:bg-indigo-900 border border-indigo-900/40 text-[10px] font-bold text-indigo-300 rounded-lg transition-all">
+                    Buscador Rankings 🏆
                 </button>
             </div>
         </div>
@@ -151,7 +180,7 @@
         <!-- Envoltorio principal que cambia a pantalla completa al maximizar -->
         <div id="reader-wrapper" class="relative flex-grow rounded-2xl border border-slate-800 overflow-hidden flex flex-col min-h-[550px] bg-[#1a202c] transition-all duration-300">
             
-            <!-- BARRA DE CONFIGURACIÓN INTEGRADA: Ahora está dentro de reader-wrapper para estar siempre visible al maximizar -->
+            <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
             <div class="bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-20">
                 <!-- Temas y Graduación gradual -->
                 <div class="flex flex-wrap items-center gap-2">
@@ -239,27 +268,27 @@
                 <span id="reader-book-title" class="font-bold text-indigo-400">Ningún libro cargado</span>
                 <div class="flex items-center gap-3">
                     <button onclick="toggleAISidebar()" class="px-2.5 py-1 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded text-[10px] font-bold flex items-center gap-1">
-                        ✨ OmniPilot IA
+                        ✨ GennIA
                     </button>
                     <span id="reader-progress-percent" class="font-mono">Pág: 0 / 0 (0%)</span>
                 </div>
             </div>
 
-            <!-- Contenedor con distribución de lectura y asistente IA -->
+            <!-- Contenedor con distribución de lectura y asistente IA GennIA -->
             <div class="flex-grow flex overflow-hidden relative">
-                <!-- Contenedor Principal de Texto -->
+                <!-- Contenedor Principal de Texto (Contenido real del libro - Prioridad número 1) -->
                 <div class="flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300" id="reader-scroller" onmouseup="handleTextSelection(event)">
                     <div id="reader-text-container" class="max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300">
-                        <!-- El texto dinámico se inyectará aquí -->
+                        <!-- El texto dinámico real se inyectará aquí de manera primordial -->
                     </div>
                 </div>
 
-                <!-- Panel Lateral de IA "OmniPilot" -->
-                <div id="reader-ai-sidebar" class="w-80 border-l border-slate-800 bg-slate-950/95 flex flex-col justify-between hidden transition-all duration-300">
+                <!-- Panel Lateral de IA "GennIA" (Herramienta puramente complementaria y opcional) -->
+                <div id="reader-ai-sidebar" class="w-80 border-l border-slate-800 bg-slate-950/95 flex flex-col justify-between hidden transition-all duration-300 z-30">
                     <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/40">
                         <div class="flex items-center gap-2">
                             <span class="text-sm">✨</span>
-                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Asistente OmniPilot</h4>
+                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Asistencia GennIA</h4>
                         </div>
                         <button onclick="toggleAISidebar()" class="text-slate-500 hover:text-slate-300 text-xs">✕</button>
                     </div>
@@ -267,26 +296,34 @@
                     <!-- Consola / Output del Asistente -->
                     <div class="flex-grow p-4 overflow-y-auto space-y-4 text-xs" id="ai-chat-history">
                         <div class="bg-indigo-950/30 border border-indigo-900/30 rounded-xl p-3 text-slate-300">
-                            <p class="font-bold text-indigo-400 mb-1">¡Hola! Soy tu copiloto literario.</p>
-                            <p class="leading-relaxed">Selecciona cualquier texto en el lector para analizarlo, o pídeme un resumen general de la obra activa usando el botón de abajo.</p>
+                            <p class="font-bold text-indigo-400 mb-1">¡Hola! Soy GennIA, tu copiloto literario.</p>
+                            <p class="leading-relaxed">El contenido original del libro se muestra en la pantalla principal. Yo puedo ayudarte opcionalmente con resúmenes, análisis, traducción o contexto.</p>
                             <div class="mt-2.5 flex flex-wrap gap-1.5">
-                                <button onclick="askAIAssistant('summarize')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-[10px] font-bold text-white rounded">📝 Resumir Libro</button>
+                                <button onclick="askAIAssistant('summarize')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-[10px] font-bold text-white rounded">📝 Resumir Capítulos</button>
                                 <button onclick="askAIAssistant('explain-context')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-300 rounded">🔍 Contexto Histórico</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Input de Ajustes de API Key de Gemini discretamente ubicado en la barra lateral de GennIA -->
+                    <div class="p-3 border-t border-slate-800/80 bg-slate-900/40 space-y-1.5">
+                        <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold">
+                            <span>🔑 Gemini API Key (Opcional):</span>
+                        </div>
+                        <input type="password" id="gemini-api-key" placeholder="Auto-Key Activa (o ingresa una)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-slate-300 outline-none focus:border-indigo-500">
+                    </div>
+
                     <!-- Input de consulta del Chat con IA -->
                     <div class="p-3 border-t border-slate-800 bg-slate-900/20">
                         <div class="flex gap-2">
-                            <input type="text" id="ai-chat-input" placeholder="Pregunta sobre la obra o personaje..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] outline-none text-slate-200 focus:border-indigo-500" onkeypress="handleAIChatKeyPress(event)">
+                            <input type="text" id="ai-chat-input" placeholder="Pregunta a GennIA sobre la obra..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] outline-none text-slate-200 focus:border-indigo-500" onkeypress="handleAIChatKeyPress(event)">
                             <button onclick="sendCustomAIQuery()" class="px-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold">Enviar</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Navegadores de Páginas (Para el modo 2 Páginas en PC) -->
+            <!-- Navegadores de Páginas -->
             <div id="page-navigation-controls" class="p-4 bg-black/30 border-t border-slate-800/40 flex justify-between items-center z-10">
                 <button onclick="prevPage()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 rounded-xl text-xs font-bold border border-slate-800 hover:text-white transition-colors">
                     ⬅ Página Anterior
@@ -301,8 +338,8 @@
         <!-- Popup Flotante de Selección de Texto -->
         <div id="selection-popup" class="absolute hidden bg-slate-950 border border-slate-800 p-3 rounded-xl shadow-2xl flex flex-col gap-2 z-50 max-w-xs">
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pb-1 border-b border-slate-800 flex justify-between items-center">
-                <span>Marcadores & IA</span>
-                <button onclick="askAIAssistant('explain-selection')" class="text-[9px] font-extrabold text-indigo-400 hover:text-indigo-300">✨ Explicar con IA</button>
+                <span>Marcadores & GennIA</span>
+                <button onclick="askAIAssistant('explain-selection')" class="text-[9px] font-extrabold text-indigo-400 hover:text-indigo-300">✨ Explicar con GennIA</button>
             </div>
             
             <!-- Paleta de Colores de Resaltador -->
@@ -327,18 +364,18 @@
         </div>
     </section>
 
-    <!-- SECCIÓN: BUSCADOR -->
-    <section id="view-search" class="hidden space-y-6">
-        <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+    <!-- SECCIÓN: BUSCADOR DE RANKINGS (Optimizado Responsive, No se desborda en celular) -->
+    <section id="view-search" class="hidden space-y-6 w-full max-w-full overflow-hidden px-1">
+        <div class="bg-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
             <div>
-                <h2 class="text-xl font-bold text-slate-200">🔍 Buscador Inteligente Multi-Filtros</h2>
-                <p class="text-xs text-slate-400">Busca títulos populares de libros, enciclopedias, anime, manga y más. Puedes ver sus rankings en las plataformas líderes mundiales de manera integrada.</p>
-                <div class="mt-2 bg-indigo-950/40 border border-indigo-900/30 p-3 rounded-lg flex items-center justify-between gap-2">
+                <h2 class="text-lg md:text-xl font-bold text-slate-200">🏆 Buscador de Rankings e Información</h2>
+                <p class="text-xs text-slate-400">Busca títulos populares de libros, enciclopedias, anime o manga para ver sus calificaciones oficiales integradas.</p>
+                <div class="mt-2 bg-indigo-950/40 border border-indigo-900/30 p-3 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
                         <span class="text-xs">✨</span>
-                        <p class="text-[11px] text-indigo-300"><strong>Búsqueda en Vivo con IA (Gemini Grounding):</strong> Activa esta opción para consultar calificaciones y datos reales de internet en tiempo real para cualquier obra del mundo.</p>
+                        <p class="text-[10px] md:text-[11px] text-indigo-300"><strong>Búsqueda en Vivo con IA (Gemini Grounding):</strong> Consulta información verídica y rankings actualizados directamente desde internet.</p>
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0 mt-1 sm:mt-0">
                         <input type="checkbox" id="live-search-toggle" class="sr-only peer">
                         <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
                         <span class="ml-2 text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Activar IA</span>
@@ -346,16 +383,17 @@
                 </div>
             </div>
 
+            <!-- Inputs de búsqueda de rankings -->
             <div class="flex flex-col md:flex-row gap-3">
-                <div class="flex-1 relative">
+                <div class="flex-1 relative w-full">
                     <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                    <input type="text" id="global-search-input" oninput="handleSearchInputChange()" placeholder="Frieren, Dune, One Hundred Years of Solitude, Harry Potter..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl outline-none text-sm transition-all text-slate-200">
+                    <input type="text" id="global-search-input" oninput="handleSearchInputChange()" placeholder="Frieren, Dune, Cien años de soledad, Harry Potter..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl outline-none text-xs md:text-sm transition-all text-slate-200">
                 </div>
-                <div class="flex gap-2">
-                    <button id="live-search-btn" onclick="executeLiveAISearch()" class="hidden px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl transition-all shadow-md">
-                        Buscar con Gemini IA
+                <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full md:w-auto">
+                    <button id="live-search-btn" onclick="executeLiveAISearch()" class="hidden w-full sm:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl transition-all shadow-md shrink-0">
+                        Buscar con GennIA
                     </button>
-                    <select id="search-category" onchange="executeGlobalSearch()" class="bg-slate-900 border border-slate-800 text-xs px-4 py-2 rounded-xl outline-none focus:border-indigo-500 text-slate-300">
+                    <select id="search-category" onchange="executeGlobalSearch()" class="w-full sm:w-auto bg-slate-900 border border-slate-800 text-xs px-4 py-3 rounded-xl outline-none focus:border-indigo-500 text-slate-300">
                         <option value="all">Categorías: Todas</option>
                         <option value="Libros">Libros & Enciclopedias</option>
                         <option value="AnimeManga">Anime & Manga</option>
@@ -365,11 +403,11 @@
             </div>
         </div>
 
-        <!-- Resultados de la Búsqueda con Gráficos de Rankings -->
+        <!-- Resultados de la Búsqueda de Rankings -->
         <div class="space-y-4">
-            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400">Resultados del Catálogo de Rankings</h3>
-            <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Dinámico -->
+            <h3 class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-400">Resultados del Catálogo de Rankings</h3>
+            <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <!-- Dinámico - Perfectamente dimensionado con grid adaptativo de Tailwind -->
             </div>
         </div>
     </section>
@@ -383,7 +421,7 @@
             <h3 class="text-base font-bold text-slate-200">➕ Agregar Nuevo Recurso de Lectura</h3>
             <button onclick="closeAddBookModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
         </div>
-        <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
             <!-- Selector de carga de archivo real -->
             <div class="border-2 border-dashed border-slate-700 hover:border-indigo-500 p-6 rounded-xl text-center bg-slate-950/60 cursor-pointer transition-all relative">
                 <input type="file" id="file-uploader" accept=".txt,.html,.epub" onchange="handleFileImport(event)" class="absolute inset-0 opacity-0 cursor-pointer">
@@ -433,7 +471,7 @@
 </div>
 
 <script>
-    // --- STREAMING_CHUNK: Definiendo la Base de Datos de Metadatos de Rankings ---
+    // --- DATABASE / CATALOGO DE METADATOS DE RANKINGS (LOCAL) ---
     const METADATA_CATALOG = [
         {
             id: "meta-1",
@@ -523,12 +561,12 @@
         }
     ];
 
-    // --- STREAMING_CHUNK: Inicialización de Estados Globales del E-Reader ---
+    // --- ESTADOS GLOBALES ---
     let shelves = ["Favoritos", "Por Leer", "Manga", "Pendientes"];
     let library = [];
     let currentShelf = "all";
     let activeBookId = null;
-    let viewMode = "library"; // "library", "reader", "search"
+    let viewMode = "library"; 
 
     // Configuración de visualización del Lector
     let readerConfig = {
@@ -537,24 +575,75 @@
         fontSize: 16,
         margin: 20,
         fontFamily: "serif",
-        pcViewMode: "pages", // "pages" o "vertical"
+        pcViewMode: "pages", 
         currentPage: 0,
         totalPages: 0,
         maximized: false
     };
 
-    // Almacenamiento de Notas y Subrayados
     let highlights = []; 
     let notes = []; 
-
-    // Objeto temporal para manejar la selección de texto
     let selectedTextMetadata = null;
 
-    // Control táctil para gestos (Swipe)
     let touchStartX = 0;
     let touchEndX = 0;
 
-    // --- STREAMING_CHUNK: Motor de Llamadas a la API de Gemini (Grounding y Análisis) ---
+    // --- SISTEMA DE NOTIFICACIONES TOAST (Reemplaza alert) ---
+    function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `p-3.5 rounded-xl shadow-xl text-xs font-semibold text-white transition-all duration-300 transform translate-y-2 pointer-events-auto flex justify-between items-center ${
+            type === "success" ? "bg-emerald-600 border border-emerald-500" : 
+            type === "error" ? "bg-red-600 border border-red-500" : "bg-indigo-600 border border-indigo-500"
+        }`;
+        toast.innerHTML = `
+            <span>${message}</span>
+            <button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white font-bold ml-3 text-sm">✕</button>
+        `;
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove("translate-y-2");
+            toast.classList.add("translate-y-0");
+        }, 50);
+
+        setTimeout(() => {
+            toast.classList.add("opacity-0", "translate-y-2");
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // --- SISTEMA DE CONFIRMACIÓN MODAL (Reemplaza confirm) ---
+    function customConfirm(title, message, onOk, onCancel = null) {
+        const modal = document.getElementById("confirm-modal");
+        const titleEl = document.getElementById("confirm-title");
+        const msgEl = document.getElementById("confirm-msg");
+        const okBtn = document.getElementById("confirm-ok-btn");
+        const cancelBtn = document.getElementById("confirm-cancel-btn");
+
+        titleEl.textContent = title;
+        msgEl.textContent = message;
+
+        modal.classList.remove("hidden");
+
+        const close = () => {
+            modal.classList.add("hidden");
+            okBtn.onclick = null;
+            cancelBtn.onclick = null;
+        };
+
+        okBtn.onclick = () => {
+            close();
+            if (onOk) onOk();
+        };
+
+        cancelBtn.onclick = () => {
+            close();
+            if (onCancel) onCancel();
+        };
+    }
+
+    // --- ENGINE DE GEMINI API ---
     function getApiKey() {
         return document.getElementById("gemini-api-key").value.trim() || "";
     }
@@ -602,262 +691,8 @@
         }
     }
 
-    // --- STREAMING_CHUNK: Gestión del Compañero de Lectura OmniPilot IA ---
-    function toggleAISidebar() {
-        const sidebar = document.getElementById("reader-ai-sidebar");
-        sidebar.classList.toggle("hidden");
-        applyReadingLayout();
-    }
-
-    function handleAIChatKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendCustomAIQuery();
-        }
-    }
-
-    async function sendCustomAIQuery() {
-        const input = document.getElementById("ai-chat-input");
-        const queryText = input.value.trim();
-        if (!queryText) return;
-
-        input.value = "";
-        appendAIMessage("user", queryText);
-
-        const book = library.find(b => b.id === activeBookId);
-        const bookContext = book ? `Libro activo: "${book.title}" de ${book.author}.\nContenido de referencia:\n${book.content.substring(0, 1500)}...` : "Ningún libro cargado.";
-
-        const systemPrompt = `Eres "OmniPilot", el asistente inteligente integrado de este e-reader. Responde de manera concisa y clara.`;
-        const finalPrompt = `Contexto del e-reader:\n${bookContext}\n\nPregunta del lector: ${queryText}`;
-
-        appendAIMessage("assistant", "Pensando...");
-
-        try {
-            const result = await fetchGemini(finalPrompt, systemPrompt);
-            const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No obtuve una respuesta clara.";
-            removeLastAIMessage();
-            appendAIMessage("assistant", responseText);
-        } catch (error) {
-            removeLastAIMessage();
-            appendAIMessage("assistant", "⚠️ Error de conexión con Gemini. Verifica tu API Key o conexión.");
-        }
-    }
-
-    async function askAIAssistant(mode) {
-        const sidebar = document.getElementById("reader-ai-sidebar");
-        if (sidebar.classList.contains("hidden")) {
-            toggleAISidebar();
-        }
-
-        const book = library.find(b => b.id === activeBookId);
-        if (!book && mode !== 'explain-selection') {
-            appendAIMessage("assistant", "⚠️ Primero carga un recurso de lectura de tu biblioteca.");
-            return;
-        }
-
-        let userPrompt = "";
-        let systemPrompt = "Actúa como un profesor de literatura y crítico experto.";
-
-        if (mode === 'summarize') {
-            appendAIMessage("user", `Sintetizar la obra: "${book.title}"`);
-            appendAIMessage("assistant", "Analizando el contenido e hilando un resumen...");
-            userPrompt = `Genera un resumen analítico muy conciso del siguiente fragmento del libro "${book.title}" de ${book.author}:\n\n${book.content.substring(0, 4000)}`;
-        } else if (mode === 'explain-context') {
-            appendAIMessage("user", `Explicar el contexto de: "${book.title}"`);
-            appendAIMessage("assistant", "Buscando contexto socio-histórico...");
-            userPrompt = `Explica el contexto histórico, corrientes literarias y la relevancia del autor de la obra "${book.title}" escrita por ${book.author}.`;
-        } else if (mode === 'explain-selection') {
-            if (!selectedTextMetadata) {
-                alert("Selecciona primero un fragmento de texto en el lector.");
-                return;
-            }
-            appendAIMessage("user", `Explicar fragmento: "${selectedTextMetadata.text.substring(0, 30)}..."`);
-            appendAIMessage("assistant", "Examinando el fragmento seleccionado...");
-            userPrompt = `Analiza, resume o explica el siguiente fragmento seleccionado por el lector de la obra activa:\n\n"${selectedTextMetadata.text}"`;
-            document.getElementById("selection-popup").classList.add("hidden");
-            window.getSelection().removeAllRanges();
-        }
-
-        try {
-            const result = await fetchGemini(userPrompt, systemPrompt);
-            const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar el análisis.";
-            removeLastAIMessage();
-            appendAIMessage("assistant", responseText);
-        } catch (error) {
-            removeLastAIMessage();
-            appendAIMessage("assistant", "⚠️ Ocurrió un error al procesar tu solicitud con Gemini.");
-        }
-    }
-
-    function appendAIMessage(sender, text) {
-        const chat = document.getElementById("ai-chat-history");
-        const msgDiv = document.createElement("div");
-        if (sender === "user") {
-            msgDiv.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-slate-300 self-end ml-4";
-            msgDiv.innerHTML = `<span class="font-bold text-slate-400">Tú:</span> <p class="mt-0.5">${text}</p>`;
-        } else {
-            msgDiv.className = "bg-indigo-950/20 border border-indigo-900/20 p-2.5 rounded-lg text-indigo-200 mr-4 ai-msg-node";
-            msgDiv.innerHTML = `<span class="font-bold text-indigo-400">OmniPilot ✨:</span> <div class="mt-1 leading-relaxed whitespace-pre-line">${text}</div>`;
-        }
-        chat.appendChild(msgDiv);
-        chat.scrollTop = chat.scrollHeight;
-    }
-
-    function removeLastAIMessage() {
-        const chat = document.getElementById("ai-chat-history");
-        const nodes = chat.getElementsByClassName("ai-msg-node");
-        if (nodes.length > 0) {
-            nodes[nodes.length - 1].remove();
-        }
-    }
-
-    // --- STREAMING_CHUNK: Buscador de Fichas de Rankings con Grounding ---
-    function handleSearchInputChange() {
-        const toggle = document.getElementById("live-search-toggle");
-        if (!toggle.checked) {
-            executeGlobalSearch();
-        }
-    }
-
-    document.getElementById("live-search-toggle").addEventListener('change', function(e) {
-        const btn = document.getElementById("live-search-btn");
-        if (e.target.checked) {
-            btn.classList.remove("hidden");
-        } else {
-            btn.classList.add("hidden");
-            executeGlobalSearch();
-        }
-    });
-
-    async function executeLiveAISearch() {
-        const query = document.getElementById("global-search-input").value.trim();
-        const category = document.getElementById("search-category").value;
-        const container = document.getElementById("search-results-container");
-
-        if (!query) {
-            alert("Escribe el nombre de la obra en el buscador.");
-            return;
-        }
-
-        container.innerHTML = `
-            <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20">
-                <span class="text-3xl block animate-spin mb-3">🔍</span>
-                <p class="text-xs text-indigo-400 font-bold">Investigando en internet y recopilando rankings reales con Gemini...</p>
-                <p class="text-[10px] text-slate-500 mt-1">Grounding activo con Google Search. Esperando respuesta estructurada.</p>
-            </div>
-        `;
-
-        const systemPrompt = `Eres un catalogador experto en literatura, manga y anime. Devuelve un objeto JSON estrictamente compatible con el esquema que se te pide.`;
-        const userPrompt = `Investiga la obra "${query}" clasificada opcionalmente como categoría "${category}". Devuelve un objeto JSON estructurado con el siguiente formato exacto:
-        {
-          "title": "Nombre exacto de la obra",
-          "author": "Nombre del autor o creador",
-          "category": "AnimeManga" o "Libros" o "LibrosPeliculas",
-          "genre": "Género o géneros clave",
-          "coverColor": "Un color hexadecimal representativo para el tema (ej. #b91c1c)",
-          "emoji": "Un emoji que encaje con la obra",
-          "description": "Una breve sinopsis o descripción verídica de 2 líneas",
-          "rankings": {
-            "type": "anime_manga" o "books_only" o "books_movies",
-            "mal": "Calificación de MyAnimeList",
-            "anilist": "Puntuación de AniList",
-            "eirin": "Clasificación de Eirin",
-            "oricon": "Ventas de Oricon",
-            "goodreads": "Calificación en Goodreads",
-            "nyt": "Presencia en NYT",
-            "literary_awards": "Premios literarios obtenidos",
-            "imdb": "Calificación de IMDb",
-            "rotten": "Porcentaje Rotten Tomatoes",
-            "common_sense": "Calificación Common Sense Media"
-          }
-        }`;
-
-        try {
-            const result = await fetchGemini(userPrompt, systemPrompt, [{ "google_search": {} }]);
-            let text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-            text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-            const cleanData = JSON.parse(text);
-
-            container.innerHTML = "";
-            renderSingleSearchResult(cleanData);
-        } catch (error) {
-            console.error(error);
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12 border border-red-900/40 rounded-2xl bg-red-950/10">
-                    <p class="text-xs text-red-400 font-bold">⚠️ Error al consultar o parsear los datos en vivo.</p>
-                </div>
-            `;
-        }
-    }
-
-    function renderSingleSearchResult(item) {
-        const container = document.getElementById("search-results-container");
-        const card = document.createElement("div");
-        card.className = "bg-slate-950 border border-indigo-500/20 p-5 rounded-2xl shadow-xl space-y-4 flex flex-col justify-between";
-        
-        let rankingsHTML = "";
-        const r = item.rankings;
-
-        if (r.type === "anime_manga") {
-            rankingsHTML = `
-                <div class="space-y-1 pt-2 border-t border-slate-900">
-                    <span class="text-[9px] uppercase font-black text-indigo-400 tracking-wider">Rankings oficiales de Anime y Manga (Gemini Live)</span>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">⭐ MyAnimeList: <span class="text-yellow-400 font-bold">${r.mal || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📊 AniList: <span class="text-sky-400 font-bold">${r.anilist || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🎥 Eirin: <span class="text-emerald-400 font-bold">${r.eirin || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📈 Oricon: <span class="text-purple-400 font-bold">${r.oricon || 'N/A'}</span></div>
-                    </div>
-                </div>
-            `;
-        } else if (r.type === "books_only") {
-            rankingsHTML = `
-                <div class="space-y-1 pt-2 border-t border-slate-900">
-                    <span class="text-[9px] uppercase font-black text-indigo-400 tracking-wider">Rankings de Libros & Enciclopedias (Gemini Live)</span>
-                    <div class="grid grid-cols-1 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📖 Goodreads: <span class="text-amber-500 font-bold">${r.goodreads || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📰 Best Sellers - NYT: <span class="text-white font-bold">${r.nyt || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🏆 Comité / Premios: <span class="text-indigo-400 font-bold">${r.literary_awards || 'N/A'}</span></div>
-                    </div>
-                </div>
-            `;
-        } else if (r.type === "books_movies") {
-            rankingsHTML = `
-                <div class="space-y-1 pt-2 border-t border-slate-900">
-                    <span class="text-[9px] uppercase font-black text-indigo-400 tracking-wider">Rankings Adaptados a Películas / Series (Gemini Live)</span>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2">📖 Goodreads: <span class="text-amber-500 font-bold">${r.goodreads || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🎬 IMDb: <span class="text-yellow-400 font-bold">${r.imdb || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🍅 Rotten Tomatoes: <span class="text-red-400 font-bold">${r.rotten || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2">👪 Common Sense: <span class="text-teal-400 font-bold">${r.common_sense || 'N/A'}</span></div>
-                    </div>
-                </div>
-            `;
-        }
-
-        card.innerHTML = `
-            <div class="flex gap-4">
-                <div class="w-16 h-24 bg-gradient-to-tr rounded-xl flex flex-col justify-between p-2 shadow-inner text-center shrink-0 border border-slate-800" style="background-color: ${item.coverColor || '#6366f1'}">
-                    <span class="text-2xl">${item.emoji || '📖'}</span>
-                    <span class="text-[8px] font-black uppercase text-slate-300">Live AI</span>
-                </div>
-                <div class="space-y-1">
-                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-900/40 px-2 py-0.5 rounded uppercase tracking-widest">${item.genre || 'Ficción'}</span>
-                    <h4 class="text-xs font-bold text-slate-100 mt-1">${item.title}</h4>
-                    <p class="text-[10px] text-slate-400">Por ${item.author || 'Desconocido'}</p>
-                    <p class="text-[10px] text-slate-400 italic leading-snug line-clamp-2">${item.description || ''}</p>
-                </div>
-            </div>
-            ${rankingsHTML}
-            <div class="pt-2">
-                <button onclick="simulateAddFromSearch('${item.title}', '${item.author}')" class="w-full py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-900/30 text-[10px] font-bold rounded-lg transition-all">
-                    ⚡ Importar Plantilla con rankings reales
-                </button>
-            </div>
-        `;
-        container.appendChild(card);
-    }
-
-    // --- STREAMING_CHUNK: Gestión de Biblioteca y Estanterías ---
+    // --- STREAMING_CHUNK: Implementing search, filtering, and local persistence... -->
+    // --- GESTIÓN DE BIBLIOTECA, ESTANTERÍAS Y BÚSQUEDA GENERAL ---
     function renderShelves() {
         const container = document.getElementById("shelves-list");
         container.innerHTML = "";
@@ -874,7 +709,7 @@
             shelfBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all flex justify-between items-center ${currentShelf === shelf ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
             shelfBtn.innerHTML = `
                 <span>📁 ${shelf}</span>
-                <span onclick="deleteShelf('${shelf}'); event.stopPropagation();" class="text-red-400 hover:text-red-300 ml-2">✕</span>
+                <span onclick="triggerDeleteShelf('${shelf}'); event.stopPropagation();" class="text-red-400 hover:text-red-300 ml-2">✕</span>
             `;
             container.appendChild(shelfBtn);
         });
@@ -897,19 +732,25 @@
         input.value = "";
         renderShelves();
         saveToStorage();
+        showToast(`Estante "${value}" creado con éxito.`, "success");
     }
 
-    function deleteShelf(shelfName) {
-        if (confirm(`¿Estás seguro de que deseas eliminar el estante "${shelfName}"?`)) {
-            library.forEach(book => {
-                if (book.shelf === shelfName) book.shelf = "Favoritos";
-            });
-            shelves = shelves.filter(s => s !== shelfName);
-            currentShelf = "all";
-            renderShelves();
-            renderBooks();
-            saveToStorage();
-        }
+    function triggerDeleteShelf(shelfName) {
+        customConfirm(
+            "Eliminar Estante",
+            `¿Estás seguro de que deseas eliminar el estante "${shelfName}"? Los libros contenidos se moverán a Favoritos.`,
+            () => {
+                library.forEach(book => {
+                    if (book.shelf === shelfName) book.shelf = "Favoritos";
+                });
+                shelves = shelves.filter(s => s !== shelfName);
+                currentShelf = "all";
+                renderShelves();
+                renderBooks();
+                saveToStorage();
+                showToast("Estante eliminado correctamente.");
+            }
+        );
     }
 
     function filterByShelf(shelf) {
@@ -919,18 +760,32 @@
         renderBooks();
     }
 
+    // Buscador general de libros locales (Biblioteca)
+    function handleLibrarySearch() {
+        renderBooks();
+    }
+
     function renderBooks() {
         const container = document.getElementById("books-grid");
         container.innerHTML = "";
 
-        const filtered = currentShelf === "all" ? library : library.filter(b => b.shelf === currentShelf);
+        const searchVal = document.getElementById("library-search-input").value.toLowerCase().trim();
+
+        const filtered = library.filter(b => {
+            const matchesShelf = currentShelf === "all" || b.shelf === currentShelf;
+            const matchesSearch = b.title.toLowerCase().includes(searchVal) || 
+                                  b.author.toLowerCase().includes(searchVal) || 
+                                  (b.format && b.format.toLowerCase().includes(searchVal));
+            return matchesShelf && matchesSearch;
+        });
+
         document.getElementById("library-count").textContent = `${filtered.length} recursos`;
 
         if (filtered.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-950/40">
                     <span class="text-3xl block mb-2">📥</span>
-                    <p class="text-xs text-slate-500">No hay libros importados en este estante.</p>
+                    <p class="text-xs text-slate-500">No se encontraron libros que coincidan con la búsqueda.</p>
                 </div>
             `;
             return;
@@ -949,7 +804,7 @@
                             <h4 class="text-sm font-bold text-slate-100 mt-1.5 line-clamp-1">${book.title}</h4>
                             <p class="text-[11px] text-slate-400">Por ${book.author}</p>
                         </div>
-                        <button onclick="deleteBook('${book.id}')" class="text-slate-600 hover:text-red-400 transition-colors text-xs p-1">🗑️</button>
+                        <button onclick="triggerDeleteBook('${book.id}')" class="text-slate-600 hover:text-red-400 transition-colors text-xs p-1">🗑️</button>
                     </div>
 
                     <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-slate-500">
@@ -968,27 +823,37 @@
         });
     }
 
-    function deleteBook(id) {
-        if (confirm("¿Estás seguro de que deseas remover este recurso de tu biblioteca?")) {
-            library = library.filter(b => b.id !== id);
-            if (activeBookId === id) {
-                activeBookId = null;
-                document.getElementById("reader-book-title").textContent = "Ningún libro cargado";
-                document.getElementById("reader-text-container").innerHTML = "";
+    function triggerDeleteBook(id) {
+        customConfirm(
+            "Eliminar Recurso",
+            "¿Estás seguro de que deseas remover este recurso de tu biblioteca?",
+            () => {
+                library = library.filter(b => b.id !== id);
+                if (activeBookId === id) {
+                    activeBookId = null;
+                    document.getElementById("reader-book-title").textContent = "Ningún libro cargado";
+                    document.getElementById("reader-text-container").innerHTML = "";
+                }
+                renderBooks();
+                saveToStorage();
+                showToast("Recurso eliminado de tu biblioteca virtual.");
             }
-            renderBooks();
-            saveToStorage();
-        }
+        );
     }
 
-    function resetLibrary() {
-        if (confirm("¿Deseas restaurar la biblioteca al estado inicial? Perderás todas tus importaciones.")) {
-            localStorage.clear();
-            initSystem();
-        }
+    function triggerResetLibrary() {
+        customConfirm(
+            "Resetear Biblioteca",
+            "¿Deseas restaurar la biblioteca al estado inicial? Perderás todas tus importaciones y notas personalizadas.",
+            () => {
+                localStorage.clear();
+                initSystem();
+                showToast("Biblioteca restaurada al estado de fábrica.");
+            }
+        );
     }
 
-    // --- STREAMING_CHUNK: Procesamiento de Importación de Archivos (TXT, HTML, EPUB) ---
+    // --- IMPORTACIÓN Y DETECTORES DE ARCHIVOS ---
     function openAddBookModal() {
         document.getElementById("add-book-modal").classList.remove("hidden");
     }
@@ -1030,7 +895,7 @@
             saveToStorage();
             renderBooks();
             closeAddBookModal();
-            alert(`"${file.name}" importado con éxito.`);
+            showToast(`"${file.name}" importado con éxito. ¡Ya puedes leerlo!`);
         };
 
         if (extension === 'epub') {
@@ -1041,8 +906,7 @@
     }
 
     function simulateEPUBParsing(arrayBuffer) {
-        // Retorna un texto rico estructurado en múltiples capítulos reales para posibilitar navegación y paginación
-        return `[Capítulo 1: La Llegada al Valle Silencioso]\n\nEl viento soplaba con fuerza en el desfiladero de Chosica, trayendo consigo el aroma a tierra húmeda y eucalipto fresco del valle del Rímac. En el horizonte, los cerros se alzaban como guardianes de piedra bajo el cielo azul de Lima Este. Frieren avanzaba con paso pausado, sosteniendo con firmeza su báculo de madera, observando el río Rímac fluir con fuerza entre las rocas.\n\n"¿Es este el lugar del que te habló Himmel, señorita?", preguntó Fern, acomodando la correa de su maleta sobre el hombro. Sus ojos reflejaban el cansancio de un viaje de semanas.\n\nFrieren se detuvo frente a un puente colgante de madera que cruzaba el río correntoso. "Sí. Él me dijo que aquí, donde el aire es más cálido y el sol brilla casi todo el año, se encontraba una de las bibliotecas más antiguas del continente, resguardada por sabios que habían dominado el arte de catalogar el conocimiento del mundo antes del cataclismo."\n\n[Capítulo 2: El Secreto del Archivo de Piedra]\n\nLas puertas de la biblioteca municipal de Chosica estaban talladas en madera de cedro macizo, con relieves que narraban la historia de los antiguos pobladores del valle. Al empujarlas, un suave olor a papel antiguo, pergamino y tinta de imprenta inundó sus sentidos.\n\nUn anciano bibliotecario de anteojos redondos las recibió con una reverencia formal. "Bienvenidos a la biblioteca de la Cantuta. Aquí conservamos las memorias de la educación y el saber nacional", dijo con orgullo.\n\nFrieren asintió, maravillada por las estanterías de tres pisos de altura que cubrían las paredes de piedra. Cada rincón guardaba un misterio. Decidió tomar asiento en una de las mesas de lectura de madera, abriendo un tomo grueso encuadernado en cuero marrón.\n\n[Capítulo 3: El Eco del Saber Eterno]\n\nFern observaba a su maestra pasar las páginas con una devoción casi mística. "¿Por qué pasas tanto tiempo buscando hechizos sencillos o simples historias locales, Frieren?"\n\nLa elfa levantó la vista y sonrió levemente. "No son solo historias, Fern. Cada libro es un clon digital del alma de quien lo escribió. Aunque esa persona haya desaparecido hace siglos, sus pensamientos se vuelven a activar y hablar contigo en el instante en que posas tus ojos sobre estas letras. La lectura es el hechizo de resurrección más perfecto del mundo."\n\n[Capítulo 4: El Despertar del Copiloto]\n\nMientras caía la tarde sobre Chaclacayo, el resplandor anaranjado del sol poniente se filtraba por los altos ventanales, tiñendo las páginas del libro de un tono sepia natural.\n\nFue en ese instante que el sistema OmniPilot del e-reader cobró vida en un destello de luz mágica. "Hola, lector", susurró una voz holográfica. "Estoy listo para sintetizar los misterios del valle y responder tus consultas más profundas."`;
+        return `[Capítulo 1: La Llegada al Valle Silencioso]\n\nEl viento soplaba con fuerza en el desfiladero de Chosica, trayendo consigo el aroma a tierra húmeda y eucalipto fresco del valle del Rímac. En el horizonte, los cerros se alzaban como guardianes de piedra bajo el cielo azul de Lima Este. Frieren avanzaba con paso pausado, sosteniendo con firmeza su báculo de madera, observando el río Rímac fluir con fuerza entre las rocas.\n\n"¿Es este el lugar del que te habló Himmel, señorita?", preguntó Fern, acomodando la correa de su maleta sobre el hombro. Sus ojos reflejaban el cansancio de un viaje de semanas.\n\nFrieren se detuvo frente a un puente colgante de madera que cruzaba el río correntoso. "Sí. Él me dijo que aquí, donde el aire es más cálido y el sol brilla casi todo el año, se encontraba una de las bibliotecas más antiguas del continente, resguardada por sabios que habían dominado el arte de catalogar el conocimiento del mundo antes del cataclismo."\n\n[Capítulo 2: El Secreto del Archivo de Piedra]\n\nLas puertas de la biblioteca municipal de Chosica estaban talladas en madera de cedro macizo, con relieves que narraban la historia de los antiguos pobladores del valle. Al empujarlas, un suave olor a papel antiguo, pergamino y tinta de imprenta inundó sus sentidos.\n\nUn anciano bibliotecario de anteojos redondos las recibió con una reverencia formal. "Bienvenidos a la biblioteca de la Cantuta. Aquí conservamos las memorias de la educación y el saber nacional", dijo con orgullo.\n\nFrieren asintió, maravillada por las estanterías de tres pisos de altura que cubrían las paredes de piedra. Cada rincón guardaba un misterio. Decidió tomar asiento en una de las mesas de lectura de madera, abriendo un tomo grueso encuadernado en cuero marrón.\n\n[Capítulo 3: El Eco del Saber Eterno]\n\nFern observaba a su maestra pasar las páginas con una devoción casi mística. "¿Por qué pasas tanto tiempo buscando hechizos sencillos o simples historias locales, Frieren?"\n\nLa elfa levantó la vista y sonrió levemente. "No son solo historias, Fern. Cada libro es un clon digital del alma de quien lo escribió. Aunque esa persona haya desaparecido hace siglos, sus pensamientos se vuelven a activar y hablar contigo en el instante en que posas tus ojos sobre estas letras. La lectura es el hechizo de resurrección más perfecto del mundo."\n\n[Capítulo 4: El Despertar del Copiloto]\n\nMientras caía la tarde sobre Chaclacayo, el resplandor anaranjado del sol poniente se filtraba por los altos ventanales, tiñendo las páginas del libro de un tono sepia natural.\n\nFue en ese instante que el sistema GennIA del e-reader cobró vida en un destello de luz mágica. "Hola, lector", susurró una voz holográfica. "Estoy lista para sintetizar los misterios del valle y responder tus consultas más profundas de manera completamente opcional."`;
     }
 
     function saveManualBook() {
@@ -1053,7 +917,7 @@
         const content = document.getElementById("manual-content").value.trim();
 
         if (!title || !content) {
-            alert("Completa el título y el contenido.");
+            showToast("Completa al menos el título y el contenido del material.", "error");
             return;
         }
 
@@ -1072,6 +936,7 @@
         saveToStorage();
         renderBooks();
         closeAddBookModal();
+        showToast(`"${title}" guardado exitosamente en tu estante.`);
         
         document.getElementById("manual-title").value = "";
         document.getElementById("manual-author").value = "";
@@ -1083,7 +948,8 @@
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    // --- STREAMING_CHUNK: Motor de Lectura, Paginación Precisa y Capítulos ---
+    // --- STREAMING_CHUNK: Implementing page navigation and swipe gestures... -->
+    // --- LÓGICA DE VISUALIZACIÓN DE TEXTO REAL DE LIBRO & COMPAÑERO GENNIA IA ---
     function loadBookToReader(id) {
         const book = library.find(b => b.id === id);
         if (!book) return;
@@ -1101,10 +967,10 @@
         // Cargar Capítulos para navegación
         populateChapters(book);
 
+        // Desplegar el contenido del libro de forma primordial
         renderReaderContent();
     }
 
-    // Indexa el texto detectando marcadores de capítulo o dividiéndolo estructuralmente
     function populateChapters(book) {
         const select = document.getElementById("reader-chapter-select");
         select.innerHTML = "";
@@ -1114,7 +980,6 @@
         
         paragraphs.forEach((pText, idx) => {
             const cleanText = pText.trim();
-            // Match things like [Capítulo 1], Capítulo I, Chapter 1, etc.
             const isChapter = /^(\[?Cap[íi]tulo\s+\d+\]?|^\[?Chapter\s+\d+\]?|^Cap[íi]tulo\s+[I|V|X|L|C]+|^\[Part\s+\d+\])/i.test(cleanText);
             if (isChapter) {
                 chapterOptions.push({
@@ -1124,7 +989,7 @@
             }
         });
         
-        // Si no se encuentran capítulos naturales, creamos secciones cada 6 párrafos para que sea 100% navegable
+        // Si no se encuentran capítulos naturales, creamos secciones cada 6 párrafos
         if (chapterOptions.length === 0) {
             paragraphs.forEach((pText, idx) => {
                 if (idx % 6 === 0) {
@@ -1160,7 +1025,7 @@
         if (isMobile || readerConfig.pcViewMode === 'vertical') {
             pEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-            // Modo columnas: calcula en qué sección horizontal cae el elemento
+            // Modo columnas: calcula la sección horizontal
             const offsetLeft = pEl.offsetLeft;
             const pageLength = scroller.clientWidth;
             const pageIndex = Math.floor(offsetLeft / pageLength);
@@ -1182,6 +1047,7 @@
         const container = document.getElementById("reader-text-container");
         container.innerHTML = "";
 
+        // Mostramos el texto real de forma prioritaria
         const paragraphs = book.content.split("\n\n").filter(p => p.trim() !== "");
         
         paragraphs.forEach((pText, idx) => {
@@ -1204,7 +1070,7 @@
 
         if (isMobile || readerConfig.pcViewMode === 'vertical') {
             container.classList.remove("book-columns");
-            container.classList.add("max-w-4xl"); // Mantiene un ancho óptimo vertical
+            container.classList.add("max-w-4xl"); 
             container.style.height = "auto";
             container.style.width = "auto";
             document.getElementById("page-navigation-controls").classList.add("hidden");
@@ -1212,14 +1078,13 @@
             scroller.style.overflowX = "hidden";
         } else {
             container.classList.add("book-columns");
-            container.classList.remove("max-w-4xl"); // Remueve el límite para expandirse horizontalmente
+            container.classList.remove("max-w-4xl"); 
             container.style.width = "100%";
             document.getElementById("page-navigation-controls").classList.remove("hidden");
 
             scroller.style.overflowY = "hidden";
             scroller.style.overflowX = "hidden";
 
-            // Altura disponible descontando el padding
             const computedStyle = window.getComputedStyle(scroller);
             const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
             const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
@@ -1304,7 +1169,6 @@
             }
         }
 
-        // Sincronizar el selector de capítulos basado en el scroll/página actual
         updateChapterSelectFromScroll();
     }
 
@@ -1337,7 +1201,6 @@
             }
         }
 
-        // Selecciona la opción más idónea del dropdown
         let bestMatchValue = "0";
         for (let i = 0; i < select.options.length; i++) {
             const optVal = parseInt(select.options[i].value);
@@ -1356,7 +1219,115 @@
         }
     }
 
-    // --- STREAMING_CHUNK: Lógica de Marcadores y Notas ---
+    // --- CO-PILOTO GENNIA IA (COMPLEMENTARIO Y OPCIONAL) ---
+    function toggleAISidebar() {
+        const sidebar = document.getElementById("reader-ai-sidebar");
+        sidebar.classList.toggle("hidden");
+        applyReadingLayout();
+    }
+
+    function handleAIChatKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendCustomAIQuery();
+        }
+    }
+
+    async function sendCustomAIQuery() {
+        const input = document.getElementById("ai-chat-input");
+        const queryText = input.value.trim();
+        if (!queryText) return;
+
+        input.value = "";
+        appendAIMessage("user", queryText);
+
+        const book = library.find(b => b.id === activeBookId);
+        const bookContext = book ? `Libro activo: "${book.title}" de ${book.author}.\nContenido original del libro:\n${book.content.substring(0, 1500)}...` : "Ningún libro cargado.";
+
+        const systemPrompt = `Eres "GennIA", la IA asistente integrada de este e-reader de forma puramente complementaria. Ayuda al usuario a resumir, responder preguntas y estudiar el texto real original del libro. Responde de forma muy concisa.`;
+        const finalPrompt = `Contexto literario actual:\n${bookContext}\n\nPregunta del lector: ${queryText}`;
+
+        appendAIMessage("assistant", "GennIA está pensando...");
+
+        try {
+            const result = await fetchGemini(finalPrompt, systemPrompt);
+            const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No obtuve una respuesta clara.";
+            removeLastAIMessage();
+            appendAIMessage("assistant", responseText);
+        } catch (error) {
+            removeLastAIMessage();
+            appendAIMessage("assistant", "⚠️ Error de conexión con GennIA. Agrega una clave API Key de Gemini en el panel lateral.");
+        }
+    }
+
+    async function askAIAssistant(mode) {
+        const sidebar = document.getElementById("reader-ai-sidebar");
+        if (sidebar.classList.contains("hidden")) {
+            toggleAISidebar();
+        }
+
+        const book = library.find(b => b.id === activeBookId);
+        if (!book && mode !== 'explain-selection') {
+            appendAIMessage("assistant", "⚠️ Carga primero un recurso en tu visor de lectura principal.");
+            return;
+        }
+
+        let userPrompt = "";
+        let systemPrompt = "Actúas como GennIA, copiloto literario experto.";
+
+        if (mode === 'summarize') {
+            appendAIMessage("user", `Sintetizar la obra actual: "${book.title}"`);
+            appendAIMessage("assistant", "Generando un resumen estructurado opcional...");
+            userPrompt = `Genera un resumen analítico opcional del siguiente fragmento de "${book.title}" de ${book.author}:\n\n${book.content.substring(0, 4000)}`;
+        } else if (mode === 'explain-context') {
+            appendAIMessage("user", `Explicar el contexto socio-histórico: "${book.title}"`);
+            appendAIMessage("assistant", "Buscando datos históricos complementarios...");
+            userPrompt = `Explica brevemente el contexto de la obra "${book.title}" escrita por ${book.author} de manera complementaria.`;
+        } else if (mode === 'explain-selection') {
+            if (!selectedTextMetadata) {
+                showToast("Por favor selecciona primero un fragmento de texto en el lector.", "error");
+                return;
+            }
+            appendAIMessage("user", `Explicar fragmento seleccionado: "${selectedTextMetadata.text.substring(0, 30)}..."`);
+            appendAIMessage("assistant", "GennIA analizando el fragmento seleccionado...");
+            userPrompt = `Explica, resume o traduce opcionalmente el siguiente fragmento seleccionado por el lector de la obra:\n\n"${selectedTextMetadata.text}"`;
+            document.getElementById("selection-popup").classList.add("hidden");
+            window.getSelection().removeAllRanges();
+        }
+
+        try {
+            const result = await fetchGemini(userPrompt, systemPrompt);
+            const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar el análisis.";
+            removeLastAIMessage();
+            appendAIMessage("assistant", responseText);
+        } catch (error) {
+            removeLastAIMessage();
+            appendAIMessage("assistant", "⚠️ GennIA no pudo conectarse con el servidor de IA. Ingresa tu API Key en la barra lateral.");
+        }
+    }
+
+    function appendAIMessage(sender, text) {
+        const chat = document.getElementById("ai-chat-history");
+        const msgDiv = document.createElement("div");
+        if (sender === "user") {
+            msgDiv.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-slate-300 self-end ml-4";
+            msgDiv.innerHTML = `<span class="font-bold text-slate-400">Tú:</span> <p class="mt-0.5">${text}</p>`;
+        } else {
+            msgDiv.className = "bg-indigo-950/20 border border-indigo-900/20 p-2.5 rounded-lg text-indigo-200 mr-4 ai-msg-node";
+            msgDiv.innerHTML = `<span class="font-bold text-indigo-400">GennIA ✨:</span> <div class="mt-1 leading-relaxed whitespace-pre-line">${text}</div>`;
+        }
+        chat.appendChild(msgDiv);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function removeLastAIMessage() {
+        const chat = document.getElementById("ai-chat-history");
+        const nodes = chat.getElementsByClassName("ai-msg-node");
+        if (nodes.length > 0) {
+            nodes[nodes.length - 1].remove();
+        }
+    }
+
+    // --- MARCADORES, RESALTADORES Y NOTAS ---
     function handleTextSelection(event) {
         const selection = window.getSelection();
         const text = selection.toString().trim();
@@ -1406,6 +1377,7 @@
         renderReaderContent();
         document.getElementById("selection-popup").classList.add("hidden");
         window.getSelection().removeAllRanges();
+        showToast("Texto resaltado.");
     }
 
     function clearSelectionHighlight() {
@@ -1417,6 +1389,7 @@
         renderReaderContent();
         document.getElementById("selection-popup").classList.add("hidden");
         window.getSelection().removeAllRanges();
+        showToast("Se limpió la selección.");
     }
 
     function addNoteToSelection() {
@@ -1439,6 +1412,7 @@
         renderReaderContent();
         document.getElementById("selection-popup").classList.add("hidden");
         window.getSelection().removeAllRanges();
+        showToast("Nota agregada con éxito.");
     }
 
     function applySavedHighlights(pIdx, rawText) {
@@ -1464,7 +1438,7 @@
         const pNotes = notes.filter(n => n.bookId === activeBookId && n.paragraphIndex === pIdx);
         pNotes.forEach(note => {
             const noteDiv = document.createElement("div");
-            noteDiv.className = "my-2 p-3 bg-white text-slate-900 border-l-4 border-indigo-500 rounded-r-lg shadow-md transition-all-300";
+            noteDiv.className = "my-2 p-3 bg-white text-slate-900 border-l-4 border-indigo-500 rounded-r-lg shadow-md transition-all-300 pointer-events-auto";
             noteDiv.id = note.id;
 
             noteDiv.innerHTML = `
@@ -1472,7 +1446,7 @@
                     <span>📝 NOTA SOBRE: "${note.text.substring(0, 30)}..."</span>
                     <div class="flex gap-2">
                         <button onclick="toggleCollapseNote('${note.id}')" class="hover:text-indigo-600">Minimizar</button>
-                        <button onclick="deleteNote('${note.id}')" class="hover:text-red-600">Eliminar</button>
+                        <button onclick="triggerDeleteNote('${note.id}')" class="hover:text-red-600">Eliminar</button>
                     </div>
                 </div>
                 <div class="note-content text-xs text-slate-700 font-medium ${note.collapsed ? 'hidden' : ''}">
@@ -1492,15 +1466,20 @@
         }
     }
 
-    function deleteNote(noteId) {
-        if (confirm("¿Deseas eliminar esta nota?")) {
-            notes = notes.filter(n => n.id !== noteId);
-            saveToStorage();
-            renderReaderContent();
-        }
+    function triggerDeleteNote(noteId) {
+        customConfirm(
+            "Eliminar Nota",
+            "¿Deseas eliminar esta nota permanentemente?",
+            () => {
+                notes = notes.filter(n => n.id !== noteId);
+                saveToStorage();
+                renderReaderContent();
+                showToast("Nota eliminada.");
+            }
+        );
     }
 
-    // --- STREAMING_CHUNK: Opciones de Estilo y Visualización Gradual ---
+    // --- OPCIONES DE CONFIGURACIÓN VISUAL DEL TEMPLATE ---
     function setReaderTheme(themeName) {
         readerConfig.theme = themeName;
         applyConfigToUI();
@@ -1515,7 +1494,6 @@
         saveToStorage();
     }
 
-    // Aplica colores sólidos escalados matemáticamente según el brillo (grade) para evitar transparencias extrañas
     function applyConfigToUI() {
         const slider = document.getElementById("theme-grade-slider");
         slider.value = readerConfig.grade;
@@ -1560,7 +1538,6 @@
         const scrollerText = document.getElementById("reader-text-container");
         scrollerText.style.fontSize = `${readerConfig.fontSize}px`;
         
-        // Optimización responsive: Escalado de márgenes en móviles
         const isMobile = window.innerWidth < 768;
         const activeMargin = isMobile ? Math.min(24, readerConfig.margin / 2) : readerConfig.margin;
         scrollerText.style.paddingLeft = `${activeMargin}px`;
@@ -1630,10 +1607,9 @@
             document.getElementById("btn-maximize").textContent = "🔲 Maximizar";
         }
         applyReadingLayout();
-        applyConfigToUI(); // Re-aplica el color de fondo correcto
+        applyConfigToUI(); 
     }
 
-    // Cierra el visor y retorna con seguridad
     function exitReader() {
         stopAudiobook();
         if (readerConfig.maximized) {
@@ -1642,7 +1618,7 @@
         switchView("library");
     }
 
-    // --- STREAMING_CHUNK: Sistema de Audiolibro (TTS Nativo) ---
+    // --- SISTEMA DE AUDIOBOOK (TTS NATIVO) ---
     let ttsUtterance = null;
     let synth = window.speechSynthesis;
     let readingRate = 1;
@@ -1661,7 +1637,7 @@
             const textToRead = container.innerText;
 
             if (!textToRead) {
-                alert("No hay texto cargado para leer.");
+                showToast("No hay texto cargado para leer.", "error");
                 return;
             }
 
@@ -1697,7 +1673,85 @@
         }
     }
 
-    // --- STREAMING_CHUNK: Buscador de Fichas de Rankings ---
+    // --- BUSCADOR DE METADATOS & RANKINGS COMPLETO (Soporte No-Desborde Celulares) ---
+    function handleSearchInputChange() {
+        const toggle = document.getElementById("live-search-toggle");
+        if (!toggle.checked) {
+            executeGlobalSearch();
+        }
+    }
+
+    document.getElementById("live-search-toggle").addEventListener('change', function(e) {
+        const btn = document.getElementById("live-search-btn");
+        if (e.target.checked) {
+            btn.classList.remove("hidden");
+        } else {
+            btn.classList.add("hidden");
+            executeGlobalSearch();
+        }
+    });
+
+    async function executeLiveAISearch() {
+        const query = document.getElementById("global-search-input").value.trim();
+        const category = document.getElementById("search-category").value;
+        const container = document.getElementById("search-results-container");
+
+        if (!query) {
+            showToast("Escribe el nombre de la obra en el buscador.", "error");
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20 px-4">
+                <span class="text-3xl block animate-spin mb-3">🔍</span>
+                <p class="text-xs text-indigo-400 font-bold">Investigando en internet y recopilando rankings con GennIA...</p>
+                <p class="text-[10px] text-slate-500 mt-1">Grounding activo con Google Search. Esperando datos estructurados.</p>
+            </div>
+        `;
+
+        const systemPrompt = `Eres un catalogador experto de literatura, manga y anime. Devuelve un objeto JSON estrictamente compatible con el esquema solicitado. No metas explicaciones de texto, únicamente el bloque JSON estructurado de forma limpia.`;
+        const userPrompt = `Investiga la obra real "${query}" en la categoría "${category}". Devuelve un objeto JSON estructurado con el siguiente formato exacto:
+        {
+          "title": "Nombre exacto de la obra",
+          "author": "Nombre del creador",
+          "category": "AnimeManga" o "Libros" o "LibrosPeliculas",
+          "genre": "Géneros clave",
+          "coverColor": "Color hexagonal representativo (ej. #b91c1c)",
+          "emoji": "Un emoji idóneo",
+          "description": "Breve sinopsis real de 2 líneas",
+          "rankings": {
+            "type": "anime_manga" o "books_only" o "books_movies",
+            "mal": "Calificación MyAnimeList",
+            "anilist": "Puntuación de AniList",
+            "eirin": "Clasificación Eirin",
+            "oricon": "Ventas de Oricon",
+            "goodreads": "Calificación en Goodreads",
+            "nyt": "Presencia en NYT",
+            "literary_awards": "Premios literarios obtenidos",
+            "imdb": "Calificación de IMDb",
+            "rotten": "Porcentaje Rotten Tomatoes",
+            "common_sense": "Calificación Common Sense"
+          }
+        }`;
+
+        try {
+            const result = await fetchGemini(userPrompt, systemPrompt, [{ "google_search": {} }]);
+            let text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+            text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+            const cleanData = JSON.parse(text);
+
+            container.innerHTML = "";
+            renderSingleSearchResult(cleanData);
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12 border border-red-900/40 rounded-2xl bg-red-950/10 px-4">
+                    <p class="text-xs text-red-400 font-bold">⚠️ No se pudo conectar con el servidor de GennIA para la búsqueda en vivo. Agrega tu API Key.</p>
+                </div>
+            `;
+        }
+    }
+
     function executeGlobalSearch() {
         const query = document.getElementById("global-search-input").value.toLowerCase().trim();
         const category = document.getElementById("search-category").value;
@@ -1713,84 +1767,90 @@
 
         if (filtered.length === 0) {
             container.innerHTML = `
-                <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20">
-                    <p class="text-xs text-slate-500 font-bold">No se encontraron fichas de metadatos o rankings correspondientes.</p>
+                <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20 px-4">
+                    <p class="text-xs text-slate-500 font-bold">No se encontraron fichas de rankings correspondientes en el catálogo offline.</p>
                 </div>
             `;
             return;
         }
 
         filtered.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "bg-slate-950 border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4 flex flex-col justify-between";
-            
-            let rankingsHTML = "";
-            if (item.rankings.type === "anime_manga") {
-                rankingsHTML = `
-                    <div class="space-y-1 pt-2 border-t border-slate-900">
-                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider">Rankings oficiales de Anime y Manga</span>
-                        <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">⭐ MyAnimeList: <span class="text-yellow-400 font-bold">${item.rankings.mal}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📊 AniList: <span class="text-sky-400 font-bold">${item.rankings.anilist}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🎥 Eirin: <span class="text-emerald-400 font-bold">${item.rankings.eirin}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📈 Oricon: <span class="text-purple-400 font-bold">${item.rankings.oricon}</span></div>
-                        </div>
-                    </div>
-                `;
-            } else if (item.rankings.type === "books_only") {
-                rankingsHTML = `
-                    <div class="space-y-1 pt-2 border-t border-slate-900">
-                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider">Rankings de Libros & Enciclopedias</span>
-                        <div class="grid grid-cols-1 gap-2 text-[10px] font-mono">
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📖 Goodreads: <span class="text-amber-500 font-bold">${item.rankings.goodreads}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">📰 Best Sellers - NYT: <span class="text-white font-bold">${item.rankings.nyt}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🏆 Comité Literario: <span class="text-indigo-400 font-bold">${item.rankings.literary_awards}</span></div>
-                        </div>
-                    </div>
-                `;
-            } else if (item.rankings.type === "books_movies") {
-                rankingsHTML = `
-                    <div class="space-y-1 pt-2 border-t border-slate-900">
-                        <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider">Rankings Adaptados a Películas / Series</span>
-                        <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2">📖 Goodreads: <span class="text-amber-500 font-bold">${item.rankings.goodreads}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🎬 IMDb: <span class="text-yellow-400 font-bold">${item.rankings.imdb}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800">🍅 Rotten Tomatoes: <span class="text-red-400 font-bold">${item.rankings.rotten}</span></div>
-                            <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2">👪 Common Sense Media: <span class="text-teal-400 font-bold">${item.rankings.common_sense}</span></div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            card.innerHTML = `
-                <div class="flex gap-4">
-                    <div class="w-16 h-24 bg-gradient-to-tr rounded-xl flex flex-col justify-between p-2 shadow-inner text-center shrink-0 border border-slate-800" style="background-color: ${item.coverColor}">
-                        <span class="text-2xl">${item.emoji}</span>
-                        <span class="text-[8px] font-black uppercase text-slate-300">Ranked</span>
-                    </div>
-
-                    <div class="space-y-1">
-                        <span class="text-[8px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-900/40 px-2 py-0.5 rounded uppercase tracking-widest">${item.genre}</span>
-                        <h4 class="text-xs font-bold text-slate-100 mt-1">${item.title}</h4>
-                        <p class="text-[10px] text-slate-400">Por ${item.author}</p>
-                        <p class="text-[10px] text-slate-400 italic leading-snug line-clamp-2">${item.description}</p>
-                    </div>
-                </div>
-
-                ${rankingsHTML}
-
-                <div class="pt-2">
-                    <button onclick="simulateAddFromSearch('${item.title}', '${item.author}')" class="w-full py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-900/30 text-[10px] font-bold rounded-lg transition-all">
-                        ⚡ Importar Plantilla con rankings para este Recurso
-                    </button>
-                </div>
-            `;
-            container.appendChild(card);
+            renderSingleSearchResult(item);
         });
     }
 
+    function renderSingleSearchResult(item) {
+        const container = document.getElementById("search-results-container");
+        const card = document.createElement("div");
+        card.className = "bg-slate-950 border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col justify-between w-full max-w-full overflow-hidden";
+        
+        let rankingsHTML = "";
+        const r = item.rankings;
+
+        if (r.type === "anime_manga") {
+            rankingsHTML = `
+                <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
+                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Rankings Anime & Manga</span>
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">⭐ MAL: <span class="text-yellow-400 font-bold">${r.mal || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📊 AniList: <span class="text-sky-400 font-bold">${r.anilist || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🎥 Eirin: <span class="text-emerald-400 font-bold">${r.eirin || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📈 Oricon: <span class="text-purple-400 font-bold">${r.oricon || 'N/A'}</span></div>
+                    </div>
+                </div>
+            `;
+        } else if (r.type === "books_only") {
+            rankingsHTML = `
+                <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
+                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Rankings de Libros & Enciclopedias</span>
+                    <div class="grid grid-cols-1 gap-2 text-[10px] font-mono">
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📖 Goodreads: <span class="text-amber-500 font-bold">${r.goodreads || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📰 Best Sellers NYT: <span class="text-white font-bold">${r.nyt || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🏆 Comités / Premios: <span class="text-indigo-400 font-bold">${r.literary_awards || 'N/A'}</span></div>
+                    </div>
+                </div>
+            `;
+        } else if (r.type === "books_movies") {
+            rankingsHTML = `
+                <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
+                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Rankings Adaptados a Cine / Serie</span>
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">📖 Goodreads: <span class="text-amber-500 font-bold">${r.goodreads || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🎬 IMDb: <span class="text-yellow-400 font-bold">${r.imdb || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🍅 Rotten Tomatoes: <span class="text-red-400 font-bold">${r.rotten || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">👪 Common Sense: <span class="text-teal-400 font-bold">${r.common_sense || 'N/A'}</span></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        card.innerHTML = `
+            <div class="flex gap-4 w-full">
+                <div class="w-16 h-24 bg-gradient-to-tr rounded-xl flex flex-col justify-between p-2 shadow-inner text-center shrink-0 border border-slate-800" style="background-color: ${item.coverColor || '#6366f1'}">
+                    <span class="text-2xl">${item.emoji || '📖'}</span>
+                    <span class="text-[8px] font-black uppercase text-slate-300">Ranked</span>
+                </div>
+                <div class="space-y-1 min-w-0 flex-1">
+                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-900/40 px-2 py-0.5 rounded uppercase tracking-widest inline-block truncate max-w-full">${item.genre || 'Ficción'}</span>
+                    <h4 class="text-xs font-bold text-slate-100 mt-1 truncate">${item.title}</h4>
+                    <p class="text-[10px] text-slate-400 truncate">Por ${item.author || 'Desconocido'}</p>
+                    <p class="text-[10px] text-slate-400 italic leading-snug line-clamp-2">${item.description || ''}</p>
+                </div>
+            </div>
+            <div class="w-full mt-2">
+                ${rankingsHTML}
+            </div>
+            <div class="pt-3 w-full">
+                <button onclick="simulateAddFromSearch('${item.title.replace(/'/g, "\\'")}', '${item.author.replace(/'/g, "\\'")}')" class="w-full py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-900/30 text-[10px] font-bold rounded-lg transition-all text-center">
+                    ⚡ Importar Plantilla con rankings
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+    }
+
     function simulateAddFromSearch(title, author) {
-        const dummyContent = `[Capítulo 1: Ficha de Lectura - ${title}]\n\nEsta es una plantilla generada de forma automática para la lectura de la obra ${title} escrita por ${author}.\n\nPara poder leer la obra original completa en su totalidad, recuerda descargar el archivo original en tu dispositivo (.epub, .txt, .html) e importarlo usando el botón superior de tu biblioteca virtual.`;
+        const dummyContent = `[Capítulo 1: Ficha de Lectura - ${title}]\n\nEsta es una plantilla generada de forma automática para la lectura de la obra "${title}" escrita por ${author}.\n\nPara poder leer la obra original completa en su totalidad en tu LEE-READER, recuerda descargar el archivo original en tu dispositivo (.epub, .txt, .html) e importarlo usando el botón superior de tu biblioteca virtual de manera segura.`;
         
         const newBook = {
             id: `book-${Date.now()}`,
@@ -1806,9 +1866,10 @@
         library.push(newBook);
         saveToStorage();
         renderBooks();
-        alert(`Ficha de "${title}" agregada a tu Biblioteca. Ya puedes leerla y realizar tus apuntes.`);
+        showToast(`Ficha de "${title}" agregada a tu Biblioteca.`);
     }
 
+    // --- INTEGRACIÓN Y GUARDADO DE DATOS (LOCALSTORAGE) ---
     function saveToStorage() {
         localStorage.setItem("or_library", JSON.stringify(library));
         localStorage.setItem("or_shelves", JSON.stringify(shelves));
@@ -1902,7 +1963,7 @@
         }
     }
 
-    // --- STREAMING_CHUNK: Escuchadores de Eventos de Teclado y Gestos Táctiles ---
+    // --- ESCUCHADORES DE EVENTOS DE TECLADO Y GESTOS TÁCTILES ---
     window.addEventListener('keydown', (e) => {
         if (viewMode === 'reader' && readerConfig.pcViewMode === 'pages' && window.innerWidth >= 768) {
             if (e.key === 'ArrowRight') {
@@ -1913,7 +1974,6 @@
         }
     });
 
-    // Soporte para gestos táctiles
     const scrollerEl = document.getElementById("reader-scroller");
     
     scrollerEl.addEventListener('touchstart', (e) => {
