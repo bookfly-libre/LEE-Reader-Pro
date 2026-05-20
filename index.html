@@ -354,22 +354,45 @@
                     class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[10px] outline-none focus:border-teal-500 text-slate-300 min-w-0 max-w-[120px] truncate"
 
                     function renderChapters(book) {
-                        const select = document.getElementById("reader-chapter-select");
-                        if (!select) return;
+    const select = document.getElementById("reader-chapter-select");
+        if (!select) return;
 
-                        select.innerHTML = "";
+    select.innerHTML = "";
 
-                        const chapters = extractChapters(book.content); // o tu lógica real
+    if (!book || !book.content) return;
 
-                        chapters.forEach((ch, i) => {
-                            const opt = document.createElement("option");
-                            opt.value = i;
-                            opt.textContent = ch.title;
-                            select.appendChild(opt);
-                        });
-                    }
+    const chapters = extractChaptersFromText(book.content);
+
+    if (chapters.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "Sin capítulos detectados";
+        opt.value = 0;
+        select.appendChild(opt);
+        return;
+    }
+
+    chapters.forEach((ch, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = ch.title || `Capítulo ${i + 1}`;
+        select.appendChild(opt);
+    });
+}
                     
-                    </select>
+           function extractChaptersFromText(text) {
+    const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
+
+    const matches = [...text.matchAll(regex)];
+
+    if (matches.length === 0) return [];
+
+    return matches.map((m, i) => ({
+        title: m[0],
+        index: m.index
+    }));
+}        
+                
+                </select>
                 <span id="gennia-complexity-badge" class="hidden px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 font-bold tracking-wide uppercase"></span>
 
             <button onclick="toggleAISidebar()" class="...">
@@ -1227,6 +1250,8 @@ function syncReaderFloatingChrome() {
         switchView("reader");
 
         renderReaderContent(book);
+
+        renderChapters(book);
 
         requestAnimationFrame(() => {
             const scroller = document.getElementById("reader-scroller");
