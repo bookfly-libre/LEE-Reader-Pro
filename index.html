@@ -283,216 +283,113 @@
     <!-- SECCIÓN: VISOR E-READER -->
     <section id="view-reader" class="hidden flex-1 flex flex-col">
 
-  <!-- Controles flotantes -->
-        
-  <div id="reader-float-controls" class="hidden">
-    <button onclick="toggleMaximizeReader()" title="Minimizar">−</button>
-    <button onclick="toggleMaximizeReader()" title="Maximizar / Restaurar">□</button>
-    <button onclick="exitReader()" title="Cerrar">X</button>
-    <button onclick="toggleReaderOrientation()" title="V / H">V/H</button>
-  </div>
+        <!-- Controles flotantes -->
+        <div id="reader-float-controls" class="hidden">
+            <button onclick="toggleMaximizeReader()" title="Minimizar">−</button>
+            <button onclick="toggleMaximizeReader()" title="Maximizar / Restaurar">□</button>
+            <button onclick="exitReader()" title="Cerrar">X</button>
+            <button onclick="toggleReaderOrientation()" title="V / H">V/H</button>
+        </div>
 
-  <!-- Barra de configuración -->
-        
-  <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="text-10px text-slate-400 font-bold">Tema</span>
-      <div class="flex gap-1">
-        <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-10px font-bold border border-slate-200">Claro</button>
-        <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
-        <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
-        <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contenido lector -->
-        
-  <div id="reader-scroller" class="reader-vertical flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300">
-    <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text"></div>
-  </div>
-
-</section>
-
-    <script>
-document.addEventListener("DOMContentLoaded", () => {
-    syncReaderFloatingChrome();
-});
-</script>        
-            
-            <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
-      
-            <div class="flex flex-wrap items-center justify-between gap-3">
-
-                <!-- CONTROLES IZQUIERDOS -->
+        <!-- Barra de configuración -->
+        <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
             <div class="flex flex-wrap items-center gap-2">
-
-                <!-- Temas y Graduación -->
-            <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">
-            <span class="text-9px text-slate-400">Tono</span>
-
-            <input
-                type="range"
-                id="theme-grade-slider"
-                min="0.1"
-                max="1.3"
-                step="0.05"
-                value="0.8"
-                oninput="adjustThemeGrade()"
-                class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700"
-            >
-
-            <span
-                id="grade-display"
-                class="text-9px text-slate-300 font-bold font-mono"
-            >
-                80%
-            </span>
+                <span class="text-10px text-slate-400 font-bold">Tema</span>
+                <div class="flex gap-1">
+                    <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-10px font-bold border border-slate-200">Claro</button>
+                    <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
+                    <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
+                    <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">
+                    <span class="text-9px text-slate-400">Tono</span>
+                    <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700">
+                    <span id="grade-display" class="text-9px text-slate-300 font-bold font-mono">80%</span>
+                </div>
+                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+                    <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A-</button>
+                    <span id="font-size-display" class="text-10px font-mono px-1">16px</span>
+                    <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A+</button>
+                </div>
+                <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-10px px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500">
+                    <option value="serif">Times New Roman Serif</option>
+                    <option value="sans">Inter Sans-Serif</option>
+                    <option value="mono">Fira Code Monospace</option>
+                    <option value="playfair">Playfair Display</option>
+                </select>
+                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+                    <span class="text-9px text-slate-400 px-1">Margen</span>
+                    <button onclick="adjustMargin(-4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M-</button>
+                    <button onclick="adjustMargin(4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M+</button>
+                </div>
+                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+                    <span class="text-[9px] text-slate-400 px-1 font-bold hidden sm:inline">🔊 Escuchar:</span>
+                    <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-[10px] font-bold text-slate-950 flex items-center gap-0.5 transition-colors">▶ Reproducir</button>
+                    <button onclick="stopAudiobook()" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] text-slate-300">⏹ Detener</button>
+                    <select id="voice-speed" onchange="adjustVoiceSpeed()" class="bg-slate-950 text-[9px] border border-slate-800 rounded p-0.5">
+                        <option value="1">1.0x</option>
+                        <option value="1.2">1.2x</option>
+                        <option value="1.5">1.5x</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <div class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800" id="pc-view-toggle">
+                    <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors">📖 2 Páginas</button>
+                    <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors">📜 Vertical</button>
+                </div>
+                <button onclick="toggleMaximizeReader()" id="btn-maximize-main" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold" title="Maximizar / Restaurar">🔲 Maximizar</button>
+                <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1" title="Salir de la lectura">✕ Salir</button>
+            </div>
         </div>
 
-        <!-- Tamaño de fuente -->
-        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-
-            <button
-                onclick="adjustFontSize(-1)"
-                class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold"
-            >
-                A-
-            </button>
-
-            <span
-                id="font-size-display"
-                class="text-10px font-mono px-1"
-            >
-                16px
-            </span>
-
-            <button
-                onclick="adjustFontSize(1)"
-                class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold"
-            >
-                A+
-            </button>
+        <!-- Barra de información -->
+        <div id="reader-info-bar" class="reader-secondary-sticky bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between text-[10px] text-slate-300 z-35">
+            <div class="flex items-center gap-2">
+                <span id="reader-book-title" class="font-bold text-slate-100 truncate max-w-[200px] md:max-w-xs">Ningún libro cargado</span>
+                <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[10px] outline-none focus:border-teal-500 text-slate-300"></select>
+                <span id="gennia-complexity-badge" class="hidden px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 font-bold tracking-wide uppercase"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="reader-progress-percent" class="text-slate-500 font-mono"></span>
+                <span id="page-counter" class="text-slate-500 font-mono"></span>
+            </div>
         </div>
 
-        <!-- Selector de fuente -->
-        <select
-            id="font-select"
-            onchange="changeFontFamily()"
-            class="bg-slate-900 border border-slate-800 text-10px px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500"
-        >
-            <option value="serif">Times New Roman Serif</option>
-            <option value="sans">Inter Sans-Serif</option>
-            <option value="mono">Fira Code Monospace</option>
-            <option value="playfair">Playfair Display</option>
-        </select>
+        <!-- Contenido lector -->
+        <div id="reader-wrapper" class="flex-1 flex relative">
+            <div id="reader-scroller" class="reader-vertical flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300">
+                <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text"></div>
+            </div>
 
-        <!-- Márgenes -->
-        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-
-            <span class="text-9px text-slate-400 px-1">
-                Margen
-            </span>
-
-            <button
-                onclick="adjustMargin(-4)"
-                class="px-1.5 bg-slate-800 rounded text-9px font-bold"
-            >
-                M-
-            </button>
-
-            <button
-                onclick="adjustMargin(4)"
-                class="px-1.5 bg-slate-800 rounded text-9px font-bold"
-            >
-                M+
-            </button>
+            <!-- Panel lateral IA -->
+            <div id="reader-ai-sidebar" class="hidden w-80 border-l border-slate-800 bg-slate-950 flex flex-col z-30 absolute right-0 top-0 bottom-0 md:relative">
+                <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-900">
+                    <span class="text-xs font-bold text-teal-400">✨ GennIA</span>
+                    <button onclick="toggleAISidebar()" class="text-slate-400 hover:text-white text-xs">✕</button>
+                </div>
+                <div id="ai-chat-history" class="flex-1 overflow-y-auto p-3 space-y-2 text-xs"></div>
+                <div class="p-3 border-t border-slate-800 bg-slate-900">
+                    <input type="text" id="ai-chat-input" onkeypress="handleAIChatKeyPress(event)" placeholder="Pregunta sobre la obra..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-teal-500 text-slate-200">
+                    <div class="mt-2 flex gap-2">
+                        <button onclick="askAIAssistant('synthesize')" class="flex-1 py-1 bg-teal-950 text-teal-300 rounded text-[10px] font-bold border border-teal-900/40">Sintetizar</button>
+                        <button onclick="askAIAssistant('context')" class="flex-1 py-1 bg-teal-950 text-teal-300 rounded text-[10px] font-bold border border-teal-900/40">Contexto</button>
+                        <button onclick="askAIAssistant('explain')" class="flex-1 py-1 bg-teal-950 text-teal-300 rounded text-[10px] font-bold border border-teal-900/40">Explicar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- TTS Audiolibro -->
-        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-
-            <span class="text-[9px] text-slate-400 px-1 font-bold hidden sm:inline">
-                🔊 Escuchar:
-            </span>
-
-            <button
-                onclick="toggleAudiobook()"
-                id="audio-play-btn"
-                class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-[10px] font-bold text-slate-950 flex items-center gap-0.5 transition-colors"
-            >
-                ▶ Reproducir
-            </button>
-
-            <button
-                onclick="stopAudiobook()"
-                class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] text-slate-300"
-            >
-                ⏹ Detener
-            </button>
-
-            <select
-                id="voice-speed"
-                onchange="adjustVoiceSpeed()"
-                class="bg-slate-950 text-[9px] border border-slate-800 rounded p-0.5"
-            >
-                <option value="1">1.0x</option>
-                <option value="1.2">1.2x</option>
-                <option value="1.5">1.5x</option>
-            </select>
+        <!-- Navegación de páginas -->
+        <div id="page-navigation-controls" class="hidden bg-slate-950 border-t border-slate-800 p-2 flex justify-between items-center text-xs">
+            <button onclick="prevPage()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold">← Anterior</button>
+            <span id="page-counter-bottom" class="text-slate-500 font-mono"></span>
+            <button onclick="nextPage()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold">Siguiente →</button>
         </div>
 
-    </div>
-
-    <!-- CONTROLES DERECHOS -->
-    <div class="flex items-center gap-1.5">
-
-        <!-- Modos de Vista -->
-        <div
-            class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800"
-            id="pc-view-toggle"
-        >
-
-            <button
-                onclick="setPCViewMode('pages')"
-                id="btn-view-pages"
-                class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors"
-            >
-                📖 2 Páginas
-            </button>
-
-            <button
-                onclick="setPCViewMode('vertical')"
-                id="btn-view-vertical"
-                class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors"
-            >
-                📜 Vertical
-            </button>
-
-        </div>
-
-        <!-- Botón Maximizar -->
-        <button
-            onclick="toggleMaximizeReader()"
-            id="btn-maximize-main"
-            class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold"
-            title="Maximizar / Restaurar"
-        >
-            🔲 Maximizar
-        </button>
-
-        <!-- Botón Salir -->
-        <button
-            onclick="exitReader()"
-            class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1"
-            title="Salir de la lectura"
-        >
-            ✕ Salir
-        </button>
-
-    </div>
-
-</div>
+    </section>
 
     <!-- SECCIÓN: BUSCADOR DE RANKINGS (TOTALMENTE INDEPENDIENTE) -->
     <section id="view-search" class="hidden space-y-6 w-full max-w-full overflow-hidden px-1">
@@ -503,15 +400,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 </h2>
                 <p class="text-xs text-slate-400">Consulta puntuaciones, opiniones y rankings oficiales consolidados de libros populares, enciclopedias, anime o manga.</p>
                 <div class="mt-2 bg-teal-950/20 border border-teal-900/30 p-3 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 flex-1">
                         <span class="text-xs text-teal-400">✨</span>
                         <p class="text-[10px] md:text-[11px] text-teal-300"><strong>Búsqueda en Vivo con IA (Grounding):</strong> Utiliza Google Search de forma inteligente para recopilar y actualizar las clasificaciones literarias oficiales.</p>
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer shrink-0 mt-1 sm:mt-0">
-                        <input type="checkbox" id="live-search-toggle" class="sr-only peer">
-                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
-                        <span class="ml-2 text-[10px] font-bold text-teal-400 uppercase tracking-wider font-mono">Activar IA</span>
-                    </label>
+                    <div class="flex items-center gap-2 shrink-0 mt-1 sm:mt-0">
+                        <input type="password" id="gemini-api-key" placeholder="Gemini API Key" class="w-32 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[10px] outline-none focus:border-teal-500 text-slate-200">
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" id="live-search-toggle" class="sr-only peer">
+                            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                            <span class="ml-2 text-[10px] font-bold text-teal-400 uppercase tracking-wider font-mono">Activar IA</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -545,6 +445,20 @@ document.addEventListener("DOMContentLoaded", () => {
     </section>
 
 </main>
+
+<!-- Popup de selección de texto -->
+<div id="selection-popup" class="fixed z-50 hidden bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 flex gap-1">
+    <button onclick="applyHighlight('yellow')" class="w-5 h-5 rounded-full bg-yellow-300 border border-yellow-400" title="Amarillo"></button>
+    <button onclick="applyHighlight('mint')" class="w-5 h-5 rounded-full bg-emerald-300 border border-emerald-400" title="Menta"></button>
+    <button onclick="applyHighlight('sky')" class="w-5 h-5 rounded-full bg-sky-300 border border-sky-400" title="Cielo"></button>
+    <button onclick="applyHighlight('blue')" class="w-5 h-5 rounded-full bg-blue-300 border border-blue-400" title="Azul"></button>
+    <button onclick="applyHighlight('pink')" class="w-5 h-5 rounded-full bg-pink-300 border border-pink-400" title="Rosa"></button>
+    <button onclick="applyHighlight('lavender')" class="w-5 h-5 rounded-full bg-purple-300 border border-purple-400" title="Lavanda"></button>
+    <button onclick="applyHighlight('teal')" class="w-5 h-5 rounded-full bg-teal-300 border border-teal-400" title="Turquesa"></button>
+    <button onclick="applyHighlight('underline')" class="w-5 h-5 rounded-full bg-transparent border border-slate-500 flex items-center justify-center text-[8px] text-slate-300" title="Subrayar">U</button>
+    <button onclick="clearSelectionHighlight()" class="w-5 h-5 rounded-full bg-red-900 border border-red-700 flex items-center justify-center text-[8px] text-red-300" title="Limpiar">✕</button>
+    <button onclick="addNoteToSelection()" class="px-1.5 h-5 rounded bg-slate-800 border border-slate-600 text-[9px] text-slate-300 font-bold" title="Nota">📝</button>
+</div>
 
 <!-- Modal de Importación / Creación de Libros -->
 <div id="add-book-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
@@ -1041,8 +955,10 @@ function syncReaderFloatingChrome() {
                 library = library.filter(b => b.id !== id);
                 if (activeBookId === id) {
                     activeBookId = null;
-                    document.getElementById("reader-book-title").textContent = "Ningún libro cargado";
-                    document.getElementById("reader-text-container").innerHTML = "";
+                    const titleEl = document.getElementById("reader-book-title");
+                    if (titleEl) titleEl.textContent = "Ningún libro cargado";
+                    const textContainer = document.getElementById("reader-text-container");
+                    if (textContainer) textContainer.innerHTML = "";
                     
                     ensureReaderStartsAtTop();
                 }
@@ -1263,7 +1179,7 @@ function syncReaderFloatingChrome() {
 
         switchView("reader");
 
-        renderReaderContent(book); // 🔥 CORREGIDO AQUÍ
+        renderReaderContent();
 
         ensureReaderPriority();
         setReaderMode(localStorage.getItem('reader-mode') || 'vertical');
@@ -1271,27 +1187,15 @@ function syncReaderFloatingChrome() {
 
         requestAnimationFrame(() => ensureReaderStartsAtTop());
         setTimeout(() => ensureReaderStartsAtTop(), 50);
-    }
 
-        // El panel de IA GennIA permanece CERRADO por defecto al cargar cualquier libro
-        document.getElementById("reader-ai-sidebar").classList.add("hidden");
-
-        document.getElementById("reader-book-title").textContent = `${book.title} - ${book.author}`;
-        
         const savedPage = localStorage.getItem(`or_pos_${activeBookId}`);
         readerConfig.currentPage = savedPage ? parseInt(savedPage) : 0;
-        
-        // Cargar Capítulos Reales para navegación
+
+        const titleEl = document.getElementById("reader-book-title");
+        if (titleEl) titleEl.textContent = `${book.title} - ${book.author}`;
+
         populateChapters(book);
-
-        // Ajustar la configuración cognitiva inteligente de GennIA de acuerdo a la obra
         detectComplexity(book);
-
-        // Desplegar el contenido del libro de forma primordial (100% Real, completo y prioritario)
-        renderReaderContent();
-
-         // Cambiar entre libros
-        ensureReaderStartsAtTop();
     }
 
     function populateChapters(book) {
@@ -1392,21 +1296,24 @@ function syncReaderFloatingChrome() {
     function applyReadingLayout() {
         const container = document.getElementById("reader-text-container");
         const scroller = document.getElementById("reader-scroller");
+        if (!container || !scroller) return;
+
         const isMobile = window.innerWidth < 768;
+        const pageNav = document.getElementById("page-navigation-controls");
 
         if (isMobile || readerConfig.pcViewMode === 'vertical') {
             container.classList.remove("book-columns");
             container.classList.add("max-w-4xl"); 
             container.style.height = "auto";
             container.style.width = "auto";
-            document.getElementById("page-navigation-controls").classList.add("hidden");
+            if (pageNav) pageNav.classList.add("hidden");
             scroller.style.overflowY = "auto";
             scroller.style.overflowX = "hidden";
         } else {
             container.classList.add("book-columns");
             container.classList.remove("max-w-4xl"); 
             container.style.width = "100%";
-            document.getElementById("page-navigation-controls").classList.remove("hidden");
+            if (pageNav) pageNav.classList.remove("hidden");
 
             scroller.style.overflowY = "hidden";
             scroller.style.overflowX = "hidden";
@@ -1426,6 +1333,7 @@ function syncReaderFloatingChrome() {
 
     function paginateBookColumns() {
         const scroller = document.getElementById("reader-scroller");
+        if (!scroller) return;
         const pageLength = scroller.clientWidth; 
         scroller.scrollLeft = readerConfig.currentPage * pageLength;
     }
@@ -1435,6 +1343,7 @@ function syncReaderFloatingChrome() {
         const container = document.getElementById("reader-text-container");
         const isMobile = window.innerWidth < 768;
 
+        if (!scroller || !container) return;
         if (isMobile || readerConfig.pcViewMode === 'vertical') return;
 
         const pageLength = scroller.clientWidth;
@@ -1455,6 +1364,7 @@ function syncReaderFloatingChrome() {
         const scroller = document.getElementById("reader-scroller");
         const isMobile = window.innerWidth < 768;
 
+        if (!scroller) return;
         if (isMobile || readerConfig.pcViewMode === 'vertical') return;
 
         const pageLength = scroller.clientWidth;
@@ -1482,10 +1392,12 @@ function syncReaderFloatingChrome() {
             readerConfig.currentPage = Math.max(0, totalPages - 1);
         }
 
-        document.getElementById("page-counter").textContent = `Página ${readerConfig.currentPage + 1} de ${totalPages}`;
+        const pageCounter = document.getElementById("page-counter");
+        if (pageCounter) pageCounter.textContent = `Página ${readerConfig.currentPage + 1} de ${totalPages}`;
         
         const progressPct = Math.min(100, Math.round(((readerConfig.currentPage + 1) / totalPages) * 100));
-        document.getElementById("reader-progress-percent").textContent = `Pág: ${readerConfig.currentPage + 1} / ${totalPages} (${progressPct}%)`;
+        const progressEl = document.getElementById("reader-progress-percent");
+        if (progressEl) progressEl.textContent = `Pág: ${readerConfig.currentPage + 1} / ${totalPages} (${progressPct}%)`;
 
         if (activeBookId) {
             const book = library.find(b => b.id === activeBookId);
@@ -1566,6 +1478,7 @@ function syncReaderFloatingChrome() {
         let isSimple = keywordsForSimple.some(word => textToCheck.includes(word));
         let isAdvanced = keywordsForAdvanced.some(word => textToCheck.includes(word));
 
+        if (!badge) return;
         if (isAdvanced) {
             currentGennIAPreset = "avanzado";
             badge.textContent = "Académico / Profundo 🧠";
@@ -1581,15 +1494,14 @@ function syncReaderFloatingChrome() {
         }
     }
 
-    function toggleAISidebar() {
-        function ensureReaderPriority() {
-          const ai = document.getElementById('reader-ai-sidebar');
-      if (ai) ai.classList.add('hidden');
-            
-            ensureReaderPriority();
+    function ensureReaderPriority() {
+        const ai = document.getElementById('reader-ai-sidebar');
+        if (ai) ai.classList.add('hidden');
     }
 
+    function toggleAISidebar() {
         const sidebar = document.getElementById("reader-ai-sidebar");
+        if (!sidebar) return;
         sidebar.classList.toggle("hidden");
         applyReadingLayout();
     }
@@ -1869,16 +1781,18 @@ function syncReaderFloatingChrome() {
 
     function adjustThemeGrade() {
         const slider = document.getElementById("theme-grade-slider");
-        readerConfig.grade = parseFloat(slider.value);
-        document.getElementById("grade-display").textContent = `${Math.round(readerConfig.grade * 100)}%`;
+        if (slider) readerConfig.grade = parseFloat(slider.value);
+        const gradeDisplay = document.getElementById("grade-display");
+        if (gradeDisplay) gradeDisplay.textContent = `${Math.round(readerConfig.grade * 100)}%`;
         applyConfigToUI();
         saveToStorage();
     }
 
     function applyConfigToUI() {
         const slider = document.getElementById("theme-grade-slider");
-        slider.value = readerConfig.grade;
-        document.getElementById("grade-display").textContent = `${Math.round(readerConfig.grade * 100)}%`;
+        if (slider) slider.value = readerConfig.grade;
+        const gradeDisplay = document.getElementById("grade-display");
+        if (gradeDisplay) gradeDisplay.textContent = `${Math.round(readerConfig.grade * 100)}%`;
 
         const wrapper = document.getElementById("reader-wrapper");
         const scroller = document.getElementById("reader-scroller");
@@ -1913,29 +1827,33 @@ function syncReaderFloatingChrome() {
         }
 
         const bg = `rgb(${r}, ${g}, ${b})`;
-        wrapper.style.backgroundColor = bg;
-        scroller.style.color = text;
+        if (wrapper) wrapper.style.backgroundColor = bg;
+        if (scroller) scroller.style.color = text;
 
         const scrollerText = document.getElementById("reader-text-container");
-        scrollerText.style.fontSize = `${readerConfig.fontSize}px`;
-        
-        const isMobile = window.innerWidth < 768;
-        const activeMargin = isMobile ? Math.min(24, readerConfig.margin / 2) : readerConfig.margin;
-        scrollerText.style.paddingLeft = `${activeMargin}px`;
-        scrollerText.style.paddingRight = `${activeMargin}px`;
+        if (scrollerText) {
+            scrollerText.style.fontSize = `${readerConfig.fontSize}px`;
+            
+            const isMobile = window.innerWidth < 768;
+            const activeMargin = isMobile ? Math.min(24, readerConfig.margin / 2) : readerConfig.margin;
+            scrollerText.style.paddingLeft = `${activeMargin}px`;
+            scrollerText.style.paddingRight = `${activeMargin}px`;
 
-        if (readerConfig.fontFamily === 'serif') {
-            scrollerText.style.fontFamily = "'Georgia', serif";
-        } else if (readerConfig.fontFamily === 'sans') {
-            scrollerText.style.fontFamily = "'Inter', sans-serif";
-        } else if (readerConfig.fontFamily === 'mono') {
-            scrollerText.style.fontFamily = "'Fira Code', monospace";
-        } else if (readerConfig.fontFamily === 'playfair') {
-            scrollerText.style.fontFamily = "'Playfair Display', serif";
+            if (readerConfig.fontFamily === 'serif') {
+                scrollerText.style.fontFamily = "'Georgia', serif";
+            } else if (readerConfig.fontFamily === 'sans') {
+                scrollerText.style.fontFamily = "'Inter', sans-serif";
+            } else if (readerConfig.fontFamily === 'mono') {
+                scrollerText.style.fontFamily = "'Fira Code', monospace";
+            } else if (readerConfig.fontFamily === 'playfair') {
+                scrollerText.style.fontFamily = "'Playfair Display', serif";
+            }
         }
 
-        document.getElementById("font-select").value = readerConfig.fontFamily;
-        document.getElementById("font-size-display").textContent = `${readerConfig.fontSize}px`;
+        const fontSelect = document.getElementById("font-select");
+        if (fontSelect) fontSelect.value = readerConfig.fontFamily;
+        const fontSizeDisplay = document.getElementById("font-size-display");
+        if (fontSizeDisplay) fontSizeDisplay.textContent = `${readerConfig.fontSize}px`;
     }
 
     function adjustFontSize(delta) {
@@ -2017,16 +1935,18 @@ function syncReaderFloatingChrome() {
     let readingRate = 1;
 
     function toggleAudiobook() {
+        const playBtn = document.getElementById("audio-play-btn");
         if (synth.speaking) {
             if (synth.paused) {
                 synth.resume();
-                document.getElementById("audio-play-btn").textContent = "⏸ Pausar";
+                if (playBtn) playBtn.textContent = "⏸ Pausar";
             } else {
                 synth.pause();
-                document.getElementById("audio-play-btn").textContent = "▶ Seguir";
+                if (playBtn) playBtn.textContent = "▶ Seguir";
             }
         } else {
             const container = document.getElementById("reader-text-container");
+            if (!container) return;
             const textToRead = container.innerText;
 
             if (!textToRead) {
@@ -2039,11 +1959,11 @@ function syncReaderFloatingChrome() {
             ttsUtterance.rate = readingRate;
 
             ttsUtterance.onstart = () => {
-                document.getElementById("audio-play-btn").textContent = "⏸ Pausar";
+                if (playBtn) playBtn.textContent = "⏸ Pausar";
             };
 
             ttsUtterance.onend = () => {
-                document.getElementById("audio-play-btn").textContent = "▶ Reproducir";
+                if (playBtn) playBtn.textContent = "▶ Reproducir";
             };
 
             synth.speak(ttsUtterance);
@@ -2054,12 +1974,13 @@ function syncReaderFloatingChrome() {
         if (synth.speaking) {
             synth.cancel();
         }
-        document.getElementById("audio-play-btn").textContent = "▶ Reproducir";
+        const playBtn = document.getElementById("audio-play-btn");
+        if (playBtn) playBtn.textContent = "▶ Reproducir";
     }
 
     function adjustVoiceSpeed() {
         const select = document.getElementById("voice-speed");
-        readingRate = parseFloat(select.value);
+        if (select) readingRate = parseFloat(select.value);
         if (synth.speaking) {
             stopAudiobook();
             toggleAudiobook();
@@ -2341,33 +2262,25 @@ function syncReaderFloatingChrome() {
     }
 
     // --- STREAMING_CHUNK:Control de cambio de pantallas y listeners ---
-    
     function switchView(viewId) {
-    viewMode = viewId;
+        viewMode = viewId;
+        
+        document.getElementById("view-library").classList.add("hidden");
+        document.getElementById("view-reader").classList.add("hidden");
+        document.getElementById("view-search").classList.add("hidden");
 
-    const views = ["library", "reader", "search"];
-    const navs = ["library", "reader", "search"];
+        document.getElementById("nav-library").className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
+        document.getElementById("nav-reader").className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
+        document.getElementById("nav-search").className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
 
-    views.forEach(v => {
-        document.getElementById(`view-${v}`)?.classList.add("hidden");
-        document.getElementById(`nav-${v}`)?.className =
-            "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
-    });
-
-    const activeView = document.getElementById(`view-${viewId}`);
-    const activeNav = document.getElementById(`nav-${viewId}`);
-
-    if (activeView) activeView.classList.remove("hidden");
-    if (activeNav) {
-        activeNav.className =
-            "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2";
+        document.getElementById(`view-${viewId}`).classList.remove("hidden");
+        document.getElementById(`nav-${viewId}`).className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2";
+    
+        if (viewId === 'reader') {
+            applyReadingLayout();
+            applyConfigToUI();
+        }
     }
-
-    if (viewId === 'reader') {
-        applyReadingLayout();
-        applyConfigToUI();
-    }
-}
 
     // ESCUCHADORES DE EVENTOS DE TECLADO Y GESTOS TÁCTILES
     window.addEventListener('keydown', (e) => {
@@ -2382,14 +2295,16 @@ function syncReaderFloatingChrome() {
 
     const scrollerEl = document.getElementById("reader-scroller");
     
-    scrollerEl.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
+    if (scrollerEl) {
+        scrollerEl.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
 
-    scrollerEl.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipeGesture();
-    }, { passive: true });
+        scrollerEl.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipeGesture();
+        }, { passive: true });
+    }
 
     function handleSwipeGesture() {
         const isMobile = window.innerWidth < 768;
