@@ -202,54 +202,43 @@
             </div>
             
             <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
-            <div class="bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-20">
+            <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">   
+                
                 <!-- Temas y Graduación -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-[10px] text-slate-400 font-bold">Tema:</span>
-                    <div class="flex gap-1">
-                        <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-[10px] font-bold border border-slate-200">Claro</button>
-                        <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-[10px] font-bold border border-slate-700">Oscuro</button>
-                        <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-[10px] font-bold border border-[#ebdcb9]">Sepia</button>
-                        <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-[#4b5563] text-white rounded-md text-[10px] font-bold border border-slate-500">Gris</button>
-                    </div>
-                    <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">
-                        <span class="text-[9px] text-slate-400">Tono:</span>
-                        <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700">
-                        <span id="grade-display" class="text-[9px] text-slate-300 font-bold font-mono">80%</span>
-                    </div>
-                </div>
+                <span class="text-9px text-slate-400">Tono</span>
+      <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700">
+      <span id="grade-display" class="text-9px text-slate-300 font-bold font-mono">80%</span>
+    </div>
+  </div>
 
-                <!-- Tipografía y Ajustes visuales -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                        <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] font-bold">A-</button>
-                        <span id="font-size-display" class="text-[10px] font-mono px-1">16px</span>
-                        <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] font-bold">A+</button>
-                    </div>
+  <div class="flex flex-wrap items-center gap-2">
+    <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+      <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A-</button>
+      <span id="font-size-display" class="text-10px font-mono px-1">16px</span>
+      <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A+</button>
+    </div>
+
                     
-                    <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-[10px] px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500">
-                        <option value="serif">Times New Roman (Serif)</option>
-                        <option value="sans">Inter (Sans-Serif)</option>
-                        <option value="mono">Fira Code (Monospace)</option>
-                        <option value="playfair">Playfair Display</option>
+                    <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-10px px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500">
+      <option value="serif">Times New Roman Serif</option>
+      <option value="sans">Inter Sans-Serif</option>
+      <option value="mono">Fira Code Monospace</option>
+      <option value="playfair">Playfair Display</option>
                     </select>
 
                     <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                        <span class="text-[9px] text-slate-400 px-1">Margen:</span>
-                        <button onclick="adjustMargin(-4)" class="px-1.5 bg-slate-800 rounded text-[9px] font-bold">M-</button>
-                        <button onclick="adjustMargin(4)" class="px-1.5 bg-slate-800 rounded text-[9px] font-bold">M+</button>
+      <span class="text-9px text-slate-400 px-1">Margen</span>
+      <button onclick="adjustMargin(-4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M-</button>
+      <button onclick="adjustMargin(4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M+</button>
                     </div>
-                </div>
 
-                <!-- Controles Audiolibro y Capítulos -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <!-- Selector de Capítulos / Páginas del PDF -->
-                    <div class="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-lg border border-slate-800" id="chapter-nav-container">
-                        <span class="text-[10px] text-slate-400 font-bold">📖 Ir a:</span>
-                        <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-950 text-[10px] border border-slate-800 rounded p-0.5 text-slate-300 max-w-[140px] outline-none focus:border-teal-500">
-                            <option value="0">Cargando...</option>
-                        </select>
+                    <div class="flex items-center gap-1">
+      <button onclick="toggleMaximizeReader()" id="btn-maximize" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-10px font-bold" title="Maximizar / Restaurar">Maximizar</button>
+      <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-10px font-bold" title="Salir de la lectura">Salir</button>
+                        </div>
+                      </div>
                     </div>
+
 
                     <!-- TTS Audiolibro de Página -->
                     <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
