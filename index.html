@@ -282,222 +282,217 @@
 
     <!-- SECCIÓN: VISOR E-READER -->
     <section id="view-reader" class="hidden flex-1 flex flex-col">
-        
-        <!-- Envoltorio principal de lectura -->
-        
-            <div id="reader-float-controls" class="hidden">
-  <button onclick="toggleMaximizeReader()" title="Minimizar">−</button>
-  <button onclick="toggleMaximizeReader()" title="Maximizar / Restaurar">□</button>
-  <button onclick="exitReader()" title="Cerrar">X</button>
-  <button onclick="toggleReaderOrientation()" title="V / H">V/H</button>
-            </div>
 
-        <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
-  <div class="flex flex-wrap items-center gap-2">
-    <span class="text-10px text-slate-400 font-bold">Tema</span>
-    <div class="flex gap-1">
-      <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-10px font-bold border border-slate-200">Claro</button>
-      <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
-      <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
-      <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
-      
-        <div id="reader-scroller" class="reader-vertical flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300">
-            <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text">      
-    
-    </div>
+  <!-- Controles flotantes -->
+        
+  <div id="reader-float-controls" class="hidden">
+    <button onclick="toggleMaximizeReader()" title="Minimizar">−</button>
+    <button onclick="toggleMaximizeReader()" title="Maximizar / Restaurar">□</button>
+    <button onclick="exitReader()" title="Cerrar">X</button>
+    <button onclick="toggleReaderOrientation()" title="V / H">V/H</button>
+  </div>
 
-            
-            
-            <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
-      
-            <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">   
-                
-                <!-- Temas y Graduación -->
-                <span class="text-9px text-slate-400">Tono</span>
-      <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700">
-      <span id="grade-display" class="text-9px text-slate-300 font-bold font-mono">80%</span>
+  <!-- Barra de configuración -->
+        
+  <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-10px text-slate-400 font-bold">Tema</span>
+      <div class="flex gap-1">
+        <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-10px font-bold border border-slate-200">Claro</button>
+        <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
+        <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
+        <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
+      </div>
     </div>
   </div>
 
-  <div class="flex flex-wrap items-center gap-2">
-    <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-      <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A-</button>
-      <span id="font-size-display" class="text-10px font-mono px-1">16px</span>
-      <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A+</button>
+  <!-- Contenido lector -->
+        
+  <div id="reader-scroller" class="reader-vertical flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300">
+    <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text"></div>
+  </div>
+
+</section>
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    syncReaderFloatingChrome();
+});
+</script>        
+            
+            <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
+      
+            <div class="flex flex-wrap items-center justify-between gap-3">
+
+                <!-- CONTROLES IZQUIERDOS -->
+            <div class="flex flex-wrap items-center gap-2">
+
+                <!-- Temas y Graduación -->
+            <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">
+            <span class="text-9px text-slate-400">Tono</span>
+
+            <input
+                type="range"
+                id="theme-grade-slider"
+                min="0.1"
+                max="1.3"
+                step="0.05"
+                value="0.8"
+                oninput="adjustThemeGrade()"
+                class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700"
+            >
+
+            <span
+                id="grade-display"
+                class="text-9px text-slate-300 font-bold font-mono"
+            >
+                80%
+            </span>
+        </div>
+
+        <!-- Tamaño de fuente -->
+        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+
+            <button
+                onclick="adjustFontSize(-1)"
+                class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold"
+            >
+                A-
+            </button>
+
+            <span
+                id="font-size-display"
+                class="text-10px font-mono px-1"
+            >
+                16px
+            </span>
+
+            <button
+                onclick="adjustFontSize(1)"
+                class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold"
+            >
+                A+
+            </button>
+        </div>
+
+        <!-- Selector de fuente -->
+        <select
+            id="font-select"
+            onchange="changeFontFamily()"
+            class="bg-slate-900 border border-slate-800 text-10px px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500"
+        >
+            <option value="serif">Times New Roman Serif</option>
+            <option value="sans">Inter Sans-Serif</option>
+            <option value="mono">Fira Code Monospace</option>
+            <option value="playfair">Playfair Display</option>
+        </select>
+
+        <!-- Márgenes -->
+        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+
+            <span class="text-9px text-slate-400 px-1">
+                Margen
+            </span>
+
+            <button
+                onclick="adjustMargin(-4)"
+                class="px-1.5 bg-slate-800 rounded text-9px font-bold"
+            >
+                M-
+            </button>
+
+            <button
+                onclick="adjustMargin(4)"
+                class="px-1.5 bg-slate-800 rounded text-9px font-bold"
+            >
+                M+
+            </button>
+        </div>
+
+        <!-- TTS Audiolibro -->
+        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+
+            <span class="text-[9px] text-slate-400 px-1 font-bold hidden sm:inline">
+                🔊 Escuchar:
+            </span>
+
+            <button
+                onclick="toggleAudiobook()"
+                id="audio-play-btn"
+                class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-[10px] font-bold text-slate-950 flex items-center gap-0.5 transition-colors"
+            >
+                ▶ Reproducir
+            </button>
+
+            <button
+                onclick="stopAudiobook()"
+                class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] text-slate-300"
+            >
+                ⏹ Detener
+            </button>
+
+            <select
+                id="voice-speed"
+                onchange="adjustVoiceSpeed()"
+                class="bg-slate-950 text-[9px] border border-slate-800 rounded p-0.5"
+            >
+                <option value="1">1.0x</option>
+                <option value="1.2">1.2x</option>
+                <option value="1.5">1.5x</option>
+            </select>
+        </div>
+
     </div>
 
-                    
-                    <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-10px px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500">
-      <option value="serif">Times New Roman Serif</option>
-      <option value="sans">Inter Sans-Serif</option>
-      <option value="mono">Fira Code Monospace</option>
-      <option value="playfair">Playfair Display</option>
-                    </select>
+    <!-- CONTROLES DERECHOS -->
+    <div class="flex items-center gap-1.5">
 
-                    <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-      <span class="text-9px text-slate-400 px-1">Margen</span>
-      <button onclick="adjustMargin(-4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M-</button>
-      <button onclick="adjustMargin(4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M+</button>
-                    </div>
+        <!-- Modos de Vista -->
+        <div
+            class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800"
+            id="pc-view-toggle"
+        >
 
-                    <div class="flex items-center gap-1">
-      <button onclick="toggleMaximizeReader()" id="btn-maximize" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-10px font-bold" title="Maximizar / Restaurar">Maximizar</button>
-      <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-10px font-bold" title="Salir de la lectura">Salir</button>
-                        </div>
-                      </div>
-                    </div>
+            <button
+                onclick="setPCViewMode('pages')"
+                id="btn-view-pages"
+                class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors"
+            >
+                📖 2 Páginas
+            </button>
 
+            <button
+                onclick="setPCViewMode('vertical')"
+                id="btn-view-vertical"
+                class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors"
+            >
+                📜 Vertical
+            </button>
 
-                    <!-- TTS Audiolibro de Página -->
-                    <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                        <span class="text-[9px] text-slate-400 px-1 font-bold hidden sm:inline">🔊 Escuchar:</span>
-                        <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-[10px] font-bold text-slate-950 flex items-center gap-0.5 transition-colors">
-                            ▶ Reproducir
-                        </button>
-                        <button onclick="stopAudiobook()" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] text-slate-300">
-                            ⏹ Detener
-                        </button>
-                        <select id="voice-speed" onchange="adjustVoiceSpeed()" class="bg-slate-950 text-[9px] border border-slate-800 rounded p-0.5">
-                            <option value="1">1.0x</option>
-                            <option value="1.2">1.2x</option>
-                            <option value="1.5">1.5x</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Modos de Vista y Maximizar/Cerrar -->
-                <div class="flex items-center gap-1.5">
-                    <div class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800" id="pc-view-toggle">
-                        <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors">📖 2 Páginas</button>
-                        <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors">📜 Vertical</button>
-                    </div>
-                    <button onclick="toggleMaximizeReader()" id="btn-maximize" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold" title="Maximizar / Restaurar">                       
-                        🔲 Maximizar
-                    </button>
-
-                    syncReaderFloatingChrome();
-                    
-                    <!-- BOTÓN CERRAR VISOR -->
-                    <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1" title="Salir de la lectura">
-                        ✕ Salir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Barra secundaria de progreso e información del libro -->
-            <div id="reader-info-bar" class="reader-secondary-sticky p-2.5 bg-black/40 border-b border-slate-800/60 flex justify-between items-center text-xs text-slate-400 z-35">
-                <span id="reader-book-title" class="font-bold text-teal-400 truncate max-w-sm">Ningún libro cargado</span>
-
-                  <div class="flex items-center gap-3">
-                    <button onclick="toggleAISidebar()" class="px-2.5 py-1 bg-teal-500/10 hover:bg-teal-500/30 text-teal-300 border border-teal-500/20 rounded text-10px font-bold transition-all">
-                    GennIA
-                    </button>
-                <span id="reader-page-indicator" class="font-mono text-11px">Pg 0 de 0</span>
-                <span id="reader-progress-percent" class="font-mono text-11px">0%</span>
-              </div>
-            </div>
-
-
-            <!-- Contenedor con distribución de lectura y asistente IA GennIA -->
-            <div class="flex-grow flex overflow-hidden relative">
-                
-                <!-- Contenedor Principal de Texto (PRIORIDAD ABSOLUTA - 100% VISIBLE Y DOMINANTE) -->
-                <div class="flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300" id="reader-scroller" onmouseup="handleTextSelection(event)">
-                    <div id="reader-text-container" class="max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text">
-                        <!-- El texto original completo del libro se inyecta dinámicamente aquí de inmediato -->
-                        <div class="text-center py-20 text-slate-500">
-                            <span class="text-4xl block mb-4">📖</span>
-                            <p class="text-sm">Selecciona un libro en tu biblioteca o añade uno nuevo (EPUB, PDF, TXT) para empezar tu lectura.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Panel Lateral de IA "GennIA" (Opcional, Oculto por Defecto) -->
-                <div id="reader-ai-sidebar" class="w-80 border-l border-slate-800 bg-slate-950/95 flex flex-col justify-between hidden transition-all duration-300 z-30">
-                    <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/40">
-                        <div class="flex items-center gap-2">
-                            <span class="text-teal-400">✨</span>
-                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Asistencia GennIA</h4>
-                        </div>
-                        <button onclick="toggleAISidebar()" class="text-slate-500 hover:text-slate-300 text-xs">✕</button>
-                    </div>
-
-                    <!-- Indicador de Adaptabilidad de Nivel Cognitivo -->
-                    <div class="px-4 py-2 bg-teal-950/20 border-b border-slate-800 flex items-center justify-between text-[10px]">
-                        <span class="text-slate-400 font-bold">Nivel Cognitivo:</span>
-                        <span id="gennia-complexity-badge" class="px-2 py-0.5 rounded bg-teal-900/40 text-teal-300 font-bold tracking-wide uppercase">Auto-Detectando</span>
-                    </div>
-
-                    <!-- Consola / Output del Asistente -->
-                    <div class="flex-grow p-4 overflow-y-auto space-y-4 text-xs" id="ai-chat-history">
-                        <div class="bg-teal-950/10 border border-teal-900/20 rounded-xl p-3 text-slate-300">
-                            <p class="font-bold text-teal-400 mb-1">¡Hola! Soy GennIA, tu copiloto de lectura opcional.</p>
-                            <p class="leading-relaxed text-[11px] text-slate-400">Puedo ayudarte a resumir el fragmento visible, explicar el contexto sociocultural, o definir conceptos complejos basándome estrictamente en el contenido real del libro.</p>
-                            <div class="mt-2.5 flex flex-wrap gap-1.5">
-                                <button onclick="askAIAssistant('summarize')" class="px-2 py-1 bg-teal-500/20 hover:bg-teal-500 text-teal-300 hover:text-slate-950 text-[10px] font-bold rounded transition-colors">📝 Resumir Páginas</button>
-                                <button onclick="askAIAssistant('explain-context')" class="px-2 py-1 bg-slate-850 hover:bg-slate-800 text-[10px] font-bold text-slate-300 rounded transition-colors">🔍 Contexto de Obra</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Configuración discreta de API Key -->
-                    <div class="p-3 border-t border-slate-800/80 bg-slate-900/40 space-y-1.5">
-                        <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold">
-                            <span>🔑 Gemini API Key (Opcional):</span>
-                        </div>
-                        <input type="password" id="gemini-api-key" placeholder="Ingresa tu API Key de Gemini" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-slate-300 outline-none focus:border-teal-500">
-                    </div>
-
-                    <!-- Input de consulta del Chat con GennIA -->
-                    <div class="p-3 border-t border-slate-800 bg-slate-900/20">
-                        <div class="flex gap-2">
-                            <input type="text" id="ai-chat-input" placeholder="Pregunta a GennIA sobre la obra..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] outline-none text-slate-200 focus:border-teal-500" onkeypress="handleAIChatKeyPress(event)">
-                            <button onclick="sendCustomAIQuery()" class="px-3 bg-teal-500 hover:bg-teal-400 rounded-lg text-xs font-bold text-slate-950 transition-colors">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navegadores de Páginas (Paginación de Doble página) -->
-            <div id="page-navigation-controls" class="p-4 bg-black/30 border-t border-slate-800/40 flex justify-between items-center z-10">
-                <button onclick="prevPage()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 rounded-xl text-xs font-bold border border-slate-800 hover:text-white transition-colors">
-                    ⬅ Página Anterior
-                </button>
-                <div class="text-xs text-slate-400 font-mono" id="page-counter">Página 1 de 1</div>
-                <button onclick="nextPage()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 rounded-xl text-xs font-bold border border-slate-800 hover:text-white transition-colors">
-                    Siguiente Página ➡
-                </button>
-            </div>
         </div>
 
-        <!-- Popup Flotante de Selección de Texto -->
-        <div id="selection-popup" class="absolute hidden bg-slate-950 border border-slate-800 p-3 rounded-xl shadow-2xl flex flex-col gap-2 z-50 max-w-xs">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pb-1 border-b border-slate-800 flex justify-between items-center">
-                <span>Marcadores & GennIA</span>
-                <button onclick="askAIAssistant('explain-selection')" class="text-[9px] font-extrabold text-teal-400 hover:text-teal-300">✨ Explicar con GennIA</button>
-            </div>
-            
-            <!-- Paleta de Colores de Resaltador -->
-            <div class="grid grid-cols-5 gap-1.5">
-                <button onclick="applyHighlight('yellow')" class="w-6 h-6 rounded-full bg-yellow-300 border border-yellow-400" title="Amarillo Pastel"></button>
-                <button onclick="applyHighlight('mint')" class="w-6 h-6 rounded-full bg-emerald-300 border border-emerald-400" title="Verde Menta"></button>
-                <button onclick="applyHighlight('sky')" class="w-6 h-6 rounded-full bg-sky-300 border border-sky-400" title="Azul Celeste"></button>
-                <button onclick="applyHighlight('blue')" class="w-6 h-6 rounded-full bg-blue-300 border border-blue-400" title="Celeste"></button>
-                <button onclick="applyHighlight('pink')" class="w-6 h-6 rounded-full bg-rose-300 border border-rose-400" title="Rosa/Salmón Claro"></button>
-                <button onclick="applyHighlight('lavender')" class="w-6 h-6 rounded-full bg-purple-300 border border-purple-400" title="Lavanda/Morado Claro"></button>
-                <button onclick="applyHighlight('teal')" class="w-6 h-6 rounded-full bg-teal-300 border border-teal-400" title="Verde Azulado"></button>
-                <button onclick="applyHighlight('abstract-brown')" class="w-6 h-6 rounded-full bg-amber-800 border border-amber-900" title="Marrón Degradado"></button>
-                <button onclick="applyHighlight('custom-orange')" class="w-6 h-6 rounded-full bg-[#FFB48A] border border-orange-400" title="#FFB48A"></button>
-                <button onclick="applyHighlight('underline')" class="w-6 h-6 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-xs font-black" title="Subrayar">U</button>
-            </div>
+        <!-- Botón Maximizar -->
+        <button
+            onclick="toggleMaximizeReader()"
+            id="btn-maximize-main"
+            class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold"
+            title="Maximizar / Restaurar"
+        >
+            🔲 Maximizar
+        </button>
 
-            <!-- Añadir Notas -->
-            <div class="pt-2 border-t border-slate-800 flex justify-between gap-1.5">
-                <button onclick="addNoteToSelection()" class="w-full py-1 bg-teal-500 text-slate-950 hover:bg-teal-400 rounded text-[10px] font-bold transition-colors">📝 Agregar Nota</button>
-                <button onclick="clearSelectionHighlight()" class="px-2 py-1 bg-slate-800 hover:bg-red-950 rounded text-[10px] text-red-400 font-bold transition-colors">🗑️ Limpiar</button>
-            </div>
-        </div>
-    </section>
+        <!-- Botón Salir -->
+        <button
+            onclick="exitReader()"
+            class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1"
+            title="Salir de la lectura"
+        >
+            ✕ Salir
+        </button>
+
+    </div>
+
+</div>
 
     <!-- SECCIÓN: BUSCADOR DE RANKINGS (TOTALMENTE INDEPENDIENTE) -->
     <section id="view-search" class="hidden space-y-6 w-full max-w-full overflow-hidden px-1">
