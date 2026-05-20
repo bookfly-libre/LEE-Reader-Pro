@@ -872,27 +872,27 @@ function syncReaderFloatingChrome() {
     // --- STREAMING_CHUNK:Gestionando lógica de estanterías y render de libros ---
     // --- GESTIÓN DE BIBLIOTECA, ESTANTERÍAS Y BÚSQUEDA ---
     function renderShelves() {
-        const container = document.getElementById("shelves-list");
-        container.innerHTML = "";
+        window.renderShelves = function () {
+    const container = document.getElementById("shelves-list");
+    if (!container) return;
 
-        const allBtn = document.createElement("button");
-        allBtn.onclick = () => filterByShelf("all");
-        allBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${currentShelf === "all" ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
-        allBtn.textContent = "📂 Todos los Recursos";
-        container.appendChild(allBtn);
+    container.innerHTML = "";   
+        window.renderBooks = renderBooks;
+        window.createNewShelf = createNewShelf;
+        window.filterByShelf = filterByShelf;   
+            
+    const allBtn = document.createElement("button");
+    allBtn.onclick = () => filterByShelf("all");
+    allBtn.textContent = "📂 Todos los Recursos";
+    container.appendChild(allBtn);
 
-        shelves.forEach(shelf => {
-            const shelfBtn = document.createElement("button");
-            shelfBtn.onclick = () => filterByShelf(shelf);
-            shelfBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all flex justify-between items-center ${currentShelf === shelf ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
-            shelfBtn.innerHTML = `
-                <span>📁 ${shelf}</span>
-                <span onclick="triggerDeleteShelf('${shelf}'); event.stopPropagation();" class="text-slate-500 hover:text-red-400 p-1 rounded transition-colors" title="Eliminar Estante">
-                    🗑️
-                </span>
-            `;
-            container.appendChild(shelfBtn);
-        });
+    shelves.forEach(shelf => {
+        const btn = document.createElement("button");
+        btn.onclick = () => filterByShelf(shelf);
+        btn.textContent = shelf;
+        container.appendChild(btn);
+    });
+};
 
         const modalSelect = document.getElementById("manual-shelf");
         modalSelect.innerHTML = "";
@@ -903,6 +903,8 @@ function syncReaderFloatingChrome() {
             modalSelect.appendChild(opt);
         });
     }
+
+           
 
     function createNewShelf() {
         const input = document.getElementById("new-shelf-input");
@@ -946,7 +948,7 @@ function syncReaderFloatingChrome() {
 
     function renderBooks() {
         const container = document.getElementById("books-grid");
-        container.innerHTML = "";
+        if (!container) return;
 
         const searchVal = document.getElementById("library-search-input").value.toLowerCase().trim();
 
