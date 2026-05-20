@@ -372,55 +372,35 @@
 
                 const chapters = extractChaptersFromText(book.content);
 
-                if (chapters.length === 0) {
-                    const opt = document.createElement("option");
-                    opt.textContent = "Sin capítulos detectados";
-                    opt.value = 0;
-                    select.appendChild(opt);
-                    return;
-            }
+    if (!chapters || chapters.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "Sin capítulos detectados";
+        opt.value = 0;
+        select.appendChild(opt);
+        return;
+    }
 
-            chapters.forEach((ch, i) => {
-                const opt = document.createElement("option");
-                opt.value = i;
-                opt.textContent = ch.title || `Capítulo ${i + 1}`;
-                select.appendChild(opt);
-                });
-            }
-                    
-                       function extractChaptersFromText(text) {
-                    const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
+    chapters.forEach((ch, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = ch.title || `Capítulo ${i + 1}`;
+        select.appendChild(opt);
+    });
+}
 
-                    const matches = [...text.matchAll(regex)];
+function extractChaptersFromText(text) {
+    const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
 
-                    if (matches.length === 0) return [];
+    const matches = [...text.matchAll(regex)];
 
-                    return matches.map((m, i) => ({
-                title: m[0],
-                index: m.index
-                }));
-            }   
-         <script>
-         
+    if (matches.length === 0) return [];
 
-        <!-- DESPUÉS del HTML, en otra parte -->
-        <script>
-           function renderChapters(book) {
-              const select = document.getElementById("reader-chapter-select");
-              if (!select) return;
-
-              select.innerHTML = "";
-
-              const chapters = extractChapters(book.content);
-
-              chapters.forEach((ch, i) => {
-                  const opt = document.createElement("option");
-                  opt.value = i;
-                  opt.textContent = ch.title;
-                  select.appendChild(opt);
-              });
-           }
-        </script>
+    return matches.map((m) => ({
+        title: m[0],
+        index: m.index
+            }));
+        }
+            </script>
             
             <div class="flex items-center gap-2">
                 <span id="reader-progress-percent" class="text-slate-500 font-mono"></span>
