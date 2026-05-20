@@ -1220,48 +1220,45 @@ function syncReaderFloatingChrome() {
 
     // --- STREAMING_CHUNK:Cargando el libro en el visor e indexando capítulos reales ---
     // --- VISUALIZACIÓN DE LECTURA REAL DE LIBRO (AUTÉNTICA PRIORIDAD) ---
+
     function loadBookToReader(id) {
-        const book = library.find(b => b.id === id);
-        if (!book) return;
+    const book = library.find(b => b.id === id);
+    if (!book) return;
 
-        activeBookId = id;
-        localStorage.setItem("or_last_active_book", id);
-        
-        document.getElementById("reader-ai-sidebar")?.classList.add("hidden");
+    activeBookId = id;
+    localStorage.setItem("or_last_active_book", id);
 
-        switchView("reader");
+    // ocultar IA si estaba abierta
+    document.getElementById("reader-ai-sidebar")?.classList.add("hidden");
 
-        document.getElementById("reader-chapter-select");
+    // cambiar vista primero
+    switchView("reader");
+
+    // 🔥 IMPORTANTE: esperar a que el DOM del reader exista
+    setTimeout(() => {
 
         renderReaderContent(book);
 
+        // capítulos (después de que el select ya existe)
         renderChapters(book);
 
-        requestAnimationFrame(() => {
-            const scroller = document.getElementById("reader-scroller");
-            if (scroller) {
-                scroller.scrollTop = 0;
-                scroller.scrollLeft = 0;
-            }
+        // reset scroll limpio
+        const scroller = document.getElementById("reader-scroller");
+        if (scroller) {
+            scroller.scrollTop = 0;
+            scroller.scrollLeft = 0;
+        }
 
-            ensureReaderStartsAtTop();
-        });
+        ensureReaderStartsAtTop();
 
-        setTimeout(() => {
-            const scroller = document.getElementById("reader-scroller");
-            if (scroller) scroller.scrollTop = 0;
-        }, 100);
-    }
+    }, 0);
 
-    function populateChapters(book) {
-        const select = document.getElementById("reader-chapter-select");
-        select.innerHTML = "";
-        
-        const paragraphs = book.content.split("\n\n").filter(p => p.trim() !== "");
-        const chapterOptions = [];
-        
-        paragraphs.forEach((pText, idx) => {
-            const cleanText = pText.trim();
+    // backup de seguridad de scroll
+    setTimeout(() => {
+        const scroller = document.getElementById("reader-scroller");
+        if (scroller) scroller.scrollTop = 0;
+    }, 100);
+}
             
             // Analizar capítulos reales en base a marcas del libro cargado
             
@@ -2416,5 +2413,47 @@ function syncReaderFloatingChrome() {
     </script>
 
     <script src="tu-app.js"></script>
+
+<script>
+    function extractChaptersFromText(text) {
+        const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
+        const matches = [...text.matchAll(regex)];
+        return matches.map(m => ({
+            title: m[0],
+            index: m.index
+        }));
+    }
+
+function renderChapters(book) {
+    const select = document.getElementById("reader-chapter-select");
+
+    if (!select) {
+        console.warn("reader-chapter-select no existe aún");
+        return;
+    }
+
+    select.innerHTML = "";
+
+    if (!book || !book.content) {
+        select.innerHTML = `<option>Sin contenido</option>`;
+        return;
+    }
+
+    const chapters = extractChaptersFromText(book.content);
+
+    if (chapters.length === 0) {
+        select.innerHTML = `<option>Sin capítulos detectados</option>`;
+        return;
+    }
+
+    chapters.forEach((ch, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = ch.title;
+        select.appendChild(opt);
+            });
+        }
+    </script>
+    
 </body>
 </html>
