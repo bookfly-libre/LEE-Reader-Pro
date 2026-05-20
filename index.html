@@ -70,6 +70,100 @@
         .underline-text {
             border-bottom: 2px dashed currentColor;
         }
+
+        .reader-config-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.reader-secondary-sticky {
+  position: sticky;
+  top: 72px;
+  z-index: 35;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.reader-maximized {
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+#reader-float-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 60;
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 9999px;
+}
+
+#reader-float-controls button {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.reader-vertical {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.reader-horizontal {
+  overflow-y: hidden;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.reader-horizontal-content {
+  min-width: 100%;
+  width: 100%;
+  scroll-snap-align: start;
+  column-count: auto !important;
+  column-width: 100% !important;
+}
+
+.reader-vertical-content {
+  min-width: 0;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .reader-config-sticky {
+    top: 0;
+  }
+
+  .reader-secondary-sticky {
+    top: 64px;
+  }
+
+  #reader-float-controls {
+    top: 8px;
+    right: 8px;
+    transform: scale(0.92);
+  }
+}
+
+        
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden">
@@ -191,7 +285,14 @@
         
         <!-- Envoltorio principal de lectura -->
         
-            <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
+            <div id="reader-float-controls" class="hidden">
+  <button onclick="toggleMaximizeReader()" title="Minimizar">−</button>
+  <button onclick="toggleMaximizeReader()" title="Maximizar / Restaurar">□</button>
+  <button onclick="exitReader()" title="Cerrar">X</button>
+  <button onclick="toggleReaderOrientation()" title="V / H">V/H</button>
+            </div>
+
+        <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
   <div class="flex flex-wrap items-center gap-2">
     <span class="text-10px text-slate-400 font-bold">Tema</span>
     <div class="flex gap-1">
@@ -199,9 +300,16 @@
       <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
       <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
       <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
-            </div>
+      
+        <div id="reader-scroller" class="reader-vertical flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300">
+            <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text">      
+    
+    </div>
+
+            
             
             <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
+      
             <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">   
                 
                 <!-- Temas y Graduación -->
@@ -263,9 +371,12 @@
                         <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors">📖 2 Páginas</button>
                         <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors">📜 Vertical</button>
                     </div>
-                    <button onclick="toggleMaximizeReader()" id="btn-maximize" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold" title="Maximizar / Restaurar">
+                    <button onclick="toggleMaximizeReader()" id="btn-maximize" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold" title="Maximizar / Restaurar">                       
                         🔲 Maximizar
                     </button>
+
+                    syncReaderFloatingChrome();
+                    
                     <!-- BOTÓN CERRAR VISOR -->
                     <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1" title="Salir de la lectura">
                         ✕ Salir
@@ -274,16 +385,18 @@
             </div>
 
             <!-- Barra secundaria de progreso e información del libro -->
-            <div class="p-2.5 bg-black/40 border-b border-slate-800/60 flex justify-between items-center text-xs text-slate-400">
+            <div id="reader-info-bar" class="reader-secondary-sticky p-2.5 bg-black/40 border-b border-slate-800/60 flex justify-between items-center text-xs text-slate-400 z-35">
                 <span id="reader-book-title" class="font-bold text-teal-400 truncate max-w-sm">Ningún libro cargado</span>
-                <div class="flex items-center gap-3">
-                    <!-- Botón de apertura manual para GennIA (Solo se activa si el lector lo solicita) -->
-                    <button onclick="toggleAISidebar()" class="px-2.5 py-1 bg-teal-500/10 hover:bg-teal-500/30 text-teal-300 border border-teal-500/20 rounded text-[10px] font-bold flex items-center gap-1 transition-all">
-                        ✨ GennIA Asistente (Opcional)
+
+                  <div class="flex items-center gap-3">
+                    <button onclick="toggleAISidebar()" class="px-2.5 py-1 bg-teal-500/10 hover:bg-teal-500/30 text-teal-300 border border-teal-500/20 rounded text-10px font-bold transition-all">
+                    GennIA
                     </button>
-                    <span id="reader-progress-percent" class="font-mono text-[11px]">Pág: 0 / 0 (0%)</span>
-                </div>
+                <span id="reader-page-indicator" class="font-mono text-11px">Pg 0 de 0</span>
+                <span id="reader-progress-percent" class="font-mono text-11px">0%</span>
+              </div>
             </div>
+
 
             <!-- Contenedor con distribución de lectura y asistente IA GennIA -->
             <div class="flex-grow flex overflow-hidden relative">
@@ -498,6 +611,77 @@
     // Configuración global de PDF.js worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+function getReaderScroller() {
+  return document.getElementById('reader-scroller');
+}
+
+function getReaderTextContainer() {
+  return document.getElementById('reader-text-container');
+}
+
+function ensureReaderStartsAtTop() {
+  const scroller = getReaderScroller();
+  const container = getReaderTextContainer();
+  if (!scroller) return;
+
+  scroller.scrollTop = 0;
+  scroller.scrollLeft = 0;
+
+  if (container) {
+    container.scrollIntoView({
+      behavior: 'instant',
+      block: 'start',
+      inline: 'nearest'
+    });
+  }
+
+  requestAnimationFrame(() => {
+    scroller.scrollTop = 0;
+    scroller.scrollLeft = 0;
+  });
+
+  setTimeout(() => {
+    scroller.scrollTop = 0;
+    scroller.scrollLeft = 0;
+  }, 50);
+}
+
+function setReaderMode(mode) {
+  readerConfig.readingMode = mode;
+  const scroller = getReaderScroller();
+  const container = getReaderTextContainer();
+  if (!scroller || !container) return;
+
+  const isHorizontal = mode === 'horizontal';
+
+  scroller.classList.toggle('reader-horizontal', isHorizontal);
+  scroller.classList.toggle('reader-vertical', !isHorizontal);
+  container.classList.toggle('reader-horizontal-content', isHorizontal);
+  container.classList.toggle('reader-vertical-content', !isHorizontal);
+
+  scroller.scrollTop = 0;
+  scroller.scrollLeft = 0;
+  localStorage.setItem('reader-mode', mode);
+}
+
+function toggleReaderOrientation() {
+  const next = readerConfig.readingMode === 'horizontal' ? 'vertical' : 'horizontal';
+  setReaderMode(next);
+}
+
+function syncReaderFloatingChrome() {
+  const controls = document.getElementById('reader-float-controls');
+  const configBar = document.getElementById('reader-config-bar');
+  const infoBar = document.getElementById('reader-info-bar');
+  if (!controls || !configBar || !infoBar) return;
+
+  const maximized = readerConfig.maximized;
+  controls.classList.toggle('hidden', !maximized);
+  configBar.classList.toggle('hidden', maximized);
+  infoBar.classList.toggle('hidden', false);
+}
+
+    
     // --- STREAMING_CHUNK:Inicializando base de datos local y catálogo de rankings offline ---
     // --- DATABASE / CATALOGO DE METADATOS DE RANKINGS (LOCAL) ---
     const METADATA_CATALOG = [
@@ -864,6 +1048,8 @@
                     activeBookId = null;
                     document.getElementById("reader-book-title").textContent = "Ningún libro cargado";
                     document.getElementById("reader-text-container").innerHTML = "";
+                    
+                    ensureReaderStartsAtTop();
                 }
                 renderBooks();
                 saveToStorage();
@@ -1082,6 +1268,13 @@
 
         switchView("reader");
 
+        renderReaderContent(bookId);
+        ensureReaderPriority();
+        setReaderMode(localStorage.getItem('reader-mode') || 'vertical');
+        syncReaderFloatingChrome();
+        requestAnimationFrame(() => ensureReaderStartsAtTop());
+        setTimeout(() => ensureReaderStartsAtTop(), 50);
+
         // El panel de IA GennIA permanece CERRADO por defecto al cargar cualquier libro
         document.getElementById("reader-ai-sidebar").classList.add("hidden");
 
@@ -1098,6 +1291,9 @@
 
         // Desplegar el contenido del libro de forma primordial (100% Real, completo y prioritario)
         renderReaderContent();
+
+         // Cambiar entre libros
+        ensureReaderStartsAtTop();
     }
 
     function populateChapters(book) {
@@ -1109,7 +1305,9 @@
         
         paragraphs.forEach((pText, idx) => {
             const cleanText = pText.trim();
+            
             // Analizar capítulos reales en base a marcas del libro cargado
+            
             const isChapter = /^(\[?Cap[íi]tulo|^\[?Chapter|^Cap[íi]tulo|^\[Part|^\[Página)/i.test(cleanText);
             if (isChapter) {
                 chapterOptions.push({
@@ -1169,6 +1367,7 @@
     }
 
     // --- STREAMING_CHUNK:Renderizando los párrafos y estructurando el visor de lectura ---
+    
     function renderReaderContent() {
         const book = library.find(b => b.id === activeBookId);
         if (!book) return;
@@ -1348,6 +1547,13 @@
         }
     }
 
+    setTimeout(() => {
+  ensureReaderStartsAtTop();
+  const savedMode = localStorage.getItem('reader-mode') || 'vertical';
+  setReaderMode(savedMode);
+  syncReaderFloatingChrome();
+}, 0);
+
     // --- STREAMING_CHUNK:Estructurando la lógica cognitiva adaptativa de GennIA ---
     // --- COMPAÑERO INTELECTUAL "GennIA" (Adaptativo y contextual) ---
     let currentGennIAPreset = "estándar";
@@ -1378,6 +1584,13 @@
     }
 
     function toggleAISidebar() {
+        function ensureReaderPriority() {
+          const ai = document.getElementById('reader-ai-sidebar');
+      if (ai) ai.classList.add('hidden');
+            
+            ensureReaderPriority();
+    }
+
         const sidebar = document.getElementById("reader-ai-sidebar");
         sidebar.classList.toggle("hidden");
         applyReadingLayout();
@@ -1766,19 +1979,22 @@
     }
 
     function toggleMaximizeReader() {
-        const wrapper = document.getElementById("reader-wrapper");
-        readerConfig.maximized = !readerConfig.maximized;
-        
-        if (readerConfig.maximized) {
-            wrapper.className = "fixed inset-0 z-50 overflow-hidden flex flex-col p-4 md:p-6";
-            document.getElementById("btn-maximize").textContent = "🔲 Minimizar";
-        } else {
-            wrapper.className = "relative flex-1 rounded-2xl border border-slate-800 overflow-hidden flex flex-col min-h-[550px] bg-[#1a202c]";
-            document.getElementById("btn-maximize").textContent = "🔲 Maximizar";
-        }
-        applyReadingLayout();
-        applyConfigToUI(); 
-    }
+  readerConfig.maximized = !readerConfig.maximized;
+
+  const wrapper = document.getElementById('reader-wrapper');
+  const btn = document.getElementById('btn-maximize');
+
+  if (wrapper) {
+    wrapper.classList.toggle('reader-maximized', readerConfig.maximized);
+  }
+
+  if (btn) {
+    btn.textContent = readerConfig.maximized ? 'Restaurar' : 'Maximizar';
+  }
+
+  syncReaderFloatingChrome();
+}
+
 
     function exitReader() {
         stopAudiobook();
@@ -1786,6 +2002,15 @@
             toggleMaximizeReader();
         }
         switchView("library");
+
+    const scroller = getReaderScroller();
+        if (scroller) {
+              scroller.scrollTop = 0;
+              scroller.scrollLeft = 0;
+    }
+            readerConfig.maximized = false;
+        syncReaderFloatingChrome();
+
     }
 
     // --- SISTEMA DE AUDIOBOOK (TTS NATIVO) ---
