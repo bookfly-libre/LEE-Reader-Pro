@@ -364,30 +364,34 @@
 
          <script>
             function renderChapters(book) {
-                const select = document.getElementById("reader-chapter-select");
-                if (!select) {
-                    console.warn("reader-chapter-select aún no existe");
-                return;
-            }
+    const select = document.getElementById("reader-chapter-select");
 
-                select.innerHTML = "";
+    if (!select) {
+        console.warn("reader-chapter-select aún no existe en el DOM");
+        return;
+    }
 
-                if (!book || !book.content) return;
+    select.innerHTML = "";
 
-                const chapters = extractChaptersFromText(book.content);
+    if (!book?.content) {
+        select.innerHTML = `<option>Sin contenido</option>`;
+        return;
+    }
 
-                if (!chapters || chapters.length === 0) {
-                select.innerHTML = `<option value="0">Sin capítulos detectados</option>`;
-                return;
-            }
+    const chapters = extractChaptersFromText(book.content);
 
-                chapters.forEach((ch, i) => {
-                const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.textContent = ch.title || `Capítulo ${i + 1}`;
-                    select.appendChild(opt);
-            });
-        }
+    if (!chapters.length) {
+        select.innerHTML = `<option>Sin capítulos detectados</option>`;
+        return;
+    }
+
+    chapters.forEach((ch, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = ch.title || `Capítulo ${i + 1}`;
+        select.appendChild(opt);
+    });
+}
 
 function extractChaptersFromText(text) {
     const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
@@ -1222,33 +1226,29 @@ function syncReaderFloatingChrome() {
     // --- STREAMING_CHUNK:Cargando el libro en el visor e indexando capítulos reales ---
     // --- VISUALIZACIÓN DE LECTURA REAL DE LIBRO (AUTÉNTICA PRIORIDAD) ---
 
-    function loadBookToReader(id) {
-        const book = library.find(b => b.id === id);
-        if (!book) return;
+        function loadBookToReader(id) {
+            const book = library.find(b => b.id === id);
+            if (!book) return;
 
     activeBookId = id;
+    localStorage.setItem("or_last_active_book", id);
 
     switchView("reader");
 
-    setTimeout(() => {
-        renderReaderContent(book);
-        renderChapters(book);
+    renderReaderContent(book);
+
+    requestAnimationFrame(() => {
+        renderChapters(book); // 🔥 AQUÍ (no antes)
 
         const scroller = document.getElementById("reader-scroller");
         if (scroller) {
             scroller.scrollTop = 0;
             scroller.scrollLeft = 0;
-                }
-
-            }, 50);
         }
 
-    // backup de seguridad de scroll
-    setTimeout(() => {
-        const scroller = document.getElementById("reader-scroller");
-        if (scroller) scroller.scrollTop = 0;
-    }, 100);
-}
+                ensureReaderStartsAtTop();
+            });
+        }
             
             // Analizar capítulos reales en base a marcas del libro cargado
             
@@ -2304,36 +2304,39 @@ function syncReaderFloatingChrome() {
     }
 
     // --- STREAMING_CHUNK:Control de cambio de pantallas y listeners ---
+    
     function switchView(viewId) {
-    viewMode = viewId;
+    
+        viewMode = viewId;
 
-    const views = ["library", "reader", "search"];
+            document.getElementById("view-library")?.classList.add("hidden");
+            document.getElementById("view-reader")?.classList.add("hidden");
+            document.getElementById("view-search")?.classList.add("hidden");
 
-    views.forEach(v => {
-        document.getElementById(`view-${v}`)?.classList.add("hidden");
+        const views = ["library", "reader", "search"];
 
+            views.forEach(v => {
         const nav = document.getElementById(`nav-${v}`);
         if (nav) {
             nav.className =
                 "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
-        }
-    });
+            }
+        });
 
     const activeView = document.getElementById(`view-${viewId}`);
-    const activeNav = document.getElementById(`nav-${viewId}`);
-
     if (activeView) activeView.classList.remove("hidden");
 
+    const activeNav = document.getElementById(`nav-${viewId}`);
     if (activeNav) {
         activeNav.className =
             "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2";
-    }
+        }
 
-    if (viewId === "reader") {
-        applyReadingLayout();
-        applyConfigToUI();
-    }
-}
+                if (viewId === "reader") {
+                    applyReadingLayout?.();
+                    applyConfigToUI?.();
+            }
+        }
 
     // ESCUCHADORES DE EVENTOS DE TECLADO Y GESTOS TÁCTILES
     window.addEventListener('keydown', (e) => {
