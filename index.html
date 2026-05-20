@@ -344,20 +344,58 @@
                 <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1" title="Salir de la lectura">✕ Salir</button>
             </div>
         </div>
-
+        
         <!-- Barra de información -->
         
         <div id="reader-info-bar" class="reader-secondary-sticky bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between text-[10px] text-slate-300 z-35">
             <div class="flex items-center gap-2">
                 <span id="reader-book-title" class="font-bold text-slate-100 truncate max-w-[200px] md:max-w-xs">Ningún libro cargado</span>
-                <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[10px] outline-none focus:border-teal-500 text-slate-300"></select>
+                <select id="reader-chapter-select" onchange="handleChapterSelect()" 
+                    class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[10px] outline-none focus:border-teal-500 text-slate-300 min-w-0 max-w-[120px] truncate"
+
+                    function renderChapters(book) {
+                        const select = document.getElementById("reader-chapter-select");
+                        if (!select) return;
+
+                        select.innerHTML = "";
+
+                        const chapters = extractChapters(book.content); // o tu lógica real
+
+                        chapters.forEach((ch, i) => {
+                            const opt = document.createElement("option");
+                            opt.value = i;
+                            opt.textContent = ch.title;
+                            select.appendChild(opt);
+                        });
+                    }
+                    
+                    </select>
                 <span id="gennia-complexity-badge" class="hidden px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 font-bold tracking-wide uppercase"></span>
-            
+
             <button onclick="toggleAISidebar()" class="...">
               ✨ GennIA
             </button>
-            
+                
             </div>
+
+        <!-- DESPUÉS del HTML, en otra parte -->
+        <script>
+           function renderChapters(book) {
+              const select = document.getElementById("reader-chapter-select");
+              if (!select) return;
+
+              select.innerHTML = "";
+
+              const chapters = extractChapters(book.content);
+
+              chapters.forEach((ch, i) => {
+                  const opt = document.createElement("option");
+                  opt.value = i;
+                  opt.textContent = ch.title;
+                  select.appendChild(opt);
+              });
+           }
+        </script>
             
             <div class="flex items-center gap-2">
                 <span id="reader-progress-percent" class="text-slate-500 font-mono"></span>
