@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght=0,400;0,700;1,400&family=Fira+Code:wght@400;500&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght=0,400;0,700;1,400&family=Fira+Code:wght=400;500&family=Cinzel:wght=600;800;900&display=swap" rel="stylesheet">
     
     <style>
         body {
@@ -28,11 +28,11 @@
             background: #0f172a;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: #1e293b;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #6366f1;
+            background: #14b8a6;
         }
         /* Estilos de doble página en PC */
         .book-columns {
@@ -40,6 +40,16 @@
             column-gap: 4rem;
             column-rule: 1px inset rgba(255, 255, 255, 0.08);
             width: 100%;
+        }
+        /* Título Turquesa Tecnológico y Prestigioso */
+        .turquoise-tech-title {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #a7f3d0 0%, #22c7b8 40%, #1abc9c 70%, #14b8a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(20, 184, 166, 0.45));
+            font-weight: 900;
+            letter-spacing: 0.06em;
         }
         /* Highlight effects */
         .hl-yellow { background-color: rgba(254, 240, 138, 0.55); color: #000; }
@@ -59,47 +69,43 @@
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
-<header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row gap-3 justify-between items-center">
+<header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <!-- Logo Digital de Lectura Turquesa Premium -->
         <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/20">
-                <span class="text-2xl">📚</span>
+            <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg shadow-teal-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
             </div>
             <div>
-                <h1 class="text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300 font-serif">
+                <h1 class="text-2xl font-black tracking-tight turquoise-tech-title">
                     LEE-READER
                 </h1>
-                <p class="text-[9px] text-indigo-400 font-semibold tracking-wider uppercase">Lector Universal & Biblioteca Inteligente</p>
+                <p class="text-[9px] text-teal-400 font-bold tracking-wider uppercase">Lector Universal & Biblioteca Inteligente</p>
             </div>
         </div>
 
-        <!-- Sección de Buscador Rankings en el Header (Reemplaza a Gemini IA en PC) -->
-        <div class="hidden md:flex items-center gap-2">
-            <button onclick="switchView('search')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-indigo-300 hover:text-indigo-200 text-xs font-semibold rounded-xl border border-slate-800 transition-all flex items-center gap-2">
-                🏆 Buscador Rankings
-            </button>
-        </div>
-
-        <!-- Navegación de Vistas -->
-        <nav class="flex space-x-1 bg-slate-900 p-1 rounded-xl border border-slate-800 w-full md:w-auto justify-center">
-            <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm flex items-center gap-2">
+        <!-- Navegación Simplificada Exclusiva -->
+        <nav class="flex space-x-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 w-full md:w-auto justify-center">
+            <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2">
                 🏛️ Mi Biblioteca
             </button>
-            <button onclick="switchView('reader')" id="nav-reader" class="px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2">
+            <button onclick="switchView('reader')" id="nav-reader" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">
                 📖 Visor E-Reader
             </button>
-            <button onclick="switchView('search')" id="nav-search" class="px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2">
-                🔍 Buscador Rankings
+            <button onclick="switchView('search')" id="nav-search" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">
+                🏆 Buscador Rankings
             </button>
         </nav>
     </div>
 </header>
 
-<!-- Notificación Flotante (Toast) Personalizada para Reemplazar alerts nativos -->
+<!-- Notificación Flotante (Toast) Personalizada -->
 <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
 <!-- Modal de Confirmación Personalizado -->
-<div id="confirm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+<div id="confirm-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
         <h4 id="confirm-title" class="text-base font-bold text-slate-100">Confirmación</h4>
         <p id="confirm-msg" class="text-xs text-slate-400"></p>
@@ -115,15 +121,19 @@
     <!-- SECCIÓN: BIBLIOTECA -->
     <section id="view-library" class="space-y-6">
         <!-- Dashboard / Buscador General de Biblioteca -->
-        <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-indigo-950/20 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+        <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-teal-950/10 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-slate-200">Mi Estantería de Libros</h2>
-                    <p class="text-xs text-slate-400">Personaliza tus estantes, sube lecturas (Texto, HTML o EPUB), gestiona tus recursos y consulta rankings en tiempo real.</p>
+                    <p class="text-xs text-slate-400">Personaliza tus estantes, sube tus lecturas o restaura contenido de forma segura.</p>
                 </div>
                 
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="openAddBookModal()" class="flex-1 md:flex-none px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5">
+                    <!-- Botón de Recuperación Anti-Reseteo -->
+                    <button id="btn-recover-backup" onclick="restoreLibraryBackup()" class="hidden px-4 py-2 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 text-xs font-bold rounded-xl transition-all border border-emerald-800/60 flex items-center gap-1.5">
+                        🛡️ Recuperar Contenido
+                    </button>
+                    <button onclick="openAddBookModal()" class="flex-1 md:flex-none px-4 py-2 bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold rounded-xl transition-all shadow-md shadow-teal-500/10 flex items-center justify-center gap-1.5">
                         ➕ Añadir Libro / EPUB
                     </button>
                     <button onclick="triggerResetLibrary()" class="flex-1 md:flex-none px-4 py-2 bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-300 text-xs font-bold rounded-xl transition-all border border-slate-700">
@@ -132,13 +142,10 @@
                 </div>
             </div>
 
-            <!-- BUSCADOR PRINCIPAL UNIFICADO -->
+            <!-- Buscador de Biblioteca -->
             <div class="relative w-full">
                 <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                <input type="text" id="library-search-input" oninput="handleLibrarySearch()" placeholder="Buscar en mi biblioteca por título, autor o filtrar rankings externos..." class="w-full pl-10 pr-24 py-3 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl outline-none text-sm transition-all text-slate-200">
-                <button onclick="switchView('search')" class="absolute right-2 top-2 px-3 py-1.5 bg-indigo-950 hover:bg-indigo-900 border border-indigo-900/40 text-[10px] font-bold text-indigo-300 rounded-lg transition-all">
-                    Buscador Rankings 🏆
-                </button>
+                <input type="text" id="library-search-input" oninput="handleLibrarySearch()" placeholder="Buscar en mi biblioteca local por título, autor o formato..." class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 focus:border-teal-500 rounded-xl outline-none text-sm transition-all text-slate-200">
             </div>
         </div>
 
@@ -151,8 +158,8 @@
                     <!-- Dinámico -->
                 </div>
                 <div class="pt-4 border-t border-slate-800/80">
-                    <input type="text" id="new-shelf-input" placeholder="Nombre de estante..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-indigo-500 mb-2">
-                    <button onclick="createNewShelf()" class="w-full py-1.5 bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-900/40 text-xs font-bold rounded-lg transition-all">
+                    <input type="text" id="new-shelf-input" placeholder="Nombre de estante..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-teal-500 mb-2">
+                    <button onclick="createNewShelf()" class="w-full py-1.5 bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-900/40 text-xs font-bold rounded-lg transition-all">
                         🔨 Crear Estante
                     </button>
                 </div>
@@ -162,9 +169,9 @@
             <div class="md:col-span-3 space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 flex items-center gap-2" id="current-shelf-title">
-                        📚 Todos los Recursos
+                        📂 Todos los Recursos
                     </h3>
-                    <span id="library-count" class="text-xs text-indigo-400 font-bold bg-indigo-950/40 border border-indigo-900/30 px-2.5 py-1 rounded-lg">0 libros</span>
+                    <span id="library-count" class="text-xs text-teal-400 font-bold bg-teal-950/40 border border-teal-900/30 px-2.5 py-1 rounded-lg">0 libros</span>
                 </div>
                 
                 <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -177,12 +184,12 @@
     <!-- SECCIÓN: VISOR E-READER -->
     <section id="view-reader" class="hidden flex-1 flex flex-col">
         
-        <!-- Envoltorio principal que cambia a pantalla completa al maximizar -->
+        <!-- Envoltorio principal de lectura -->
         <div id="reader-wrapper" class="relative flex-grow rounded-2xl border border-slate-800 overflow-hidden flex flex-col min-h-[550px] bg-[#1a202c] transition-all duration-300">
             
             <!-- BARRA DE CONFIGURACIÓN INTEGRADA -->
             <div class="bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-20">
-                <!-- Temas y Graduación gradual -->
+                <!-- Temas y Graduación -->
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="text-[10px] text-slate-400 font-bold">Tema:</span>
                     <div class="flex gap-1">
@@ -193,12 +200,12 @@
                     </div>
                     <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">
                         <span class="text-[9px] text-slate-400">Graduación:</span>
-                        <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-indigo-500 h-1 rounded-lg cursor-pointer bg-slate-700">
+                        <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700">
                         <span id="grade-display" class="text-[9px] text-slate-300 font-bold font-mono">80%</span>
                     </div>
                 </div>
 
-                <!-- Tipografía y Ajustes visuales (Font size, family, margins) -->
+                <!-- Tipografía y Ajustes visuales -->
                 <div class="flex flex-wrap items-center gap-2">
                     <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
                         <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] font-bold">A-</button>
@@ -206,7 +213,7 @@
                         <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] font-bold">A+</button>
                     </div>
                     
-                    <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-[10px] px-2 py-1 rounded-md text-slate-300 outline-none">
+                    <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-[10px] px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500">
                         <option value="serif">Times New Roman (Serif)</option>
                         <option value="sans">Inter (Sans-Serif)</option>
                         <option value="mono">Fira Code (Monospace)</option>
@@ -220,12 +227,12 @@
                     </div>
                 </div>
 
-                <!-- Controles Audiolibro y Navegación de Capítulos -->
+                <!-- Controles Audiolibro y Capítulos -->
                 <div class="flex flex-wrap items-center gap-2">
                     <!-- Selector de Capítulos -->
                     <div class="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-lg border border-slate-800" id="chapter-nav-container">
                         <span class="text-[10px] text-slate-400 font-bold">📖 Capítulo:</span>
-                        <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-950 text-[10px] border border-slate-800 rounded p-0.5 text-slate-300 max-w-[140px] outline-none">
+                        <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-950 text-[10px] border border-slate-800 rounded p-0.5 text-slate-300 max-w-[140px] outline-none focus:border-teal-500">
                             <option value="0">Cargando...</option>
                         </select>
                     </div>
@@ -233,7 +240,7 @@
                     <!-- TTS Audiolibro -->
                     <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
                         <span class="text-[9px] text-slate-400 px-1 font-bold hidden sm:inline">🔊 Audiolibro:</span>
-                        <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-indigo-600 hover:bg-indigo-500 rounded text-[10px] font-bold text-white flex items-center gap-0.5">
+                        <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-[10px] font-bold text-slate-950 flex items-center gap-0.5 transition-colors">
                             ▶ Leer
                         </button>
                         <button onclick="stopAudiobook()" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] text-slate-300">
@@ -250,13 +257,13 @@
                 <!-- Modos de Vista y Maximizar/Cerrar -->
                 <div class="flex items-center gap-1.5">
                     <div class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800" id="pc-view-toggle">
-                        <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-indigo-600 text-white rounded text-[10px] font-bold">📖 2 Páginas</button>
-                        <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold">📜 Vertical</button>
+                        <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors">📖 2 Páginas</button>
+                        <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors">📜 Vertical</button>
                     </div>
                     <button onclick="toggleMaximizeReader()" id="btn-maximize" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold" title="Maximizar / Restaurar">
                         🔲 Maximizar
                     </button>
-                    <!-- BOTÓN CERRAR VISOR (Salir de la lectura) -->
+                    <!-- BOTÓN CERRAR VISOR -->
                     <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1" title="Salir de la lectura">
                         ✕ Salir
                     </button>
@@ -265,9 +272,9 @@
 
             <!-- Barra secundaria de progreso e información del libro -->
             <div class="p-2.5 bg-black/40 border-b border-slate-800/60 flex justify-between items-center text-xs text-slate-400">
-                <span id="reader-book-title" class="font-bold text-indigo-400">Ningún libro cargado</span>
+                <span id="reader-book-title" class="font-bold text-teal-400">Ningún libro cargado</span>
                 <div class="flex items-center gap-3">
-                    <button onclick="toggleAISidebar()" class="px-2.5 py-1 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded text-[10px] font-bold flex items-center gap-1">
+                    <button onclick="toggleAISidebar()" class="px-2.5 py-1 bg-teal-500/20 hover:bg-teal-500/40 text-teal-300 border border-teal-500/30 rounded text-[10px] font-bold flex items-center gap-1 transition-all">
                         ✨ GennIA
                     </button>
                     <span id="reader-progress-percent" class="font-mono">Pág: 0 / 0 (0%)</span>
@@ -276,31 +283,37 @@
 
             <!-- Contenedor con distribución de lectura y asistente IA GennIA -->
             <div class="flex-grow flex overflow-hidden relative">
-                <!-- Contenedor Principal de Texto (Contenido real del libro - Prioridad número 1) -->
+                <!-- Contenedor Principal de Texto -->
                 <div class="flex-grow p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300" id="reader-scroller" onmouseup="handleTextSelection(event)">
-                    <div id="reader-text-container" class="max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300">
+                    <div id="reader-text-container" class="max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text">
                         <!-- El texto dinámico real se inyectará aquí de manera primordial -->
                     </div>
                 </div>
 
-                <!-- Panel Lateral de IA "GennIA" (Herramienta puramente complementaria y opcional) -->
+                <!-- Panel Lateral de IA "GennIA" -->
                 <div id="reader-ai-sidebar" class="w-80 border-l border-slate-800 bg-slate-950/95 flex flex-col justify-between hidden transition-all duration-300 z-30">
                     <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/40">
                         <div class="flex items-center gap-2">
-                            <span class="text-sm">✨</span>
+                            <span class="text-teal-400">✨</span>
                             <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Asistencia GennIA</h4>
                         </div>
                         <button onclick="toggleAISidebar()" class="text-slate-500 hover:text-slate-300 text-xs">✕</button>
                     </div>
 
+                    <!-- Indicador de Adaptabilidad de Nivel Cognitivo -->
+                    <div class="px-4 py-2 bg-teal-950/20 border-b border-slate-800 flex items-center justify-between text-[10px]">
+                        <span class="text-slate-400 font-bold">Nivel Cognitivo:</span>
+                        <span id="gennia-complexity-badge" class="px-2 py-0.5 rounded bg-teal-900/40 text-teal-300 font-bold tracking-wide uppercase">Auto-Detectando</span>
+                    </div>
+
                     <!-- Consola / Output del Asistente -->
                     <div class="flex-grow p-4 overflow-y-auto space-y-4 text-xs" id="ai-chat-history">
-                        <div class="bg-indigo-950/30 border border-indigo-900/30 rounded-xl p-3 text-slate-300">
-                            <p class="font-bold text-indigo-400 mb-1">¡Hola! Soy GennIA, tu copiloto literario.</p>
-                            <p class="leading-relaxed">El contenido original del libro se muestra en la pantalla principal. Yo puedo ayudarte opcionalmente con resúmenes, análisis, traducción o contexto.</p>
+                        <div class="bg-teal-950/20 border border-teal-900/30 rounded-xl p-3 text-slate-300">
+                            <p class="font-bold text-teal-400 mb-1">¡Hola! Soy GennIA, tu copiloto de lectura.</p>
+                            <p class="leading-relaxed text-[11px]">Básandome en el texto real que estás visualizando, puedo ayudarte a resumir, explicar contextos o definir términos académicos sin inventar datos.</p>
                             <div class="mt-2.5 flex flex-wrap gap-1.5">
-                                <button onclick="askAIAssistant('summarize')" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-[10px] font-bold text-white rounded">📝 Resumir Capítulos</button>
-                                <button onclick="askAIAssistant('explain-context')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-300 rounded">🔍 Contexto Histórico</button>
+                                <button onclick="askAIAssistant('summarize')" class="px-2 py-1 bg-teal-500 hover:bg-teal-400 text-[10px] font-bold text-slate-950 rounded transition-colors">📝 Resumir</button>
+                                <button onclick="askAIAssistant('explain-context')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-300 rounded transition-colors">🔍 Contexto Histórico</button>
                             </div>
                         </div>
                     </div>
@@ -310,14 +323,14 @@
                         <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold">
                             <span>🔑 Gemini API Key (Opcional):</span>
                         </div>
-                        <input type="password" id="gemini-api-key" placeholder="Auto-Key Activa (o ingresa una)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-slate-300 outline-none focus:border-indigo-500">
+                        <input type="password" id="gemini-api-key" placeholder="Auto-Key Activa (o ingresa una)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-[10px] text-slate-300 outline-none focus:border-teal-500">
                     </div>
 
                     <!-- Input de consulta del Chat con IA -->
                     <div class="p-3 border-t border-slate-800 bg-slate-900/20">
                         <div class="flex gap-2">
-                            <input type="text" id="ai-chat-input" placeholder="Pregunta a GennIA sobre la obra..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] outline-none text-slate-200 focus:border-indigo-500" onkeypress="handleAIChatKeyPress(event)">
-                            <button onclick="sendCustomAIQuery()" class="px-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold">Enviar</button>
+                            <input type="text" id="ai-chat-input" placeholder="Pregunta a GennIA sobre la obra..." class="flex-grow bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] outline-none text-slate-200 focus:border-teal-500" onkeypress="handleAIChatKeyPress(event)">
+                            <button onclick="sendCustomAIQuery()" class="px-3 bg-teal-500 hover:bg-teal-400 rounded-lg text-xs font-bold text-slate-950 transition-colors">Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -339,7 +352,7 @@
         <div id="selection-popup" class="absolute hidden bg-slate-950 border border-slate-800 p-3 rounded-xl shadow-2xl flex flex-col gap-2 z-50 max-w-xs">
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pb-1 border-b border-slate-800 flex justify-between items-center">
                 <span>Marcadores & GennIA</span>
-                <button onclick="askAIAssistant('explain-selection')" class="text-[9px] font-extrabold text-indigo-400 hover:text-indigo-300">✨ Explicar con GennIA</button>
+                <button onclick="askAIAssistant('explain-selection')" class="text-[9px] font-extrabold text-teal-400 hover:text-teal-300">✨ Explicar con GennIA</button>
             </div>
             
             <!-- Paleta de Colores de Resaltador -->
@@ -358,27 +371,27 @@
 
             <!-- Añadir Notas -->
             <div class="pt-2 border-t border-slate-800 flex justify-between gap-1.5">
-                <button onclick="addNoteToSelection()" class="w-full py-1 bg-indigo-600 hover:bg-indigo-500 rounded text-[10px] font-bold">📝 Agregar Nota</button>
-                <button onclick="clearSelectionHighlight()" class="px-2 py-1 bg-slate-800 hover:bg-red-950 rounded text-[10px] text-red-400 font-bold">🗑️ Limpiar</button>
+                <button onclick="addNoteToSelection()" class="w-full py-1 bg-teal-500 text-slate-950 hover:bg-teal-400 rounded text-[10px] font-bold transition-colors">📝 Agregar Nota</button>
+                <button onclick="clearSelectionHighlight()" class="px-2 py-1 bg-slate-800 hover:bg-red-950 rounded text-[10px] text-red-400 font-bold transition-colors">🗑️ Limpiar</button>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN: BUSCADOR DE RANKINGS (Optimizado Responsive, No se desborda en celular) -->
+    <!-- SECCIÓN: BUSCADOR DE RANKINGS -->
     <section id="view-search" class="hidden space-y-6 w-full max-w-full overflow-hidden px-1">
         <div class="bg-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
             <div>
                 <h2 class="text-lg md:text-xl font-bold text-slate-200">🏆 Buscador de Rankings e Información</h2>
                 <p class="text-xs text-slate-400">Busca títulos populares de libros, enciclopedias, anime o manga para ver sus calificaciones oficiales integradas.</p>
-                <div class="mt-2 bg-indigo-950/40 border border-indigo-900/30 p-3 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <div class="mt-2 bg-teal-950/20 border border-teal-900/30 p-3 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
-                        <span class="text-xs">✨</span>
-                        <p class="text-[10px] md:text-[11px] text-indigo-300"><strong>Búsqueda en Vivo con IA (Gemini Grounding):</strong> Consulta información verídica y rankings actualizados directamente desde internet.</p>
+                        <span class="text-xs text-teal-400">✨</span>
+                        <p class="text-[10px] md:text-[11px] text-teal-300"><strong>Búsqueda en Vivo con IA:</strong> Consulta información verídica y rankings actualizados directamente desde internet.</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer shrink-0 mt-1 sm:mt-0">
                         <input type="checkbox" id="live-search-toggle" class="sr-only peer">
-                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                        <span class="ml-2 text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Activar IA</span>
+                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                        <span class="ml-2 text-[10px] font-bold text-teal-400 uppercase tracking-wider font-mono">Activar IA</span>
                     </label>
                 </div>
             </div>
@@ -387,13 +400,13 @@
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1 relative w-full">
                     <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                    <input type="text" id="global-search-input" oninput="handleSearchInputChange()" placeholder="Frieren, Dune, Cien años de soledad, Harry Potter..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl outline-none text-xs md:text-sm transition-all text-slate-200">
+                    <input type="text" id="global-search-input" oninput="handleSearchInputChange()" placeholder="Frieren, Dune, Cien años de soledad, Harry Potter..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 focus:border-teal-500 rounded-xl outline-none text-xs md:text-sm transition-all text-slate-200">
                 </div>
                 <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full md:w-auto">
-                    <button id="live-search-btn" onclick="executeLiveAISearch()" class="hidden w-full sm:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl transition-all shadow-md shrink-0">
+                    <button id="live-search-btn" onclick="executeLiveAISearch()" class="hidden w-full sm:w-auto px-5 py-3 bg-teal-500 text-slate-950 hover:bg-teal-400 text-xs font-bold rounded-xl transition-all shadow-md shadow-teal-500/10 shrink-0">
                         Buscar con GennIA
                     </button>
-                    <select id="search-category" onchange="executeGlobalSearch()" class="w-full sm:w-auto bg-slate-900 border border-slate-800 text-xs px-4 py-3 rounded-xl outline-none focus:border-indigo-500 text-slate-300">
+                    <select id="search-category" onchange="executeGlobalSearch()" class="w-full sm:w-auto bg-slate-900 border border-slate-800 text-xs px-4 py-3 rounded-xl outline-none focus:border-teal-500 text-slate-300">
                         <option value="all">Categorías: Todas</option>
                         <option value="Libros">Libros & Enciclopedias</option>
                         <option value="AnimeManga">Anime & Manga</option>
@@ -405,9 +418,9 @@
 
         <!-- Resultados de la Búsqueda de Rankings -->
         <div class="space-y-4">
-            <h3 class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-400">Resultados del Catálogo de Rankings</h3>
+            <h3 class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-400 font-mono">Resultados del Catálogo de Rankings</h3>
             <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <!-- Dinámico - Perfectamente dimensionado con grid adaptativo de Tailwind -->
+                <!-- Dinámico -->
             </div>
         </div>
     </section>
@@ -423,7 +436,7 @@
         </div>
         <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
             <!-- Selector de carga de archivo real -->
-            <div class="border-2 border-dashed border-slate-700 hover:border-indigo-500 p-6 rounded-xl text-center bg-slate-950/60 cursor-pointer transition-all relative">
+            <div class="border-2 border-dashed border-slate-700 hover:border-teal-500 p-6 rounded-xl text-center bg-slate-950/60 cursor-pointer transition-all relative">
                 <input type="file" id="file-uploader" accept=".txt,.html,.epub" onchange="handleFileImport(event)" class="absolute inset-0 opacity-0 cursor-pointer">
                 <span class="text-3xl block mb-2">📂</span>
                 <p class="text-xs font-bold text-slate-300">Cargar archivo local (TXT, HTML o EPUB)</p>
@@ -432,46 +445,47 @@
 
             <div class="relative flex py-2 items-center">
                 <div class="flex-grow border-t border-slate-800"></div>
-                <span class="flex-shrink mx-4 text-[10px] text-slate-500 uppercase font-black">O Crea uno Manual / Simulado</span>
+                <span class="flex-shrink mx-4 text-[10px] text-slate-500 uppercase font-black">O Crea uno Manual</span>
                 <div class="flex-grow border-t border-slate-800"></div>
             </div>
 
             <div class="space-y-3">
                 <div>
                     <label class="text-[10px] text-slate-400 font-bold block mb-1">Título del Recurso</label>
-                    <input type="text" id="manual-title" placeholder="Ej: Drácula" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-indigo-500">
+                    <input type="text" id="manual-title" placeholder="Ej: Drácula" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500">
                 </div>
                 <div>
                     <label class="text-[10px] text-slate-400 font-bold block mb-1">Autor / Mangaka</label>
-                    <input type="text" id="manual-author" placeholder="Ej: Bram Stoker" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-indigo-500">
+                    <input type="text" id="manual-author" placeholder="Ej: Bram Stoker" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-[10px] text-slate-400 font-bold block mb-1">Estante Destino</label>
-                        <select id="manual-shelf" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-indigo-500">
+                        <select id="manual-shelf" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500">
                             <!-- Dinámico -->
                         </select>
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 font-bold block mb-1">Color de Portada</label>
-                        <input type="color" id="manual-color" value="#6366f1" class="w-full h-9 bg-slate-950 border border-slate-800 rounded-lg outline-none cursor-pointer">
+                        <input type="color" id="manual-color" value="#14b8a6" class="w-full h-9 bg-slate-950 border border-slate-800 rounded-lg outline-none cursor-pointer">
                     </div>
                 </div>
                 <div>
                     <label class="text-[10px] text-slate-400 font-bold block mb-1">Contenido / Texto a leer</label>
-                    <textarea id="manual-content" rows="6" placeholder="Pega el contenido del libro o escribe capítulos usando '[Capítulo 1: Nombre]'..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-indigo-500 font-mono"></textarea>
+                    <textarea id="manual-content" rows="6" placeholder="Pega el contenido del libro o escribe capítulos usando '[Capítulo 1: Nombre]'..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500 font-mono"></textarea>
                 </div>
             </div>
         </div>
         <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-end gap-2">
             <button onclick="closeAddBookModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl font-bold">Cancelar</button>
-            <button onclick="saveManualBook()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold rounded-xl transition-all shadow-lg">Guardar en Estante</button>
+            <button onclick="saveManualBook()" class="px-5 py-2 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg text-xs">Guardar en Estante</button>
         </div>
     </div>
 </div>
 
 <script>
     // --- DATABASE / CATALOGO DE METADATOS DE RANKINGS (LOCAL) ---
+    // --- STREAMING_CHUNK: Datos del catálogo de rankings y soporte offline ---
     const METADATA_CATALOG = [
         {
             id: "meta-1",
@@ -588,17 +602,18 @@
     let touchStartX = 0;
     let touchEndX = 0;
 
-    // --- SISTEMA DE NOTIFICACIONES TOAST (Reemplaza alert) ---
+    // --- STREAMING_CHUNK: Sistema de Notificaciones Toasts y Confirmaciones en interfaz turquesa ---
+    // --- SISTEMA DE NOTIFICACIONES TOAST ---
     function showToast(message, type = "success") {
         const container = document.getElementById("toast-container");
         const toast = document.createElement("div");
         toast.className = `p-3.5 rounded-xl shadow-xl text-xs font-semibold text-white transition-all duration-300 transform translate-y-2 pointer-events-auto flex justify-between items-center ${
-            type === "success" ? "bg-emerald-600 border border-emerald-500" : 
-            type === "error" ? "bg-red-600 border border-red-500" : "bg-indigo-600 border border-indigo-500"
+            type === "success" ? "bg-teal-600 border border-teal-500" : 
+            type === "error" ? "bg-red-600 border border-red-500" : "bg-teal-700 text-white border border-teal-500"
         }`;
         toast.innerHTML = `
             <span>${message}</span>
-            <button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white font-bold ml-3 text-sm">✕</button>
+            <button onclick="this.parentElement.remove()" class="font-bold ml-3 text-sm">✕</button>
         `;
         container.appendChild(toast);
         
@@ -613,7 +628,7 @@
         }, 4000);
     }
 
-    // --- SISTEMA DE CONFIRMACIÓN MODAL (Reemplaza confirm) ---
+    // --- SISTEMA DE CONFIRMACIÓN MODAL (UX de seguridad) ---
     function customConfirm(title, message, onOk, onCancel = null) {
         const modal = document.getElementById("confirm-modal");
         const titleEl = document.getElementById("confirm-title");
@@ -691,25 +706,27 @@
         }
     }
 
-    // --- STREAMING_CHUNK: Implementing search, filtering, and local persistence... -->
-    // --- GESTIÓN DE BIBLIOTECA, ESTANTERÍAS Y BÚSQUEDA GENERAL ---
+    // --- STREAMING_CHUNK: Control y filtrado de estanterías y sidebar ---
+    // --- GESTIÓN DE BIBLIOTECA, ESTANTERÍAS Y BÚSQUEDA ---
     function renderShelves() {
         const container = document.getElementById("shelves-list");
         container.innerHTML = "";
 
         const allBtn = document.createElement("button");
         allBtn.onclick = () => filterByShelf("all");
-        allBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${currentShelf === "all" ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
+        allBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${currentShelf === "all" ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
         allBtn.textContent = "📂 Todos los Recursos";
         container.appendChild(allBtn);
 
         shelves.forEach(shelf => {
             const shelfBtn = document.createElement("button");
             shelfBtn.onclick = () => filterByShelf(shelf);
-            shelfBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all flex justify-between items-center ${currentShelf === shelf ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
+            shelfBtn.className = `w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all flex justify-between items-center ${currentShelf === shelf ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30' : 'text-slate-400 hover:bg-slate-800'}`;
             shelfBtn.innerHTML = `
                 <span>📁 ${shelf}</span>
-                <span onclick="triggerDeleteShelf('${shelf}'); event.stopPropagation();" class="text-red-400 hover:text-red-300 ml-2">✕</span>
+                <span onclick="triggerDeleteShelf('${shelf}'); event.stopPropagation();" class="text-slate-500 hover:text-red-400 p-1 rounded transition-colors" title="Eliminar Estante">
+                    🗑️
+                </span>
             `;
             container.appendChild(shelfBtn);
         });
@@ -760,11 +777,11 @@
         renderBooks();
     }
 
-    // Buscador general de libros locales (Biblioteca)
     function handleLibrarySearch() {
         renderBooks();
     }
 
+    // --- STREAMING_CHUNK: Renderizado de tarjetas de libros de la estantería ---
     function renderBooks() {
         const container = document.getElementById("books-grid");
         container.innerHTML = "";
@@ -793,18 +810,18 @@
 
         filtered.forEach(book => {
             const card = document.createElement("div");
-            card.className = "bg-slate-950 border border-slate-800/80 p-4 rounded-xl flex flex-col justify-between hover:border-indigo-500/40 transition-all shadow-lg group relative overflow-hidden";
+            card.className = "bg-slate-950 border border-slate-800/80 p-4 rounded-xl flex flex-col justify-between hover:border-teal-500/40 transition-all shadow-lg group relative overflow-hidden";
             
             card.innerHTML = `
-                <div class="absolute top-0 left-0 w-2 h-full" style="background-color: ${book.color || '#6366f1'}"></div>
+                <div class="absolute top-0 left-0 w-2 h-full" style="background-color: ${book.color || '#14b8a6'}"></div>
                 <div class="pl-4 space-y-3">
                     <div class="flex justify-between items-start">
                         <div>
-                            <span class="text-[9px] uppercase font-black text-indigo-400 bg-indigo-950/60 border border-indigo-900/30 px-2 py-0.5 rounded tracking-wider">${book.format || 'Texto'}</span>
+                            <span class="text-[9px] uppercase font-black text-teal-400 bg-teal-950/60 border border-teal-900/30 px-2 py-0.5 rounded tracking-wider">${book.format || 'Texto'}</span>
                             <h4 class="text-sm font-bold text-slate-100 mt-1.5 line-clamp-1">${book.title}</h4>
                             <p class="text-[11px] text-slate-400">Por ${book.author}</p>
                         </div>
-                        <button onclick="triggerDeleteBook('${book.id}')" class="text-slate-600 hover:text-red-400 transition-colors text-xs p-1">🗑️</button>
+                        <button onclick="triggerDeleteBook('${book.id}')" class="text-slate-600 hover:text-red-400 transition-colors text-xs p-1" title="Eliminar Libro">🗑️</button>
                     </div>
 
                     <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-slate-500">
@@ -813,7 +830,7 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <button onclick="loadBookToReader('${book.id}')" class="flex-1 py-2 bg-indigo-600/10 hover:bg-indigo-600 hover:text-white text-indigo-300 text-xs font-bold rounded-lg transition-all text-center">
+                        <button onclick="loadBookToReader('${book.id}')" class="flex-1 py-2 bg-teal-500/10 hover:bg-teal-500 hover:text-slate-950 text-teal-300 text-xs font-bold rounded-lg transition-all text-center">
                             📖 Leer ahora
                         </button>
                     </div>
@@ -841,16 +858,45 @@
         );
     }
 
+    // --- STREAMING_CHUNK: Sistema de respaldo y recuperación ante reseteos accidentales ---
     function triggerResetLibrary() {
         customConfirm(
             "Resetear Biblioteca",
-            "¿Deseas restaurar la biblioteca al estado inicial? Perderás todas tus importaciones y notas personalizadas.",
+            "¿Deseas restaurar la biblioteca al estado inicial? Tus datos actuales se guardarán en una copia de seguridad temporal por si cambias de opinión.",
             () => {
-                localStorage.clear();
+                // Hacer backup antes del reset
+                if (library && library.length > 0) {
+                    localStorage.setItem("or_library_backup", JSON.stringify(library));
+                }
+                localStorage.removeItem("or_library");
                 initSystem();
-                showToast("Biblioteca restaurada al estado de fábrica.");
+                showToast("Biblioteca reseteada. Copia de seguridad guardada con éxito.", "success");
+                renderRecoverButton();
             }
         );
+    }
+
+    function restoreLibraryBackup() {
+        const backup = localStorage.getItem("or_library_backup");
+        if (backup) {
+            library = JSON.parse(backup);
+            saveToStorage();
+            renderBooks();
+            showToast("¡Biblioteca restaurada de la copia de seguridad exitosamente!", "success");
+            renderRecoverButton();
+        } else {
+            showToast("No se encontró ninguna copia de seguridad para restaurar.", "error");
+        }
+    }
+
+    function renderRecoverButton() {
+        const backup = localStorage.getItem("or_library_backup");
+        const btn = document.getElementById("btn-recover-backup");
+        if (backup) {
+            btn.classList.remove("hidden");
+        } else {
+            btn.classList.add("hidden");
+        }
     }
 
     // --- IMPORTACIÓN Y DETECTORES DE ARCHIVOS ---
@@ -906,7 +952,7 @@
     }
 
     function simulateEPUBParsing(arrayBuffer) {
-        return `[Capítulo 1: La Llegada al Valle Silencioso]\n\nEl viento soplaba con fuerza en el desfiladero de Chosica, trayendo consigo el aroma a tierra húmeda y eucalipto fresco del valle del Rímac. En el horizonte, los cerros se alzaban como guardianes de piedra bajo el cielo azul de Lima Este. Frieren avanzaba con paso pausado, sosteniendo con firmeza su báculo de madera, observando el río Rímac fluir con fuerza entre las rocas.\n\n"¿Es este el lugar del que te habló Himmel, señorita?", preguntó Fern, acomodando la correa de su maleta sobre el hombro. Sus ojos reflejaban el cansancio de un viaje de semanas.\n\nFrieren se detuvo frente a un puente colgante de madera que cruzaba el río correntoso. "Sí. Él me dijo que aquí, donde el aire es más cálido y el sol brilla casi todo el año, se encontraba una de las bibliotecas más antiguas del continente, resguardada por sabios que habían dominado el arte de catalogar el conocimiento del mundo antes del cataclismo."\n\n[Capítulo 2: El Secreto del Archivo de Piedra]\n\nLas puertas de la biblioteca municipal de Chosica estaban talladas en madera de cedro macizo, con relieves que narraban la historia de los antiguos pobladores del valle. Al empujarlas, un suave olor a papel antiguo, pergamino y tinta de imprenta inundó sus sentidos.\n\nUn anciano bibliotecario de anteojos redondos las recibió con una reverencia formal. "Bienvenidos a la biblioteca de la Cantuta. Aquí conservamos las memorias de la educación y el saber nacional", dijo con orgullo.\n\nFrieren asintió, maravillada por las estanterías de tres pisos de altura que cubrían las paredes de piedra. Cada rincón guardaba un misterio. Decidió tomar asiento en una de las mesas de lectura de madera, abriendo un tomo grueso encuadernado en cuero marrón.\n\n[Capítulo 3: El Eco del Saber Eterno]\n\nFern observaba a su maestra pasar las páginas con una devoción casi mística. "¿Por qué pasas tanto tiempo buscando hechizos sencillos o simples historias locales, Frieren?"\n\nLa elfa levantó la vista y sonrió levemente. "No son solo historias, Fern. Cada libro es un clon digital del alma de quien lo escribió. Aunque esa persona haya desaparecido hace siglos, sus pensamientos se vuelven a activar y hablar contigo en el instante en que posas tus ojos sobre estas letras. La lectura es el hechizo de resurrección más perfecto del mundo."\n\n[Capítulo 4: El Despertar del Copiloto]\n\nMientras caía la tarde sobre Chaclacayo, el resplandor anaranjado del sol poniente se filtraba por los altos ventanales, tiñendo las páginas del libro de un tono sepia natural.\n\nFue en ese instante que el sistema GennIA del e-reader cobró vida en un destello de luz mágica. "Hola, lector", susurró una voz holográfica. "Estoy lista para sintetizar los misterios del valle y responder tus consultas más profundas de manera completamente opcional."`;
+        return `[Capítulo 1: La Llegada al Valle Silencioso]\n\nEl viento soplaba con fuerza en el desfiladero, trayendo consigo el aroma a tierra húmeda y eucalipto fresco. En el horizonte, los cerros se alzaban como guardianes de piedra bajo el cielo azul. Frieren avanzaba con paso pausado, sosteniendo con firmeza su báculo de madera, observando el río fluir con fuerza entre las rocas.\n\n"¿Es este el lugar del que te habló Himmel, señorita?", preguntó Fern, acomodando la correa de su maleta sobre el hombro. Sus ojos reflejaban el cansancio de un viaje de semanas.\n\nFrieren se detuvo frente a un puente colgante de madera que cruzaba el río correntoso. "Sí. Él me dijo que aquí, donde el aire es más cálido y el sol brilla casi todo el año, se encontraba una de las bibliotecas más antiguas del continente, resguardada por sabios que habían dominado el arte de catalogar el conocimiento del mundo antes del cataclismo."\n\n[Capítulo 2: El Secreto del Archivo de Piedra]\n\nLas puertas de la biblioteca municipal estaban talladas en madera de cedro macizo, con relieves que narraban la historia de los antiguos pobladores del valle. Al empujarlas, un suave olor a papel antiguo, pergamino y tinta de imprenta inundó sus sentidos.\n\nUn anciano recibiría con una reverencia formal. "Bienvenidos a la biblioteca de la Cantuta. Aquí conservamos las memorias de la educación y el saber nacional", dijo con orgullo.\n\nFrieren asintió, maravillada por las estanterías de tres pisos de altura que cubrían las paredes de piedra. Cada rincón guardaba un misterio. Decidió tomar asiento en una de las mesas de lectura de madera, abriendo un tomo grueso encuadernado en cuero marrón.\n\n[Capítulo 3: El Eco del Saber Eterno]\n\nFern observaba a su maestra pasar las páginas con una devoción casi mística. "¿Por qué pasas tanto tiempo buscando hechizos sencillos o simples historias locales, Frieren?"\n\nLa elfa levantó la vista y sonrió levemente. "No son solo historias, Fern. Cada libro es un clon digital del alma de quien lo escribió. Aunque esa persona haya desaparecido hace siglos, sus pensamientos se vuelven a activar y hablar contigo en el instante en que posas tus ojos sobre estas letras. La lectura es el hechizo de resurrección más perfecto del mundo."\n\n[Capítulo 4: El Despertar de la Razón]\n\nMientras caía la tarde, el resplandor anaranjado del sol poniente se filtraba por los altos ventanales, tiñendo las páginas del libro de un tono sepia natural.\n\nFue en ese instante que el sistema GennIA del e-reader cobró vida en un destello de luz mágica. "Hola, lector", susurró una voz holográfica. "Estoy lista para sintetizar los misterios del valle y responder tus consultas más profundas de manera completamente opcional."`;
     }
 
     function saveManualBook() {
@@ -944,12 +990,12 @@
     }
 
     function getRandomHexColor() {
-        const colors = ["#6366f1", "#10b981", "#3b82f6", "#f59e0b", "#ec4899", "#8b5cf6"];
+        const colors = ["#14b8a6", "#10b981", "#3b82f6", "#06b6d4", "#8b5cf6", "#ec4899"];
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    // --- STREAMING_CHUNK: Implementing page navigation and swipe gestures... -->
-    // --- LÓGICA DE VISUALIZACIÓN DE TEXTO REAL DE LIBRO & COMPAÑERO GENNIA IA ---
+    // --- STREAMING_CHUNK: Carga de recursos y preparación de capítulos reales ---
+    // --- VISUALIZACIÓN DE LECTURA REAL DE LIBRO ---
     function loadBookToReader(id) {
         const book = library.find(b => b.id === id);
         if (!book) return;
@@ -967,7 +1013,10 @@
         // Cargar Capítulos para navegación
         populateChapters(book);
 
-        // Desplegar el contenido del libro de forma primordial
+        // Ajustar GennIA de acuerdo a la complejidad detectada
+        detectComplexity(book);
+
+        // Desplegar el contenido del libro de forma primordial (100% Real)
         renderReaderContent();
     }
 
@@ -989,7 +1038,6 @@
             }
         });
         
-        // Si no se encuentran capítulos naturales, creamos secciones cada 6 párrafos
         if (chapterOptions.length === 0) {
             paragraphs.forEach((pText, idx) => {
                 if (idx % 6 === 0) {
@@ -1025,7 +1073,6 @@
         if (isMobile || readerConfig.pcViewMode === 'vertical') {
             pEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-            // Modo columnas: calcula la sección horizontal
             const offsetLeft = pEl.offsetLeft;
             const pageLength = scroller.clientWidth;
             const pageIndex = Math.floor(offsetLeft / pageLength);
@@ -1040,6 +1087,7 @@
         }
     }
 
+    // --- STREAMING_CHUNK: Procesamiento de párrafos y renderizado de texto real ---
     function renderReaderContent() {
         const book = library.find(b => b.id === activeBookId);
         if (!book) return;
@@ -1219,7 +1267,35 @@
         }
     }
 
-    // --- CO-PILOTO GENNIA IA (COMPLEMENTARIO Y OPCIONAL) ---
+    // --- STREAMING_CHUNK: Adaptabilidad cognitiva inteligente de GennIA ---
+    // --- COMPAÑERO INTELECTUAL "GennIA" (Adaptativo y contextual) ---
+    let currentGennIAPreset = "estándar";
+
+    function detectComplexity(book) {
+        const keywordsForSimple = ["manga", "infantil", "niño", "frieren", "fantasía", "aventura", "animemanga", "recreativo"];
+        const keywordsForAdvanced = ["académico", "soledad", "marquez", "filosófico", "ensayo", "clásico", "historia", "nobel"];
+        
+        const textToCheck = (book.title + " " + book.shelf + " " + book.content.substring(0, 1000)).toLowerCase();
+        const badge = document.getElementById("gennia-complexity-badge");
+
+        let isSimple = keywordsForSimple.some(word => textToCheck.includes(word));
+        let isAdvanced = keywordsForAdvanced.some(word => textToCheck.includes(word));
+
+        if (isAdvanced) {
+            currentGennIAPreset = "avanzado";
+            badge.textContent = "Académico / Profundo 🧠";
+            badge.className = "px-2 py-0.5 rounded bg-teal-900/40 text-teal-300 font-bold tracking-wide uppercase";
+        } else if (isSimple) {
+            currentGennIAPreset = "simple";
+            badge.textContent = "Simple / Infantil 🧸";
+            badge.className = "px-2 py-0.5 rounded bg-emerald-950/40 text-emerald-300 font-bold tracking-wide uppercase";
+        } else {
+            currentGennIAPreset = "estándar";
+            badge.textContent = "Estándar 📖";
+            badge.className = "px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 font-bold tracking-wide uppercase";
+        }
+    }
+
     function toggleAISidebar() {
         const sidebar = document.getElementById("reader-ai-sidebar");
         sidebar.classList.toggle("hidden");
@@ -1243,22 +1319,30 @@
         const book = library.find(b => b.id === activeBookId);
         const bookContext = book ? `Libro activo: "${book.title}" de ${book.author}.\nContenido original del libro:\n${book.content.substring(0, 1500)}...` : "Ningún libro cargado.";
 
-        const systemPrompt = `Eres "GennIA", la IA asistente integrada de este e-reader de forma puramente complementaria. Ayuda al usuario a resumir, responder preguntas y estudiar el texto real original del libro. Responde de forma muy concisa.`;
-        const finalPrompt = `Contexto literario actual:\n${bookContext}\n\nPregunta del lector: ${queryText}`;
+        let instruction = "Actúas como GennIA, el copiloto inteligente del lector.";
+        if (currentGennIAPreset === "simple") {
+            instruction += " El material que lee el usuario es infantil o recreativo básico. Por favor, responde con un vocabulario sumamente amigable, sencillo, claro e ilustrativo. Evita modismos científicos, ve al grano de forma entretenida. NO inventes hechos que no estén en la obra.";
+        } else if (currentGennIAPreset === "avanzado") {
+            instruction += " El material que lee el usuario es académico, técnico o clásico literario. Por favor, responde con un lenguaje riguroso, analítico, exhaustivo e intelectual. Analiza las metáforas, semántica o implicaciones históricas de forma crítica. NO inventes hechos falsos.";
+        } else {
+            instruction += " Responde de forma clara y equilibrada. Nunca inventes información, basa tus resúmenes y explicaciones estrictas en el texto provisto.";
+        }
 
-        appendAIMessage("assistant", "GennIA está pensando...");
+        const finalPrompt = `Contexto del libro actual:\n${bookContext}\n\nPregunta del lector: ${queryText}`;
+        appendAIMessage("assistant", "Pensando en tu lectura...");
 
         try {
-            const result = await fetchGemini(finalPrompt, systemPrompt);
+            const result = await fetchGemini(finalPrompt, instruction);
             const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No obtuve una respuesta clara.";
             removeLastAIMessage();
             appendAIMessage("assistant", responseText);
         } catch (error) {
             removeLastAIMessage();
-            appendAIMessage("assistant", "⚠️ Error de conexión con GennIA. Agrega una clave API Key de Gemini en el panel lateral.");
+            appendAIMessage("assistant", "⚠️ Error de conexión con GennIA. Agrega una clave API de Gemini en el panel lateral.");
         }
     }
 
+    // --- STREAMING_CHUNK: Gestión de comandos rápidos del copiloto de IA ---
     async function askAIAssistant(mode) {
         const sidebar = document.getElementById("reader-ai-sidebar");
         if (sidebar.classList.contains("hidden")) {
@@ -1272,16 +1356,21 @@
         }
 
         let userPrompt = "";
-        let systemPrompt = "Actúas como GennIA, copiloto literario experto.";
+        let instruction = "Actúas como GennIA, copiloto literario experto.";
+        if (currentGennIAPreset === "simple") {
+            instruction += " Responde con tono simple, didáctico y divertido.";
+        } else if (currentGennIAPreset === "avanzado") {
+            instruction += " Responde con tono analítico, crítico y de alto nivel académico.";
+        }
 
         if (mode === 'summarize') {
-            appendAIMessage("user", `Sintetizar la obra actual: "${book.title}"`);
-            appendAIMessage("assistant", "Generando un resumen estructurado opcional...");
-            userPrompt = `Genera un resumen analítico opcional del siguiente fragmento de "${book.title}" de ${book.author}:\n\n${book.content.substring(0, 4000)}`;
+            appendAIMessage("user", `Sintetizar obra actual: "${book.title}"`);
+            appendAIMessage("assistant", "Generando un análisis/resumen estructurado...");
+            userPrompt = `Genera un resumen opcional y preciso del siguiente fragmento de "${book.title}" de ${book.author}:\n\n${book.content.substring(0, 4000)}`;
         } else if (mode === 'explain-context') {
-            appendAIMessage("user", `Explicar el contexto socio-histórico: "${book.title}"`);
+            appendAIMessage("user", `Explicar el contexto socio-histórico de "${book.title}"`);
             appendAIMessage("assistant", "Buscando datos históricos complementarios...");
-            userPrompt = `Explica brevemente el contexto de la obra "${book.title}" escrita por ${book.author} de manera complementaria.`;
+            userPrompt = `Explica brevemente el contexto socio-histórico real de la obra "${book.title}" de ${book.author} de manera verídica y documentada.`;
         } else if (mode === 'explain-selection') {
             if (!selectedTextMetadata) {
                 showToast("Por favor selecciona primero un fragmento de texto en el lector.", "error");
@@ -1289,13 +1378,13 @@
             }
             appendAIMessage("user", `Explicar fragmento seleccionado: "${selectedTextMetadata.text.substring(0, 30)}..."`);
             appendAIMessage("assistant", "GennIA analizando el fragmento seleccionado...");
-            userPrompt = `Explica, resume o traduce opcionalmente el siguiente fragmento seleccionado por el lector de la obra:\n\n"${selectedTextMetadata.text}"`;
+            userPrompt = `Explica, define o traduce el siguiente fragmento exacto que he seleccionado en la lectura:\n\n"${selectedTextMetadata.text}"`;
             document.getElementById("selection-popup").classList.add("hidden");
             window.getSelection().removeAllRanges();
         }
 
         try {
-            const result = await fetchGemini(userPrompt, systemPrompt);
+            const result = await fetchGemini(userPrompt, instruction);
             const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar el análisis.";
             removeLastAIMessage();
             appendAIMessage("assistant", responseText);
@@ -1312,8 +1401,8 @@
             msgDiv.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-slate-300 self-end ml-4";
             msgDiv.innerHTML = `<span class="font-bold text-slate-400">Tú:</span> <p class="mt-0.5">${text}</p>`;
         } else {
-            msgDiv.className = "bg-indigo-950/20 border border-indigo-900/20 p-2.5 rounded-lg text-indigo-200 mr-4 ai-msg-node";
-            msgDiv.innerHTML = `<span class="font-bold text-indigo-400">GennIA ✨:</span> <div class="mt-1 leading-relaxed whitespace-pre-line">${text}</div>`;
+            msgDiv.className = "bg-teal-950/20 border border-teal-900/20 p-2.5 rounded-lg text-teal-200 mr-4 ai-msg-node";
+            msgDiv.innerHTML = `<span class="font-bold text-teal-400">GennIA ✨:</span> <div class="mt-1 leading-relaxed whitespace-pre-line">${text}</div>`;
         }
         chat.appendChild(msgDiv);
         chat.scrollTop = chat.scrollHeight;
@@ -1327,6 +1416,7 @@
         }
     }
 
+    // --- STREAMING_CHUNK: Lógica de selección de texto, resaltador y notas integradas ---
     // --- MARCADORES, RESALTADORES Y NOTAS ---
     function handleTextSelection(event) {
         const selection = window.getSelection();
@@ -1404,7 +1494,7 @@
             paragraphIndex: selectedTextMetadata.paragraphIndex,
             text: selectedTextMetadata.text,
             noteText: noteText,
-            color: "indigo",
+            color: "teal",
             collapsed: false
         });
 
@@ -1438,14 +1528,14 @@
         const pNotes = notes.filter(n => n.bookId === activeBookId && n.paragraphIndex === pIdx);
         pNotes.forEach(note => {
             const noteDiv = document.createElement("div");
-            noteDiv.className = "my-2 p-3 bg-white text-slate-900 border-l-4 border-indigo-500 rounded-r-lg shadow-md transition-all-300 pointer-events-auto";
+            noteDiv.className = "my-2 p-3 bg-white text-slate-900 border-l-4 border-teal-500 rounded-r-lg shadow-md transition-all-300 pointer-events-auto";
             noteDiv.id = note.id;
 
             noteDiv.innerHTML = `
                 <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold mb-1">
                     <span>📝 NOTA SOBRE: "${note.text.substring(0, 30)}..."</span>
                     <div class="flex gap-2">
-                        <button onclick="toggleCollapseNote('${note.id}')" class="hover:text-indigo-600">Minimizar</button>
+                        <button onclick="toggleCollapseNote('${note.id}')" class="hover:text-teal-600">Minimizar</button>
                         <button onclick="triggerDeleteNote('${note.id}')" class="hover:text-red-600">Eliminar</button>
                     </div>
                 </div>
@@ -1494,6 +1584,7 @@
         saveToStorage();
     }
 
+    // --- STREAMING_CHUNK: Mezclador de colores adaptable para los modos de lectura ---
     function applyConfigToUI() {
         const slider = document.getElementById("theme-grade-slider");
         slider.value = readerConfig.grade;
@@ -1584,11 +1675,11 @@
         const btnVert = document.getElementById("btn-view-vertical");
 
         if (mode === 'pages') {
-            btnPages.className = "px-2 py-0.5 bg-indigo-600 text-white rounded text-[10px] font-bold";
+            btnPages.className = "px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold";
             btnVert.className = "px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold";
         } else {
             btnPages.className = "px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold";
-            btnVert.className = "px-2 py-0.5 bg-indigo-600 text-white rounded text-[10px] font-bold";
+            btnVert.className = "px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold";
         }
 
         applyReadingLayout();
@@ -1673,7 +1764,8 @@
         }
     }
 
-    // --- BUSCADOR DE METADATOS & RANKINGS COMPLETO (Soporte No-Desborde Celulares) ---
+    // --- BUSCADOR DE METADATOS & RANKINGS COMPLETO ---
+    // --- STREAMING_CHUNK: Integración del Buscador con IA en el Catálogo Turquesa ---
     function handleSearchInputChange() {
         const toggle = document.getElementById("live-search-toggle");
         if (!toggle.checked) {
@@ -1704,7 +1796,7 @@
         container.innerHTML = `
             <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20 px-4">
                 <span class="text-3xl block animate-spin mb-3">🔍</span>
-                <p class="text-xs text-indigo-400 font-bold">Investigando en internet y recopilando rankings con GennIA...</p>
+                <p class="text-xs text-teal-400 font-bold">Investigando en internet y recopilando rankings con GennIA...</p>
                 <p class="text-[10px] text-slate-500 mt-1">Grounding activo con Google Search. Esperando datos estructurados.</p>
             </div>
         `;
@@ -1768,7 +1860,7 @@
         if (filtered.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12 border border-slate-800 rounded-2xl bg-slate-950/20 px-4">
-                    <p class="text-xs text-slate-500 font-bold">No se encontraron fichas de rankings correspondientes en el catálogo offline.</p>
+                    <p class="text-xs text-slate-500 font-bold font-mono">No se encontraron fichas de rankings correspondientes en el catálogo offline.</p>
                 </div>
             `;
             return;
@@ -1779,6 +1871,7 @@
         });
     }
 
+    // --- STREAMING_CHUNK: Impresión visual de las fichas de rankings con estilos turquesa ---
     function renderSingleSearchResult(item) {
         const container = document.getElementById("search-results-container");
         const card = document.createElement("div");
@@ -1790,9 +1883,9 @@
         if (r.type === "anime_manga") {
             rankingsHTML = `
                 <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
-                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Rankings Anime & Manga</span>
+                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block font-mono">Rankings Anime & Manga (MyAnimeList / AniList / Eirin / Oricon)</span>
                     <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">⭐ MAL: <span class="text-yellow-400 font-bold">${r.mal || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">⭐ MAL: <span class="text-teal-400 font-bold">${r.mal || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📊 AniList: <span class="text-sky-400 font-bold">${r.anilist || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🎥 Eirin: <span class="text-emerald-400 font-bold">${r.eirin || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📈 Oricon: <span class="text-purple-400 font-bold">${r.oricon || 'N/A'}</span></div>
@@ -1802,20 +1895,21 @@
         } else if (r.type === "books_only") {
             rankingsHTML = `
                 <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
-                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Rankings de Libros & Enciclopedias</span>
+                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block font-mono">Rankings Libros & Enciclopedias (Goodreads / NYT / Premios)</span>
                     <div class="grid grid-cols-1 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📖 Goodreads: <span class="text-amber-500 font-bold">${r.goodreads || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📖 Goodreads: <span class="text-teal-400 font-bold">${r.goodreads || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">📰 Best Sellers NYT: <span class="text-white font-bold">${r.nyt || 'N/A'}</span></div>
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🏆 Comités / Premios: <span class="text-indigo-400 font-bold">${r.literary_awards || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🏆 Comités / Premios: <span class="text-teal-400 font-bold">${r.literary_awards || 'N/A'}</span></div>
                     </div>
                 </div>
             `;
         } else if (r.type === "books_movies") {
             rankingsHTML = `
                 <div class="space-y-1.5 pt-2 border-t border-slate-900 w-full">
-                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block">Rankings Adaptados a Cine / Serie</span>
+                    <span class="text-[9px] uppercase font-black text-slate-500 tracking-wider block font-mono">Adaptación Cine/Serie (Goodreads / NYT / IMDb / Rotten / Common Sense)</span>
                     <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">📖 Goodreads: <span class="text-amber-500 font-bold">${r.goodreads || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">📖 Goodreads: <span class="text-teal-400 font-bold">${r.goodreads || 'N/A'}</span></div>
+                        <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">📰 NYT: <span class="text-white font-bold">${r.nyt || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🎬 IMDb: <span class="text-yellow-400 font-bold">${r.imdb || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 truncate">🍅 Rotten Tomatoes: <span class="text-red-400 font-bold">${r.rotten || 'N/A'}</span></div>
                         <div class="bg-slate-900 p-1.5 rounded border border-slate-800 col-span-2 truncate">👪 Common Sense: <span class="text-teal-400 font-bold">${r.common_sense || 'N/A'}</span></div>
@@ -1826,12 +1920,12 @@
 
         card.innerHTML = `
             <div class="flex gap-4 w-full">
-                <div class="w-16 h-24 bg-gradient-to-tr rounded-xl flex flex-col justify-between p-2 shadow-inner text-center shrink-0 border border-slate-800" style="background-color: ${item.coverColor || '#6366f1'}">
+                <div class="w-16 h-24 bg-gradient-to-tr rounded-xl flex flex-col justify-between p-2 shadow-inner text-center shrink-0 border border-slate-800" style="background-color: ${item.coverColor || '#14b8a6'}">
                     <span class="text-2xl">${item.emoji || '📖'}</span>
-                    <span class="text-[8px] font-black uppercase text-slate-300">Ranked</span>
+                    <span class="text-[8px] font-black uppercase text-slate-300 font-mono">Ranked</span>
                 </div>
                 <div class="space-y-1 min-w-0 flex-1">
-                    <span class="text-[8px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-900/40 px-2 py-0.5 rounded uppercase tracking-widest inline-block truncate max-w-full">${item.genre || 'Ficción'}</span>
+                    <span class="text-[8px] font-bold text-teal-400 bg-teal-950/60 border border-teal-900/40 px-2 py-0.5 rounded uppercase tracking-widest inline-block truncate max-w-full font-mono">${item.genre || 'Ficción'}</span>
                     <h4 class="text-xs font-bold text-slate-100 mt-1 truncate">${item.title}</h4>
                     <p class="text-[10px] text-slate-400 truncate">Por ${item.author || 'Desconocido'}</p>
                     <p class="text-[10px] text-slate-400 italic leading-snug line-clamp-2">${item.description || ''}</p>
@@ -1841,7 +1935,7 @@
                 ${rankingsHTML}
             </div>
             <div class="pt-3 w-full">
-                <button onclick="simulateAddFromSearch('${item.title.replace(/'/g, "\\'")}', '${item.author.replace(/'/g, "\\'")}')" class="w-full py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-900/30 text-[10px] font-bold rounded-lg transition-all text-center">
+                <button onclick="simulateAddFromSearch('${item.title.replace(/'/g, "\\'")}', '${item.author.replace(/'/g, "\\'")}')" class="w-full py-2 bg-teal-500/10 hover:bg-teal-500 text-teal-300 hover:text-slate-950 border border-teal-900/30 text-[10px] font-bold rounded-lg transition-all text-center">
                     ⚡ Importar Plantilla con rankings
                 </button>
             </div>
@@ -1857,7 +1951,7 @@
             title: title,
             author: author,
             shelf: "Favoritos",
-            color: "#4f46e5",
+            color: "#14b8a6",
             format: "text",
             progress: 0,
             content: dummyContent
@@ -1870,6 +1964,7 @@
     }
 
     // --- INTEGRACIÓN Y GUARDADO DE DATOS (LOCALSTORAGE) ---
+    // --- STREAMING_CHUNK: Inicialización y carga de bases de datos locales persistentes ---
     function saveToStorage() {
         localStorage.setItem("or_library", JSON.stringify(library));
         localStorage.setItem("or_shelves", JSON.stringify(shelves));
@@ -1892,7 +1987,7 @@
                     color: "#1e3a8a",
                     format: "epub",
                     progress: 0,
-                    content: `[Capítulo 1: El fin de la aventura]\nLa maga Frieren y sus compañeros regresan triunfantes tras derrotar al Rey Demonio. Sin embargo, para una elfa cuya vida abarca milenios, una década de viaje es apenas un suspiro.\n\n[Capítulo 2: El fluir del tiempo]\nTras la partida de sus amigos humanos, Frieren inicia un nuevo viaje para comprender mejor el valor de las conexiones humanas y el peso del tiempo efímero.\n\n[Capítulo 3: El sendero de los sabios]\nLa elfa emprende rumbo hacia el valle de Lima Este para encontrar antiguas runas de archivo.`
+                    content: `[Capítulo 1: El fin de la aventura]\nLa maga Frieren y sus compañeros regresan triunfantes tras derrotar al Rey Demonio. Sin embargo, para una elfa cuya vida abarca milenios, una década de viaje es apenas un suspiro.\n\n[Capítulo 2: El fluir del tiempo]\nTras la partida de sus amigos humanos, Frieren inicia un nuevo viaje para comprender mejor el valor de las conexiones humanas y el peso del tiempo efímero.\n\n[Capítulo 3: El sendero de los sabios]\nLa elfa emprende rumbo para encontrar antiguas runas de archivo.`
                 },
                 {
                     id: "init-2",
@@ -1931,6 +2026,7 @@
         renderBooks();
         applyConfigToUI();
         executeGlobalSearch();
+        renderRecoverButton();
 
         const lastBookId = localStorage.getItem("or_last_active_book");
         if (lastBookId) {
@@ -1943,6 +2039,7 @@
         }
     }
 
+    // --- STREAMING_CHUNK: Cambiador de vistas unificado y listeners táctiles ---
     function switchView(viewId) {
         viewMode = viewId;
         
@@ -1955,7 +2052,7 @@
         document.getElementById("nav-search").className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white flex items-center gap-2";
 
         document.getElementById(`view-${viewId}`).classList.remove("hidden");
-        document.getElementById(`nav-${viewId}`).className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm flex items-center gap-2";
+        document.getElementById(`nav-${viewId}`).className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2";
     
         if (viewId === 'reader') {
             applyReadingLayout();
