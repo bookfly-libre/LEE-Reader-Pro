@@ -646,6 +646,91 @@ function syncReaderFloatingChrome() {
   infoBar.classList.toggle('hidden', false);
 }
 
+    // … tus funciones actuales: pdfjsLib, getReaderScroller, ensureReaderStartsAtTop, etc …
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    function getReaderScroller() { /* ... */ }
+    function getReaderTextContainer() { /* ... */ }
+    function ensureReaderStartsAtTop() { /* ... */ }
+    function setReaderMode(mode) { /* ... */ }
+    function toggleReaderOrientation() { /* ... */ }
+    function syncReaderFloatingChrome() { /* ... */ }
+
+    // ──────────────────────
+    // Aquí va el bloque de código que creé, SIN agregar nada extra:
+    // Inicializa datos mínimos de biblioteca
+    const libraryState = {
+      books: [
+        {
+          id: "book-1",
+          title: "Libro de ejemplo",
+          author: "Autor de prueba",
+          format: "TXT",
+          shelfId: 1
+        }
+      ],
+      shelves: [
+        { id: 1, name: "Todos los Recursos" }
+      ],
+      activeShelfId: null
+    };
+
+    function renderShelvesList() {
+  const container = document.getElementById("shelves-list");
+  if (!container) return;
+
+  container.innerHTML = libraryState.shelves.map(shelf => `
+    <button
+      onclick="switchShelf(${shelf.id})"
+      class="text-left text-xs text-slate-400 hover:text-teal-400 px-2 py-1 rounded-md w-full text-left">
+      📂 ${shelf.name}
+    </button>
+  `).join("");
+}
+
+function switchShelf(shelfId) {
+  libraryState.activeShelfId = shelfId;
+  const shelvesEl = libraryState.shelves.find(s => s.id === shelfId);
+  document.getElementById("current-shelf-title").textContent =
+    "📚 " + (shelvesEl ? shelvesEl.name : "Desconocido");
+  renderBooksGrid();
+}
+
+function renderBooksGrid() {
+  const container = document.getElementById("books-grid");
+  if (!container) return;
+
+  const booksFiltered = libraryState.books.filter(
+    book => !libraryState.activeShelfId || book.shelfId === libraryState.activeShelfId
+  );
+
+  container.innerHTML = booksFiltered.length
+    ? booksFiltered.map(book => `
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-1 text-xs">
+          <div class="font-bold text-slate-200 truncate">${book.title || "Sin título"}</div>
+          <div class="text-slate-500">${book.author || "Anónimo"}</div>
+          <div class="text-slate-400">${book.format}</div>
+          <button onclick="openBook('${book.id}')" class="mt-2 px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white text-xs rounded-lg font-bold">
+            📖 Abrir
+          </button>
+        </div>`
+    ).join("")
+    : `<p class="text-slate-500 text-xs col-span-full">No hay libros en este estante</p>`;
+}
+
+function openBook(bookId) {
+  alert("Abriendo libro: " + bookId);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderShelvesList();
+  document.getElementById("current-shelf-title").textContent = "📚 " + libraryState.shelves[0].name;
+  renderBooksGrid();
+});
+
+
+
+    
     
     // --- STREAMING_CHUNK:Inicializando base de datos local y catálogo de rankings offline ---
     // --- DATABASE / CATALOGO DE METADATOS DE RANKINGS (LOCAL) ---
@@ -1265,6 +1350,7 @@ function renderBooks() {
             }
         );
     }
+            
 
     // --- STREAMING_CHUNK:Manejando reseteo y recuperación de la estantería ---
     function triggerResetLibrary() {
