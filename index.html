@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEE-READER - Sistema Inteligente de Lectura & Biblioteca</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght=0,400;0,700;1,400&family=Fira+Code:wght=400;500&family=Cinzel:wght=600;800;900&display=swap" rel="stylesheet">
     
-    <!-- JSZip para decodificar EPUBs de forma real en cliente -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <!-- PDF.js para decodificar PDFs de forma real en cliente -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <style>
@@ -20,14 +16,12 @@
             background-color: #0b0f19;
             color: #f1f5f9;
         }
-        /* Transiciones suaves */
         .transition-all-300 {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* Personalización de la barra de desplazamiento */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: #0f172a;
@@ -39,14 +33,12 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #14b8a6;
         }
-        /* Estilos de doble página en PC */
         .book-columns {
             column-count: 2;
-            column-gap: 4rem;
+            column-gap: 3rem;
             column-rule: 1px inset rgba(255, 255, 255, 0.08);
             width: 100%;
         }
-        /* Título Turquesa Tecnológico y Prestigioso */
         .turquoise-tech-title {
             font-family: 'Cinzel', serif;
             background: linear-gradient(135deg, #a7f3d0 0%, #22c7b8 40%, #1abc9c 70%, #14b8a6 100%);
@@ -56,2917 +48,895 @@
             font-weight: 900;
             letter-spacing: 0.06em;
         }
-        /* Highlight effects */
-        .hl-yellow { background-color: rgba(254, 240, 138, 0.55); color: #000; }
-        .hl-mint { background-color: rgba(167, 243, 208, 0.55); color: #000; }
-        .hl-sky { background-color: rgba(186, 230, 253, 0.55); color: #000; }
-        .hl-blue { background-color: rgba(191, 219, 254, 0.55); color: #000; }
-        .hl-pink { background-color: rgba(254, 205, 211, 0.6); color: #000; }
-        .hl-lavender { background-color: rgba(233, 213, 255, 0.6); color: #000; }
-        .hl-teal { background-color: rgba(153, 246, 228, 0.55); color: #000; }
-        .hl-abstract-brown { background: linear-gradient(135deg, rgba(161, 130, 118, 0.5), rgba(141, 110, 99, 0.7)); color: #fff; }
-        .hl-custom-orange { background-color: rgba(255, 180, 138, 0.65); color: #000; }
-        
-        .underline-text {
-            border-bottom: 2px dashed currentColor;
-        }
+        /* Efectos de Subrayado y Resaltado */
+        .hl-yellow { background-color: rgba(254, 240, 138, 0.6); color: #000; }
+        .hl-mint { background-color: rgba(167, 243, 208, 0.6); color: #000; }
+        .hl-sky { background-color: rgba(186, 230, 253, 0.6); color: #000; }
+        .hl-blue { background-color: rgba(191, 219, 254, 0.6); color: #000; }
+        .hl-pink { background-color: rgba(254, 205, 211, 0.65); color: #000; }
+        .hl-lavender { background-color: rgba(233, 213, 255, 0.65); color: #000; }
+        .hl-teal { background-color: rgba(153, 246, 228, 0.6); color: #000; }
+        .underline-text { border-bottom: 2px dashed currentColor; }
 
         .reader-config-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .reader-secondary-sticky {
+            position: sticky;
+            top: 72px;
+            z-index: 35;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .reader-maximized {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 50 !important;
+            background: #0b0f19;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+        }
+        #reader-float-controls {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 60;
+            display: flex;
+            gap: 0.35rem;
+            padding: 0.35rem;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 9999px;
+        }
+        #reader-float-controls button {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            color: #f1f5f9;
+            background: rgba(30, 41, 59, 0.8);
+            transition: all 0.2s;
+        }
+        #reader-float-controls button:hover {
+            background: #14b8a6;
+            color: #0f172a;
+        }
+        .reader-vertical { overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+        .reader-horizontal {
+            overflow-y: hidden;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            display: flex;
+            align-items: stretch;
+        }
+        .reader-horizontal-content {
+            min-width: 100%;
+            width: 100%;
+            scroll-snap-align: start;
+            column-count: auto !important;
+            column-width: 100% !important;
+        }
+        .reader-vertical-content { min-width: 0; width: 100%; }
 
-.reader-secondary-sticky {
-  position: sticky;
-  top: 72px;
-  z-index: 35;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.reader-maximized {
-  border-radius: 1.5rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-}
-
-#reader-float-controls {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 60;
-  display: flex;
-  gap: 0.35rem;
-  padding: 0.35rem;
-  background: rgba(2, 6, 23, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 9999px;
-}
-
-#reader-float-controls button {
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 12px;
-}
-
-.reader-vertical {
-  overflow-y: auto;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
-.reader-horizontal {
-  overflow-y: hidden;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-}
-
-.reader-horizontal-content {
-  min-width: 100%;
-  width: 100%;
-  scroll-snap-align: start;
-  column-count: auto !important;
-  column-width: 100% !important;
-}
-
-.reader-vertical-content {
-  min-width: 0;
-  width: 100%;
-}
-
-@media (max-width: 768px) {
-  .reader-config-sticky {
-    top: 0;
-  }
-
-  .reader-secondary-sticky {
-    top: 64px;
-  }
-
-  #reader-float-controls {
-    top: 8px;
-    right: 8px;
-    transform: scale(0.92);
-  }
-}
-
-        
+        @media (max-width: 768px) {
+            .reader-secondary-sticky { top: 110px; }
+            .book-columns { column-count: 1; }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
+<body class="min-h-screen flex flex-col overflow-x-hidden bg-slate-950 text-slate-100">
 
 <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row gap-4 justify-between items-center">
-        <!-- Logo Digital de Lectura Turquesa Premium -->
         <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg shadow-teal-500/20 flex items-center justify-center">
-                <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
             </div>
             <div>
-                <h1 class="text-2xl font-black tracking-tight turquoise-tech-title">
-                    LEE-READER
-                </h1>
+                <h1 class="text-2xl font-black tracking-tight turquoise-tech-title">LEE-READER</h1>
                 <p class="text-[9px] text-teal-400 font-bold tracking-wider uppercase">Lector Universal & Biblioteca Inteligente</p>
             </div>
         </div>
 
-        <!-- Navegación Simplificada Exclusiva -->
         <nav class="flex space-x-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 w-full md:w-auto justify-center">
-            <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2">
-                🏛️ Mi Biblioteca
-            </button>
-            <button onclick="switchView('reader')" id="nav-reader" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">
-                📖 Visor E-Reader
-            </button>
-            <button onclick="switchView('search')" id="nav-search" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">
-                🏆 Buscador Rankings
-            </button>
+            <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm flex items-center gap-2">🏛️ Mi Biblioteca</button>
+            <button onclick="switchView('reader')" id="nav-reader" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">📖 Visor E-Reader</button>
+            <button onclick="switchView('search')" id="nav-search" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">🏆 Rankings</button>
         </nav>
     </div>
 </header>
 
-<!-- Notificación Flotante (Toast) Personalizada -->
 <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
-<!-- Modal de Confirmación Personalizado -->
-<div id="confirm-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
-        <h4 id="confirm-title" class="text-base font-bold text-slate-100">Confirmación</h4>
-        <p id="confirm-msg" class="text-xs text-slate-400"></p>
-        <div class="flex justify-end gap-2 pt-2">
-            <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300 transition-all">Cancelar</button>
-            <button id="confirm-ok-btn" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-xs font-bold rounded-xl text-white transition-all">Aceptar</button>
-        </div>
-    </div>
-</div>
-
 <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col">
-
-    <!-- SECCIÓN: BIBLIOTECA -->
     <section id="view-library" class="space-y-6">
-        <!-- Dashboard / Buscador General de Biblioteca -->
         <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-teal-950/10 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-slate-200">Mi Estantería de Libros</h2>
-                    <p class="text-xs text-slate-400">Personaliza tus estantes, sube tus lecturas en múltiples formatos o restaura copias de seguridad.</p>
+                    <p class="text-xs text-slate-400">Sube tus lecturas en múltiples formatos y organízalas libremente.</p>
                 </div>
-                
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <!-- Botón de Recuperación Anti-Reseteo -->
-                    <button id="btn-recover-backup" class="btn-library-action btn-library-backup hidden">
-                        🛡️ Recuperar Biblioteca
-                    </button>
-                    <button id="btn-add-book" class="btn-library-action btn-library-add">
-                        ➕ Añadir Libro (EPUB/PDF/TXT)
-                    </button>
-                    <button id="btn-reset-library" class="btn-library-action btn-library-reset">
-                        🔄 Resetear Biblioteca
-                    </button>
-
+                    <button onclick="openAddBookModal()" class="px-4 py-2 bg-teal-500 text-slate-950 hover:bg-teal-400 text-xs font-bold rounded-xl transition-all shadow-md">➕ Añadir Libro</button>
+                    <button onclick="resetLibrary()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300 transition-all">🔄 Resetear Biblioteca</button>
                 </div>
             </div>
-
-            <!-- Buscador de Biblioteca -->
             <div class="relative w-full">
                 <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                <input type="text" id="library-search-input" oninput="handleLibrarySearch()" placeholder="Buscar en mi estantería local por título, autor o formato..." class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 focus:border-teal-500 rounded-xl outline-none text-sm transition-all text-slate-200">
+                <input type="text" id="library-search-input" oninput="handleLibrarySearch()" placeholder="Buscar por título, autor o formato..." class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 focus:border-teal-500 rounded-xl outline-none text-sm transition-all text-slate-200">
             </div>
         </div>
 
-        <!-- Secciones de Estanterías Personalizadas -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <!-- Sidebar de Estantes -->
             <div class="md:col-span-1 bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-4">
                 <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Mis Estantes</h3>
-                <div class="flex flex-col gap-1.5" id="shelves-list">
-                    <!-- Dinámico -->
-                </div>
+                <div class="flex flex-col gap-1.5" id="shelves-list"></div>
                 <div class="pt-4 border-t border-slate-800/80">
                     <input type="text" id="new-shelf-input" placeholder="Nombre de estante..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-teal-500 mb-2">
-                    <button onclick="createNewShelf()" class="w-full py-1.5 bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-900/40 text-xs font-bold rounded-lg transition-all">
-                        🔨 Crear Estante
-                    </button>
+                    <button onclick="createNewShelf()" class="w-full py-1.5 bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-900/40 text-xs font-bold rounded-lg transition-all">🔨 Crear Estante</button>
                 </div>
             </div>
 
-            <!-- Listado de Libros en Estantería -->
             <div class="md:col-span-3 space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 flex items-center gap-2" id="current-shelf-title">
-                        📂 Todos los Recursos
-                    </h3>
+                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 flex items-center gap-2" id="current-shelf-title">📂 Todos los Recursos</h3>
                     <span id="library-count" class="text-xs text-teal-400 font-bold bg-teal-950/40 border border-teal-900/30 px-2.5 py-1 rounded-lg font-mono">0 libros</span>
                 </div>
-                
-                <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Dinámico por JS -->
-                </div>
+                <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN: VISOR E-READER -->
     <section id="view-reader" class="hidden flex-1 flex flex-col">
-
-        <!-- Controles flotantes -->
         <div id="reader-float-controls" class="hidden">
-            <button onclick="toggleMaximizeReader()" title="Minimizar">−</button>
-            <button onclick="toggleMaximizeReader()" title="Maximizar / Restaurar">□</button>
-            <button onclick="exitReader()" title="Cerrar">X</button>
-            <button onclick="toggleReaderOrientation()" title="V / H">V/H</button>
+            <button onclick="toggleMaximizeReader()" title="Restaurar">🗗</button>
+            <button onclick="exitReader()" title="Cerrar">✕</button>
         </div>
 
-        <!-- Barra de configuración -->
-        <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300 z-40">
+        <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300">
             <div class="flex flex-wrap items-center gap-2">
-                <span class="text-10px text-slate-400 font-bold">Tema</span>
+                <span class="text-[11px] text-slate-400 font-bold">Tema</span>
                 <div class="flex gap-1">
-                    <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-10px font-bold border border-slate-200">Claro</button>
-                    <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-10px font-bold border border-slate-700">Oscuro</button>
-                    <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-10px font-bold border border-[#ebdcb9]">Sepia</button>
-                    <button onclick="setReaderTheme('gray')" class="px-2 py-1 bg-slate-600 text-white rounded-md text-10px font-bold border border-slate-500">Gris</button>
+                    <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md font-bold border border-slate-200">Claro</button>
+                    <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md font-bold border border-slate-700">Oscuro</button>
+                    <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md font-bold border border-[#ebdcb9]">Sepia</button>
                 </div>
             </div>
+
             <div class="flex flex-wrap items-center gap-2">
-                <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800/80">
-                    <span class="text-9px text-slate-400">Tono</span>
-                    <input type="range" id="theme-grade-slider" min="0.1" max="1.3" step="0.05" value="0.8" oninput="adjustThemeGrade()" class="w-16 accent-teal-500 h-1 rounded-lg cursor-pointer bg-slate-700">
-                    <span id="grade-display" class="text-9px text-slate-300 font-bold font-mono">80%</span>
-                </div>
                 <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                    <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A-</button>
+                    <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded font-bold">A-</button>
                     <span id="font-size-display" class="text-10px font-mono px-1">16px</span>
-                    <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-10px font-bold">A+</button>
+                    <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded font-bold">A+</button>
                 </div>
-                <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 text-10px px-2 py-1 rounded-md text-slate-300 outline-none focus:border-teal-500">
-                    <option value="serif">Times New Roman Serif</option>
+                <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 px-2 py-1 rounded-md text-slate-300 outline-none">
                     <option value="sans">Inter Sans-Serif</option>
+                    <option value="serif">Times New Roman Serif</option>
                     <option value="mono">Fira Code Monospace</option>
                     <option value="playfair">Playfair Display</option>
                 </select>
                 <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                    <span class="text-9px text-slate-400 px-1">Margen</span>
-                    <button onclick="adjustMargin(-4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M-</button>
-                    <button onclick="adjustMargin(4)" class="px-1.5 bg-slate-800 rounded text-9px font-bold">M+</button>
-                </div>
-                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                    <span class="text-[9px] text-slate-400 px-1 font-bold hidden sm:inline">🔊 Escuchar:</span>
-                    <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-[10px] font-bold text-slate-950 flex items-center gap-0.5 transition-colors">▶ Reproducir</button>
-                    <button onclick="stopAudiobook()" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[10px] text-slate-300">⏹ Detener</button>
-                    <select id="voice-speed" onchange="adjustVoiceSpeed()" class="bg-slate-950 text-[9px] border border-slate-800 rounded p-0.5">
-                        <option value="1">1.0x</option>
-                        <option value="1.2">1.2x</option>
-                        <option value="1.5">1.5x</option>
-                    </select>
+                    <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-slate-950 font-bold">▶ Escuchar</button>
                 </div>
             </div>
+
             <div class="flex items-center gap-1.5">
-                <div class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800" id="pc-view-toggle">
-                    <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold transition-colors">📖 2 Páginas</button>
-                    <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold transition-colors">📜 Vertical</button>
+                <div class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+                    <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded font-bold">📖 2 Páginas</button>
+                    <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded font-bold">📜 Vertical</button>
                 </div>
-                <button onclick="toggleMaximizeReader()" id="btn-maximize-main" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold" title="Maximizar / Restaurar">🔲 Maximizar</button>
-                <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1" title="Salir de la lectura">✕ Salir</button>
+                <button onclick="toggleMaximizeReader()" id="btn-maximize-main" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md font-bold">🔲 Maximizar</button>
+                <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 text-red-200 rounded-md font-bold">✕ Salir</button>
             </div>
         </div>
         
-        <!-- Barra de información -->
-        
-        <div id="reader-info-bar" class="reader-secondary-sticky bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between text-[10px] text-slate-300 z-35">
+        <div id="reader-info-bar" class="reader-secondary-sticky bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between text-[11px] text-slate-300">
             <div class="flex items-center gap-2">
-                <span id="reader-book-title" class="font-bold text-slate-100 truncate max-w-[200px] md:max-w-xs">Ningún libro cargado</span>
-                <select id="reader-chapter-select"
-                    onchange="handleChapterSelect()"
-                    class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[10px] outline-none focus:border-teal-500 text-slate-300">
-                </select>
-                <span id="gennia-complexity-badge" class="hidden px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 font-bold tracking-wide uppercase"></span>
-
-            <button onclick="toggleAISidebar()" class="...">
-              ✨ GennIA
-            </button>
-                
+                <span id="reader-book-title" class="font-bold text-slate-100 truncate max-w-[200px]">Ningún libro cargado</span>
+                <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-slate-300 outline-none"></select>
+                <button onclick="toggleAISidebar()" class="px-2 py-0.5 bg-slate-800 text-teal-400 rounded font-bold hover:bg-slate-700">✨ GennIA</button>
             </div>
-
-         <script>
-            function renderChapters(book) {
-    const select = document.getElementById("reader-chapter-select");
-
-    if (!select) {
-        console.warn("reader-chapter-select aún no existe en el DOM");
-        return;
-    }
-
-    select.innerHTML = "";
-
-    if (!book?.content) {
-        select.innerHTML = `<option>Sin contenido</option>`;
-        return;
-    }
-
-    const chapters = extractChaptersFromText(book.content);
-
-    if (!chapters.length) {
-        select.innerHTML = `<option>Sin capítulos detectados</option>`;
-        return;
-    }
-
-    chapters.forEach((ch, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.textContent = ch.title || `Capítulo ${i + 1}`;
-        select.appendChild(opt);
-    });
-}
-
-function extractChaptersFromText(text) {
-    const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
-
-    const matches = [...text.matchAll(regex)];
-
-    if (matches.length === 0) return [];
-
-    return matches.map((m) => ({
-        title: m[0],
-        index: m.index
-            }));
-        }
-            </script>
-            
             <div class="flex items-center gap-2">
-                <span id="reader-progress-percent" class="text-slate-500 font-mono"></span>
                 <span id="page-counter" class="text-slate-500 font-mono"></span>
             </div>
         </div>
 
-        <!-- Contenido lector -->
         <div id="reader-wrapper" class="flex-1 flex relative">
-            <div id="reader-scroller" class="reader-vertical flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden transition-all duration-300">
-                <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed focus:outline-none text-justify transition-all duration-300 select-text"></div>
+            <div id="reader-scroller" class="reader-vertical flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden min-h-[60vh]">
+                <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed text-justify select-text focus:outline-none"></div>
             </div>
 
-            <!-- Panel lateral IA -->
             <div id="reader-ai-sidebar" class="hidden w-80 border-l border-slate-800 bg-slate-950 flex flex-col z-30 absolute right-0 top-0 bottom-0 md:relative">
                 <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-900">
-                    <span class="text-xs font-bold text-teal-400">✨ GennIA</span>
-                    <button onclick="toggleAISidebar()" class="text-slate-400 hover:text-white text-xs">✕</button>
+                    <span class="text-xs font-bold text-teal-400">✨ Asistente GennIA</span>
+                    <button onclick="toggleAISidebar()" class="text-slate-400 hover:text-white">✕</button>
                 </div>
                 <div id="ai-chat-history" class="flex-1 overflow-y-auto p-3 space-y-2 text-xs"></div>
                 <div class="p-3 border-t border-slate-800 bg-slate-900">
-                    <input type="text" id="ai-chat-input" onkeypress="handleAIChatKeyPress(event)" placeholder="Pregunta sobre la obra..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-teal-500 text-slate-200">
-                    <div class="mt-2 flex gap-2">
-                        <button onclick="askAIAssistant('synthesize')" class="flex-1 py-1 bg-teal-950 text-teal-300 rounded text-[10px] font-bold border border-teal-900/40">Sintetizar</button>
-                        <button onclick="askAIAssistant('context')" class="flex-1 py-1 bg-teal-950 text-teal-300 rounded text-[10px] font-bold border border-teal-900/40">Contexto</button>
-                        <button onclick="askAIAssistant('explain')" class="flex-1 py-1 bg-teal-950 text-teal-300 rounded text-[10px] font-bold border border-teal-900/40">Explicar</button>
-                    </div>
+                    <input type="text" id="ai-chat-input" onkeypress="handleAIChatKeyPress(event)" placeholder="Pregunta sobre la obra..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-slate-200">
                 </div>
-            </div>
-        </div>
-
-        <!-- Navegación de páginas -->
-        <div id="page-navigation-controls" class="hidden bg-slate-950 border-t border-slate-800 p-2 flex justify-between items-center text-xs">
-            <button onclick="prevPage()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold">← Anterior</button>
-            <span id="page-counter-bottom" class="text-slate-500 font-mono"></span>
-            <button onclick="nextPage()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold">Siguiente →</button>
-        </div>
-
-    </section>
-
-    <!-- SECCIÓN: BUSCADOR DE RANKINGS (TOTALMENTE INDEPENDIENTE) -->
-    <section id="view-search" class="hidden space-y-6 w-full max-w-full overflow-hidden px-1">
-        <div class="bg-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
-            <div>
-                <h2 class="text-lg md:text-xl font-bold text-slate-200 flex items-center gap-2">
-                    🏆 Buscador Independiente de Rankings
-                </h2>
-                <p class="text-xs text-slate-400">Consulta puntuaciones, opiniones y rankings oficiales consolidados de libros populares, enciclopedias, anime o manga.</p>
-                <div class="mt-2 bg-teal-950/20 border border-teal-900/30 p-3 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <div class="flex items-center gap-2 flex-1">
-                        <span class="text-xs text-teal-400">✨</span>
-                        <p class="text-[10px] md:text-[11px] text-teal-300"><strong>Búsqueda en Vivo con IA (Grounding):</strong> Utiliza Google Search de forma inteligente para recopilar y actualizar las clasificaciones literarias oficiales.</p>
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0 mt-1 sm:mt-0">
-                        <input type="password" id="gemini-api-key" placeholder="Gemini API Key" class="w-32 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[10px] outline-none focus:border-teal-500 text-slate-200">
-                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                            <input type="checkbox" id="live-search-toggle" class="sr-only peer">
-                            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
-                            <span class="ml-2 text-[10px] font-bold text-teal-400 uppercase tracking-wider font-mono">Activar IA</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Inputs de búsqueda de rankings -->
-            <div class="flex flex-col md:flex-row gap-3">
-                <div class="flex-1 relative w-full">
-                    <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                    <input type="text" id="global-search-input" oninput="handleSearchInputChange()" placeholder="Frieren, Dune, Cien años de soledad, Harry Potter, Chainsaw Man..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 focus:border-teal-500 rounded-xl outline-none text-xs md:text-sm transition-all text-slate-200">
-                </div>
-                <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full md:w-auto">
-                    <button id="live-search-btn" onclick="executeLiveAISearch()" class="hidden w-full sm:w-auto px-5 py-3 bg-teal-500 text-slate-950 hover:bg-teal-400 text-xs font-bold rounded-xl transition-all shadow-md shadow-teal-500/10 shrink-0">
-                        Buscar con GennIA
-                    </button>
-                    <select id="search-category" onchange="executeGlobalSearch()" class="w-full sm:w-auto bg-slate-900 border border-slate-800 text-xs px-4 py-3 rounded-xl outline-none focus:border-teal-500 text-slate-300">
-                        <option value="all">Categorías: Todas</option>
-                        <option value="Libros">Libros & Enciclopedias</option>
-                        <option value="AnimeManga">Anime & Manga</option>
-                        <option value="LibrosPeliculas">Libros Adaptados a Cine/Serie</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Resultados de la Búsqueda de Rankings -->
-        <div class="space-y-4">
-            <h3 class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-400 font-mono">Resultados del Catálogo de Rankings</h3>
-            <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <!-- Dinámico -->
             </div>
         </div>
     </section>
 
+    <section id="view-search" class="hidden space-y-6">
+        <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <h2 class="text-xl font-bold text-slate-200 flex items-center gap-2">🏆 Catálogo & Rankings Literarios</h2>
+            <div class="relative w-full">
+                <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
+                <input type="text" id="global-search-input" oninput="executeGlobalSearch()" placeholder="Buscar obras populares..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 rounded-xl outline-none text-sm text-slate-200">
+            </div>
+        </div>
+        <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
 </main>
 
-<!-- Popup de selección de texto -->
 <div id="selection-popup" class="fixed z-50 hidden bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 flex gap-1">
-    <button onclick="applyHighlight('yellow')" class="w-5 h-5 rounded-full bg-yellow-300 border border-yellow-400" title="Amarillo"></button>
-    <button onclick="applyHighlight('mint')" class="w-5 h-5 rounded-full bg-emerald-300 border border-emerald-400" title="Menta"></button>
-    <button onclick="applyHighlight('sky')" class="w-5 h-5 rounded-full bg-sky-300 border border-sky-400" title="Cielo"></button>
-    <button onclick="applyHighlight('blue')" class="w-5 h-5 rounded-full bg-blue-300 border border-blue-400" title="Azul"></button>
-    <button onclick="applyHighlight('pink')" class="w-5 h-5 rounded-full bg-pink-300 border border-pink-400" title="Rosa"></button>
-    <button onclick="applyHighlight('lavender')" class="w-5 h-5 rounded-full bg-purple-300 border border-purple-400" title="Lavanda"></button>
-    <button onclick="applyHighlight('teal')" class="w-5 h-5 rounded-full bg-teal-300 border border-teal-400" title="Turquesa"></button>
-    <button onclick="applyHighlight('underline')" class="w-5 h-5 rounded-full bg-transparent border border-slate-500 flex items-center justify-center text-[8px] text-slate-300" title="Subrayar">U</button>
-    <button onclick="clearSelectionHighlight()" class="w-5 h-5 rounded-full bg-red-900 border border-red-700 flex items-center justify-center text-[8px] text-red-300" title="Limpiar">✕</button>
-    <button onclick="addNoteToSelection()" class="px-1.5 h-5 rounded bg-slate-800 border border-slate-600 text-[9px] text-slate-300 font-bold" title="Nota">📝</button>
+    <button onclick="applyHighlight('yellow')" class="w-5 h-5 rounded-full bg-yellow-300 border border-yellow-400"></button>
+    <button onclick="applyHighlight('mint')" class="w-5 h-5 rounded-full bg-emerald-300 border border-emerald-400"></button>
+    <button onclick="applyHighlight('sky')" class="w-5 h-5 rounded-full bg-sky-300 border border-sky-400"></button>
+    <button onclick="clearSelectionHighlight()" class="px-1.5 h-5 rounded bg-red-900 text-[9px] font-bold text-red-200">✕</button>
 </div>
 
-<!-- Modal de Importación / Creación de Libros -->
 <div id="add-book-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col">
         <div class="p-5 border-b border-slate-800 bg-slate-950 flex justify-between items-center">
-            <h3 class="text-base font-bold text-slate-200">➕ Agregar Nuevo Recurso de Lectura</h3>
-            <button onclick="closeAddBookModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
+            <h3 class="text-base font-bold text-slate-200">➕ Añadir Nuevo Recurso</h3>
+            <button onclick="closeAddBookModal()" class="text-slate-400 hover:text-white">✕</button>
         </div>
         <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-            <!-- Selector de carga de archivo real -->
-            <div class="border-2 border-dashed border-slate-700 hover:border-teal-500 p-6 rounded-xl text-center bg-slate-950/60 cursor-pointer transition-all relative">
-                <input type="file" id="file-uploader" accept=".txt,.html,.epub,.pdf" onchange="handleFileImport(event)" class="absolute inset-0 opacity-0 cursor-pointer">
+            <div class="border-2 border-dashed border-slate-700 hover:border-teal-500 p-6 rounded-xl text-center bg-slate-950/60 cursor-pointer relative">
+                <input type="file" id="file-uploader" accept=".txt,.epub,.pdf" onchange="handleFileImport(event)" class="absolute inset-0 opacity-0 cursor-pointer">
                 <span class="text-3xl block mb-2">📂</span>
-                <p class="text-xs font-bold text-slate-300">Cargar archivo local (TXT, HTML, EPUB o PDF)</p>
-                <p class="text-[10px] text-slate-500 mt-1">El e-reader lo procesará, extraerá su contenido real y lo guardará de forma segura.</p>
+                <p class="text-xs font-bold text-slate-300">Cargar archivo (TXT o PDF)</p>
             </div>
-
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-slate-800"></div>
-                <span class="flex-shrink mx-4 text-[10px] text-slate-500 uppercase font-black">O Crea uno Manual</span>
-                <div class="flex-grow border-t border-slate-800"></div>
-            </div>
-
             <div class="space-y-3">
                 <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Título del Recurso</label>
-                    <input type="text" id="manual-title" placeholder="Ej: Drácula" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500">
+                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Título</label>
+                    <input type="text" id="manual-title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none">
                 </div>
                 <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Autor / Creador</label>
-                    <input type="text" id="manual-author" placeholder="Ej: Bram Stoker" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold block mb-1">Estante Destino</label>
-                        <select id="manual-shelf" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500">
-                            <!-- Dinámico -->
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold block mb-1">Color de Portada</label>
-                        <input type="color" id="manual-color" value="#14b8a6" class="w-full h-9 bg-slate-950 border border-slate-800 rounded-lg outline-none cursor-pointer">
-                    </div>
+                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Autor</label>
+                    <input type="text" id="manual-author" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none">
                 </div>
                 <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Contenido / Texto Real de Lectura</label>
-                    <textarea id="manual-content" rows="6" placeholder="Pega el contenido del libro aquí. Estructúralo con [Capítulo 1] si deseas un índice automático." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-teal-500 font-mono"></textarea>
+                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Contenido Manual</label>
+                    <textarea id="manual-content" rows="4" placeholder="Si no cargas un archivo, puedes escribir o pegar texto aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none font-mono"></textarea>
                 </div>
             </div>
         </div>
         <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-end gap-2">
-            <button onclick="closeAddBookModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl font-bold">Cancelar</button>
-            <button onclick="saveManualBook()" class="px-5 py-2 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg text-xs">Guardar en Estante</button>
+            <button onclick="closeAddBookModal()" class="px-4 py-2 bg-slate-800 text-xs font-bold rounded-xl">Cancelar</button>
+            <button onclick="saveManualBook()" class="px-5 py-2 bg-teal-500 text-slate-950 font-bold rounded-xl text-xs">Guardar Libro</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Configuración global de PDF.js worker
+    // --- Configuración y Estado Global ---
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-function getReaderScroller() {
-  return document.getElementById('reader-scroller');
-}
-
-function getReaderTextContainer() {
-  return document.getElementById('reader-text-container');
-}
-
-function ensureReaderStartsAtTop() {
-  const scroller = getReaderScroller();
-  const container = getReaderTextContainer();
-  if (!scroller) return;
-
-  scroller.scrollTop = 0;
-  scroller.scrollLeft = 0;
-
-  if (container) {
-    container.scrollIntoView({
-      behavior: 'instant',
-      block: 'start',
-      inline: 'nearest'
-    });
-  }
-
-  requestAnimationFrame(() => {
-    scroller.scrollTop = 0;
-    scroller.scrollLeft = 0;
-  });
-
-  setTimeout(() => {
-    scroller.scrollTop = 0;
-    scroller.scrollLeft = 0;
-  }, 50);
-}
-
-function setReaderMode(mode) {
-  readerConfig.readingMode = mode;
-  const scroller = getReaderScroller();
-  const container = getReaderTextContainer();
-  if (!scroller || !container) return;
-
-  const isHorizontal = mode === 'horizontal';
-
-  scroller.classList.toggle('reader-horizontal', isHorizontal);
-  scroller.classList.toggle('reader-vertical', !isHorizontal);
-  container.classList.toggle('reader-horizontal-content', isHorizontal);
-  container.classList.toggle('reader-vertical-content', !isHorizontal);
-
-  scroller.scrollTop = 0;
-  scroller.scrollLeft = 0;
-  localStorage.setItem('reader-mode', mode);
-}
-
-function toggleReaderOrientation() {
-  const next = readerConfig.readingMode === 'horizontal' ? 'vertical' : 'horizontal';
-  setReaderMode(next);
-}
-
-function syncReaderFloatingChrome() {
-  const controls = document.getElementById('reader-float-controls');
-  const configBar = document.getElementById('reader-config-bar');
-  const infoBar = document.getElementById('reader-info-bar');
-  if (!controls || !configBar || !infoBar) return;
-
-  const maximized = readerConfig.maximized;
-  controls.classList.toggle('hidden', !readerConfig.maximized);
-  configBar.classList.toggle('hidden', maximized);
-  infoBar.classList.toggle('hidden', false);
-}
-
-    // … tus funciones actuales: pdfjsLib, getReaderScroller, ensureReaderStartsAtTop, etc …
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    function getReaderScroller() { /* ... */ }
-    function getReaderTextContainer() { /* ... */ }
-    function ensureReaderStartsAtTop() { /* ... */ }
-    function setReaderMode(mode) { /* ... */ }
-    function toggleReaderOrientation() { /* ... */ }
-    function syncReaderFloatingChrome() { /* ... */ }
-
-    // ──────────────────────
-    // Aquí va el bloque de código que creé, SIN agregar nada extra:
-    // Inicializa datos mínimos de biblioteca
-    const libraryState = {
-      books: [
-        {
-          id: "book-1",
-          title: "Libro de ejemplo",
-          author: "Autor de prueba",
-          format: "TXT",
-          shelfId: 1
-        }
-      ],
-      shelves: [
-        { id: 1, name: "Todos los Recursos" }
-      ],
-      activeShelfId: null
-    };
-
-    function renderShelvesList() {
-  const container = document.getElementById("shelves-list");
-  if (!container) return;
-
-  container.innerHTML = libraryState.shelves.map(shelf => `
-    <button
-      onclick="switchShelf(${shelf.id})"
-      class="text-left text-xs text-slate-400 hover:text-teal-400 px-2 py-1 rounded-md w-full text-left">
-      📂 ${shelf.name}
-    </button>
-  `).join("");
-}
-
-function switchShelf(shelfId) {
-  libraryState.activeShelfId = shelfId;
-  const shelvesEl = libraryState.shelves.find(s => s.id === shelfId);
-  document.getElementById("current-shelf-title").textContent =
-    "📚 " + (shelvesEl ? shelvesEl.name : "Desconocido");
-  renderBooksGrid();
-}
-
-function renderBooksGrid() {
-  const container = document.getElementById("books-grid");
-  if (!container) return;
-
-  const booksFiltered = libraryState.books.filter(
-    book => !libraryState.activeShelfId || book.shelfId === libraryState.activeShelfId
-  );
-
-  container.innerHTML = booksFiltered.length
-    ? booksFiltered.map(book => `
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-1 text-xs">
-          <div class="font-bold text-slate-200 truncate">${book.title || "Sin título"}</div>
-          <div class="text-slate-500">${book.author || "Anónimo"}</div>
-          <div class="text-slate-400">${book.format}</div>
-          <button onclick="openBook('${book.id}')" class="mt-2 px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white text-xs rounded-lg font-bold">
-            📖 Abrir
-          </button>
-        </div>`
-    ).join("")
-    : `<p class="text-slate-500 text-xs col-span-full">No hay libros en este estante</p>`;
-}
-
-function openBook(bookId) {
-  alert("Abriendo libro: " + bookId);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderShelvesList();
-  document.getElementById("current-shelf-title").textContent = "📚 " + libraryState.shelves[0].name;
-  renderBooksGrid();
-});
-
-
-
-    
-    
-    // --- STREAMING_CHUNK:Inicializando base de datos local y catálogo de rankings offline ---
-    // --- DATABASE / CATALOGO DE METADATOS DE RANKINGS (LOCAL) ---
-    const METADATA_CATALOG = [
-        {
-            id: "meta-1",
-            title: "Frieren: Beyond Journey's End",
-            author: "Kanehito Yamada & Tsukasa Abe",
-            category: "AnimeManga",
-            genre: "Fantasía, Drama",
-            coverColor: "#1e3a8a",
-            emoji: "🧙‍♀️",
-            description: "Un manga profundamente existencial sobre lo que sucede después de que el grupo de héroes vence al Rey Demonio.",
-            rankings: {
-                type: "anime_manga",
-                mal: "9.39 (Top 1)",
-                anilist: "92% Score",
-                eirin: "Clasificación G (Apto)",
-                oricon: "Bestseller (Millones en Ventas)"
-            }
-        },
-        {
-            id: "meta-2",
-            title: "Chainsaw Man",
-            author: "Tatsuki Fujimoto",
-            category: "AnimeManga",
-            genre: "Acción, Gore, Sobrenatural",
-            coverColor: "#b91c1c",
-            emoji: "🪚",
-            description: "Denji es un joven desamparado que hace un pacto con su demonio Pochita para renacer como el Hombre Motosierra.",
-            rankings: {
-                type: "anime_manga",
-                mal: "8.72 (Manga)",
-                anilist: "88% Score",
-                eirin: "Clasificación PG-12",
-                oricon: "Líder de Tomos Semanales"
-            }
-        },
-        {
-            id: "meta-3",
-            title: "One Hundred Years of Solitude",
-            author: "Gabriel García Márquez",
-            category: "Libros",
-            genre: "Realismo Mágico",
-            coverColor: "#7c2d12",
-            emoji: "🦋",
-            description: "La saga mítica de la familia Buendía en el fantástico e inolvidable pueblo de Macondo.",
-            rankings: {
-                type: "books_only",
-                goodreads: "4.11 / 5 (850k Votos)",
-                nyt: "Mejor Libro del Siglo XX",
-                literary_awards: "Premio Nobel de Literatura 1982"
-            }
-        },
-        {
-            id: "meta-4",
-            title: "Dune",
-            author: "Frank Herbert",
-            category: "LibrosPeliculas",
-            genre: "Ciencia Ficción",
-            coverColor: "#854d0e",
-            emoji: "🏜️",
-            description: "La obra maestra de la ciencia ficción ecológica e interestelar ambientada en el desértico planeta Arrakis.",
-            rankings: {
-                type: "books_movies",
-                goodreads: "4.26 / 5 (1.2M Votos)",
-                nyt: "Best Seller Eterno Sci-Fi",
-                imdb: "8.0 / 10 (Adaptación de Denis Villeneuve)",
-                rotten: "83% Tomatometer / 90% Audience",
-                common_sense: "Recomendado para mayores de 12 años"
-            }
-        },
-        {
-            id: "meta-5",
-            title: "Harry Potter and the Philosopher's Stone",
-            author: "J.K. Rowling",
-            category: "LibrosPeliculas",
-            genre: "Fantasía, Aventura",
-            coverColor: "#581c87",
-            emoji: "⚡",
-            description: "Un joven huérfano descubre el día de su undécimo cumpleaños que es un mago de gran renombre.",
-            rankings: {
-                type: "books_movies",
-                goodreads: "4.48 / 5 (3.5M Votos)",
-                nyt: "Número 1 por años consecutivos",
-                imdb: "7.6 / 10 (Película clásica)",
-                rotten: "81% Tomatometer / 82% Audience",
-                common_sense: "Seguro y educativo para mayores de 7 años"
-            }
-        }
-    ];
-
-    // --- ESTADOS GLOBALES ---
-    let shelves = ["Favoritos", "Por Leer", "Manga", "Pendientes"];
     let library = [];
-    let currentShelf = "all";
+    let shelves = ["Favoritos", "Lecturas Diarias", "Por Leer", "Historial"];
+    let currentShelf = "Todos";
     let activeBookId = null;
-    let viewMode = "library"; 
+    let viewMode = 'library';
 
-    let librarySearchTimeout = null;
-
-    function handleLibrarySearch() {
-        clearTimeout(librarySearchTimeout);
-
-        librarySearchTimeout = setTimeout(() => {
-            renderBooks();
-        }, 250);
-    }
-
-    // Configuración de visualización del Lector
     let readerConfig = {
-        theme: "sepia",
-        grade: 0.8,
+        theme: 'dark',
         fontSize: 16,
-        margin: 20,
-        fontFamily: "serif",
-        pcViewMode: "pages", 
-        currentPage: 0,
-        totalPages: 0,
-        maximized: false
+        fontFamily: 'sans',
+        pcViewMode: 'pages',
+        maximized: false,
+        readingMode: 'vertical'
     };
 
-    let highlights = []; 
-    let notes = []; 
-    let selectedTextMetadata = null;
+    let synth = window.speechSynthesis;
+    let utterance = null;
+    let isSpeaking = false;
 
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-
-    // --- STREAMING_CHUNK:Declarando sistema de avisos integrados (Toasts y modals) ---
-    // --- SISTEMA DE NOTIFICACIONES TOAST ---
-    function showToast(message, type = "success") {
-        const container = document.getElementById("toast-container");
-        const toast = document.createElement("div");
-        toast.className = `p-3.5 rounded-xl shadow-xl text-xs font-semibold text-white transition-all duration-300 transform translate-y-2 pointer-events-auto flex justify-between items-center ${
-            type === "success" ? "bg-teal-600 border border-teal-500" : 
-            type === "error" ? "bg-red-600 border border-red-500" : "bg-teal-700 text-white border border-teal-500"
-        }`;
-        toast.innerHTML = `
-            <span>${message}</span>
-            <button onclick="this.parentElement.remove()" class="font-bold ml-3 text-sm">✕</button>
-        `;
-        container.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.classList.remove("translate-y-2");
-            toast.classList.add("translate-y-0");
-        }, 50);
-
-        setTimeout(() => {
-            toast.classList.add("opacity-0", "translate-y-2");
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
-    }
-
-    // --- SISTEMA DE CONFIRMACIÓN MODAL ---
-    function customConfirm(title, message, onOk, onCancel = null) {
-        const modal = document.getElementById("confirm-modal");
-        const titleEl = document.getElementById("confirm-title");
-        const msgEl = document.getElementById("confirm-msg");
-        const okBtn = document.getElementById("confirm-ok-btn");
-        const cancelBtn = document.getElementById("confirm-cancel-btn");
-
-        titleEl.textContent = title;
-        msgEl.textContent = message;
-
-        modal.classList.remove("hidden");
-
-        const close = () => {
-            modal.classList.add("hidden");
-            okBtn.onclick = null;
-            cancelBtn.onclick = null;
-        };
-
-        okBtn.onclick = () => {
-            close();
-            if (onOk) onOk();
-        };
-
-        cancelBtn.onclick = () => {
-            close();
-            if (onCancel) onCancel();
-        };
-    }
-
-    
-
-    // --- STREAMING_CHUNK:Inicializando motor de peticiones Gemini API ---
-    // --- ENGINE DE GEMINI API ---
-    function getApiKey() {
-        return document.getElementById("gemini-api-key").value.trim() || "";
-    }
-
-    async function fetchGemini(userPrompt, systemInstruction = "", tools = []) {
-        const apiKey = getApiKey();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-        const payload = {
-            contents: [{ parts: [{ text: userPrompt }] }]
-        };
-
-        if (systemInstruction) {
-            payload.systemInstruction = {
-                parts: [{ text: systemInstruction }]
-            };
-        }
-
-        if (tools && tools.length > 0) {
-            payload.tools = tools;
-        }
-
-        let delay = 1000;
-        for (let i = 0; i < 3; i++) {
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (response.ok) {
-                    return await response.json();
-                }
-                if (response.status === 429) {
-                    await new Promise(r => setTimeout(r, delay));
-                    delay *= 2;
-                    continue;
-                }
-                throw new Error(`HTTP Error: ${response.status}`);
-            } catch (err) {
-                if (i === 2) throw err;
-                await new Promise(r => setTimeout(r, delay));
-                delay *= 2;
-            }
-        }
-    }
-
-    // --- STREAMING_CHUNK:Gestionando lógica de estanterías y render de libros ---
-    // --- GESTIÓN DE BIBLIOTECA, ESTANTERÍAS Y BÚSQUEDA ---
-    function renderShelves() {
-        
-        const container = document.getElementById("shelves-list");
-        if (!container) return;
-        container.innerHTML = "";
-        const allBtn = document.createElement("button");
-
-        allBtn.onclick = () => filterByShelf("all");
-
-        allBtn.className = `
-            px-3 py-2 rounded-lg text-xs font-bold transition-all
-            ${currentShelf === "all"
-                ? "bg-teal-500 text-slate-950"
-                : "bg-slate-900 text-slate-300 hover:bg-slate-800"}
-    `    ;
-
-    allBtn.textContent = "📂 Todos los Recursos";
-
-    container.appendChild(allBtn);
-
-    shelves.forEach(shelf => {
-        const btn = document.createElement("button");
-
-        btn.onclick = () => filterByShelf(shelf);
-
-        btn.className = `
-            flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all
-            ${currentShelf === shelf
-                ? "bg-teal-500 text-slate-950"
-                : "bg-slate-900 text-slate-300 hover:bg-slate-800"}
-        `;
-
-        btn.innerHTML = `
-            <span>${shelf}</span>
-            <span onclick="event.stopPropagation(); triggerDeleteShelf('${shelf}')"
-                class="text-red-400 hover:text-red-300 cursor-pointer ml-2">
-                ✕
-            </span>
-        `;
-
-        container.appendChild(btn);
+    // --- Inicialización ---
+    window.addEventListener('DOMContentLoaded', () => {
+        loadFromStorage();
+        initDefaultBooks();
+        renderShelves();
+        renderBooks();
+        setupSelectionPopup();
     });
 
-    const modalSelect = document.getElementById("manual-shelf");
-
-    if (modalSelect) {
-        modalSelect.innerHTML = "";
-
-        shelves.forEach(shelf => {
-            const opt = document.createElement("option");
-            opt.value = shelf;
-            opt.textContent = shelf;
-            modalSelect.appendChild(opt);
-        });
+    function loadFromStorage() {
+        const storedLibrary = localStorage.getItem('or_library_books');
+        const storedShelves = localStorage.getItem('or_library_shelves');
+        const storedConfig = localStorage.getItem('or_reader_config');
+        
+        if (storedLibrary) library = JSON.parse(storedLibrary);
+        if (storedShelves) shelves = JSON.parse(storedShelves);
+        if (storedConfig) readerConfig = JSON.parse(storedConfig);
     }
-}
-           
+
+    function saveToStorage() {
+        localStorage.setItem('or_library_books', JSON.stringify(library));
+        localStorage.setItem('or_library_shelves', JSON.stringify(shelves));
+        localStorage.setItem('or_reader_config', JSON.stringify(readerConfig));
+    }
+
+    function initDefaultBooks() {
+        if (library.length === 0) {
+            library = [
+                {
+                    id: "default-1",
+                    title: "Cien años de soledad",
+                    author: "Gabriel García Márquez",
+                    shelf: "Favoritos",
+                    color: "#7c2d12",
+                    format: "TXT",
+                    progress: 0,
+                    content: "[Capítulo 1]\nMuchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota en que su padre lo llevó a conocer el hielo. Macondo era entonces una aldea de veinte casas de barro y cañabrava construidas a la orilla de un río de aguas diáfanas que se precipitaban por un lecho de piedras pulidas, blancas y enormes como huevos prehistóricos. El mundo era tan reciente, que muchas cosas carecían de nombre, y para mencionarlas había que señalaras con el dedo.\n\n[Capítulo 2]\nEstratón era un hombre de ciencias..."
+                }
+            ];
+            saveToStorage();
+        }
+    }
+
+    // --- Navegación de Vistas ---
+    function switchView(view) {
+        viewMode = view;
+        document.getElementById('view-library').classList.toggle('hidden', view !== 'library');
+        document.getElementById('view-reader').classList.toggle('hidden', view !== 'reader');
+        document.getElementById('view-search').classList.toggle('hidden', view !== 'search');
+
+        document.getElementById('nav-library').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 'library' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'}`;
+        document.getElementById('nav-reader').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 'reader' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'}`;
+        document.getElementById('nav-search').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 'search' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'}`;
+    }
+
+    // --- Gestión de la Biblioteca ---
+    function renderShelves() {
+        const container = document.getElementById('shelves-list');
+        if (!container) return;
+
+        let html = `<button onclick="selectShelf('Todos')" class="w-full text-left text-xs px-3 py-2 rounded-xl transition-all font-medium ${currentShelf === 'Todos' ? 'bg-teal-950/60 text-teal-400 border border-teal-900/50' : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'}">📂 Todos los Recursos</button>`;
+        
+        shelves.forEach(shelf => {
+            html += `<button onclick="selectShelf('${shelf}')" class="w-full text-left text-xs px-3 py-2 rounded-xl transition-all font-medium truncate ${currentShelf === shelf ? 'bg-teal-950/60 text-teal-400 border border-teal-900/50' : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'}">📁 ${shelf}</button>`;
+        });
+        container.innerHTML = html;
+
+        // Actualizar select del modal
+        const mShelf = document.getElementById('manual-shelf');
+        if (mShelf) {
+            mShelf.innerHTML = shelves.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+    }
+
+    function selectShelf(shelf) {
+        currentShelf = shelf;
+        document.getElementById('current-shelf-title').textContent = shelf === 'Todos' ? '📂 Todos los Recursos' : `📁 Estante: ${shelf}`;
+        renderShelves();
+        renderBooks();
+    }
 
     function createNewShelf() {
-        const input = document.getElementById("new-shelf-input");
-        const value = input.value.trim();
-        if (!value || shelves.includes(value)) return;
-        shelves.push(value);
-        input.value = "";
-        renderShelves();
-        saveToStorage();
-        showToast(`Estante "${value}" creado con éxito.`, "success");
+        const input = document.getElementById('new-shelf-input');
+        const val = input.value.trim();
+        if (val && !shelves.includes(val)) {
+            shelves.push(val);
+            saveToStorage();
+            renderShelves();
+            input.value = '';
+            showToast(`Estante "${val}" creado exitosamente.`);
+        }
     }
 
-    function triggerDeleteShelf(shelfName) {
-        customConfirm(
-            "Eliminar Estante",
-            `¿Estás seguro de que deseas eliminar el estante "${shelfName}"? Los libros contenidos se moverán a Favoritos.`,
-            () => {
-                library.forEach(book => {
-                    if (book.shelf === shelfName) book.shelf = "Favoritos";
-                });
-                shelves = shelves.filter(s => s !== shelfName);
-                currentShelf = "all";
-                renderShelves();
-                renderBooks();
-                saveToStorage();
-                showToast("Estante eliminado correctamente.");
-            }
-        );
-    }
+    function renderBooks(filteredBooks = null) {
+        const grid = document.getElementById('books-grid');
+        if (!grid) return;
 
-    function filterByShelf(shelf) {
-        currentShelf = shelf;
-        document.getElementById("current-shelf-title").textContent = shelf === 'all' ? "📂 Todos los Recursos" : `📁 Estante: ${shelf}`;
-        renderShelves();
-        renderBooks();
+        let targetBooks = filteredBooks || library;
+        if (currentShelf !== 'Todos' && !filteredBooks) {
+            targetBooks = library.filter(b => b.shelf === currentShelf);
+        }
+
+        document.getElementById('library-count').textContent = `${targetBooks.length} libro(s)`;
+
+        if (targetBooks.length === 0) {
+            grid.innerHTML = `<div class="col-span-full py-12 text-center text-xs text-slate-500">Este estante se encuentra vacío.</div>`;
+            return;
+        }
+
+        grid.innerHTML = targetBooks.map(book => `
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition-all shadow-md group">
+                <div class="flex gap-4 items-start">
+                    <div class="w-14 h-20 rounded-lg shrink-0 flex flex-col justify-between p-1.5 text-[8px] font-bold text-white shadow-md relative overflow-hidden" style="background-color: ${book.color || '#0d9488'}">
+                        <div class="line-clamp-3 leading-tight">${book.title}</div>
+                        <span class="bg-black/40 px-1 py-0.5 rounded self-start font-mono text-[6px]">${book.format}</span>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h4 class="text-sm font-bold text-slate-200 truncate group-hover:text-teal-400 transition-colors cursor-pointer" onclick="openBook('${book.id}')">${book.title}</h4>
+                        <p class="text-xs text-slate-400 truncate">${book.author || 'Autor Desconocido'}</p>
+                        <span class="inline-block mt-2 text-[9px] bg-slate-950 px-2 py-0.5 rounded-md text-slate-500 border border-slate-800/60 font-medium">${book.shelf}</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-800/60 flex justify-between items-center text-[11px]">
+                    <span class="text-slate-500 font-mono">Progreso: ${book.progress || 0}%</span>
+                    <div class="flex gap-1">
+                        <button onclick="openBook('${book.id}')" class="px-2.5 py-1 bg-teal-950 text-teal-400 hover:bg-teal-900 rounded-lg font-bold border border-teal-900/30 transition-colors">Leer</button>
+                        <button onclick="deleteBook('${book.id}')" class="px-2 py-1 bg-slate-950 text-slate-500 hover:text-red-400 hover:bg-red-950/20 rounded-lg transition-colors">✕</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     function handleLibrarySearch() {
-        renderBooks();
-    }
-
-    function renderBooks() {
-        const container = document.getElementById("books-grid");
-        if (!container) return;
-        container.innerHTML = "";
-
-        const searchVal = document.getElementById("library-search-input").value.toLowerCase().trim();
-
-        const filtered = library.filter(b => {
-            const matchesShelf = currentShelf === "all" || b.shelf === currentShelf;
-            const matchesSearch = b.title.toLowerCase().includes(searchVal) || 
-                                  b.author.toLowerCase().includes(searchVal) || 
-                                  (b.format && b.format.toLowerCase().includes(searchVal));
-            return matchesShelf && matchesSearch;
-        });
-
-        document.getElementById("library-count").textContent = `${filtered.length} recursos`;
-
-        if (filtered.length === 0) {
-            container.innerHTML = `
-                <div class="col-span-full text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-950/40">
-                    <span class="text-3xl block mb-2">📥</span>
-                    <p class="text-xs text-slate-500">No se encontraron libros que coincidan con la búsqueda.</p>
-                </div>
-            `;
-            return;
-        }
-
-        function escapeHTML(str = "") {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-function renderBooks() {
-
-    const container = document.getElementById("books-grid");
-
-    if (!container) return;
-
-    const searchVal = document
-        .getElementById("library-search-input")
-        .value
-        .toLowerCase()
-        .trim();
-
-    const filtered = library.filter(book => {
-
-        const matchesShelf =
-            currentShelf === "all" ||
-            book.shelf === currentShelf;
-
-        const matchesSearch =
-            (book.title || "")
-                .toLowerCase()
-                .includes(searchVal)
-
-            ||
-
-            (book.author || "")
-                .toLowerCase()
-                .includes(searchVal)
-
-            ||
-
-            (book.format || "")
-                .toLowerCase()
-                .includes(searchVal);
-
-        return matchesShelf && matchesSearch;
-    });
-
-    document.getElementById("library-count").textContent =
-        `${filtered.length} recursos`;
-
-    if (filtered.length === 0) {
-
-        container.innerHTML = `
-            <div class="col-span-full text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-950/40">
-                <span class="text-3xl block mb-2">📥</span>
-                <p class="text-xs text-slate-500">
-                    No se encontraron libros.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML = "";
-
-    const fragment = document.createDocumentFragment();
-
-    filtered.forEach(book => {
-
-        const safeTitle = escapeHTML(
-            book.title || "Sin título"
-        );
-
-        const safeAuthor = escapeHTML(
-            book.author || "Autor desconocido"
-        );
-
-        const safeFormat = escapeHTML(
-            book.format || "Texto"
-        );
-
-        const safeShelf = escapeHTML(
-            book.shelf || "General"
-        );
-
-        const progress =
-            Number(book.progress) || 0;
-
-        const color =
-            /^#([0-9A-F]{3}){1,2}$/i.test(book.color)
-                ? book.color
-                : "#14b8a6";
-
-        const card = document.createElement("div");
-
-        card.className = `
-            bg-slate-950
-            border
-            border-slate-800/80
-            p-4
-            rounded-xl
-            flex
-            flex-col
-            justify-between
-            hover:border-teal-500/40
-            transition-all
-            shadow-lg
-            group
-            relative
-            overflow-hidden
-        `;
-
-        card.innerHTML = `
-            <div
-                class="absolute top-0 left-0 w-2 h-full"
-                style="background-color: ${color}"
-            ></div>
-
-            <div class="pl-4 space-y-3">
-
-                <div class="flex justify-between items-start">
-
-                    <div>
-
-                        <span class="
-                            text-[9px]
-                            uppercase
-                            font-black
-                            text-teal-400
-                            bg-teal-950/60
-                            border
-                            border-teal-900/30
-                            px-2
-                            py-0.5
-                            rounded
-                            tracking-wider
-                        ">
-                            ${safeFormat}
-                        </span>
-
-                        <h4
-                            class="text-sm font-bold text-slate-100 mt-1.5 line-clamp-1"
-                            title="${safeTitle}"
-                        >
-                            ${safeTitle}
-                        </h4>
-
-                        <p class="text-[11px] text-slate-400">
-                            Por ${safeAuthor}
-                        </p>
-
-                    </div>
-
-                    <button
-                        class="delete-book-btn text-slate-600 hover:text-red-400 transition-colors text-xs p-1"
-                        title="Eliminar Libro"
-                    >
-                        🗑️
-                    </button>
-
-                </div>
-
-                <div class="
-                    pt-2
-                    border-t
-                    border-slate-900
-                    flex
-                    justify-between
-                    items-center
-                    text-[10px]
-                    text-slate-500
-                ">
-
-                    <span>
-                        Progreso: ${progress}%
-                    </span>
-
-                    <span class="
-                        bg-slate-900
-                        px-2
-                        py-1
-                        rounded
-                        border
-                        border-slate-800
-                    ">
-                        Estante: ${safeShelf}
-                    </span>
-
-                </div>
-
-                <div class="flex gap-2">
-
-                    <button
-                        class="
-                            read-book-btn
-                            flex-1
-                            py-2
-                            bg-teal-500/10
-                            hover:bg-teal-500
-                            hover:text-slate-950
-                            text-teal-300
-                            text-xs
-                            font-bold
-                            rounded-lg
-                            transition-all
-                            text-center
-                        "
-                    >
-                        📖 Leer ahora
-                    </button>
-
-                </div>
-
-            </div>
-        `;
-
-        const deleteBtn =
-            card.querySelector(".delete-book-btn");
-
-        deleteBtn.addEventListener("click", () => {
-            triggerDeleteBook(book.id);
-        });
-
-        const readBtn =
-            card.querySelector(".read-book-btn");
-
-        readBtn.addEventListener("click", () => {
-            loadBookToReader(book.id);
-        });
-
-        fragment.appendChild(card);
-    });
-
-    container.appendChild(fragment);
-}
-
-    function triggerDeleteBook(id) {
-        customConfirm(
-            "Eliminar Recurso",
-            "¿Estás seguro de que deseas remover este recurso de tu biblioteca?",
-            () => {
-                library = library.filter(b => b.id !== id);
-                if (activeBookId === id) {
-                    activeBookId = null;
-                    const titleEl = document.getElementById("reader-book-title");
-                    if (titleEl) titleEl.textContent = "Ningún libro cargado";
-                    const textContainer = document.getElementById("reader-text-container");
-                    if (textContainer) textContainer.innerHTML = "";
-                    
-                    ensureReaderStartsAtTop();
-                }
-                renderBooks();
-                saveToStorage();
-                showToast("Recurso eliminado de tu biblioteca virtual.");
-            }
-        );
-    }
-            
-
-    // --- STREAMING_CHUNK:Manejando reseteo y recuperación de la estantería ---
-    function triggerResetLibrary() {
-        customConfirm(
-            "Resetear Biblioteca",
-            "¿Deseas restaurar la biblioteca al estado inicial? Tus datos actuales se guardarán en una copia de seguridad temporal por si cambias de opinión.",
-            () => {
-                if (library && library.length > 0) {
-                    localStorage.setItem("or_library_backup", JSON.stringify(library));
-                }
-                localStorage.removeItem("or_library");
-                initSystem();
-                showToast("Biblioteca reseteada. Copia de seguridad guardada con éxito.", "success");
-                renderRecoverButton();
-            }
-        );
-    }
-
-    function restoreLibraryBackup() {
-        const backup = localStorage.getItem("or_library_backup");
-        if (backup) {
-            library = JSON.parse(backup);
-            saveToStorage();
+        const query = document.getElementById('library-search-input').value.toLowerCase().trim();
+        if (!query) {
             renderBooks();
-            showToast("¡Biblioteca restaurada de la copia de seguridad exitosamente!", "success");
-            renderRecoverButton();
-        } else {
-            showToast("No se encontró ninguna copia de seguridad para restaurar.", "error");
+            return;
+        }
+        const filtered = library.filter(b => 
+            b.title.toLowerCase().includes(query) || 
+            b.author.toLowerCase().includes(query) ||
+            b.format.toLowerCase().includes(query)
+        );
+        renderBooks(filtered);
+    }
+
+    function resetLibrary() {
+        if (confirm("¿Estás seguro de que deseas restablecer la biblioteca de fábrica? Perderás tus libros cargados.")) {
+            localStorage.clear();
+            library = [];
+            shelves = ["Favoritos", "Lecturas Diarias", "Por Leer", "Historial"];
+            currentShelf = "Todos";
+            initDefaultBooks();
+            renderShelves();
+            renderBooks();
+            showToast("Biblioteca restaurada de fábrica.");
         }
     }
 
-    function renderRecoverButton() {
-        const backup = localStorage.getItem("or_library_backup");
-        const btn = document.getElementById("btn-recover-backup");
-        if (backup) {
-            btn.classList.remove("hidden");
-        } else {
-            btn.classList.add("hidden");
-        }
+    // --- Apertura y Gestión del E-Reader ---
+    function openBook(id) {
+        const book = library.find(b => b.id === id);
+        if (!book) return;
+
+        activeBookId = id;
+        document.getElementById('reader-book-title').textContent = book.title;
+
+        // Extraer e indexar capítulos
+        renderChapters(book);
+
+        const container = document.getElementById('reader-text-container');
+        container.innerHTML = formatBookContent(book.content);
+
+        applyConfigToUI();
+        switchView('reader');
+        
+        // Registrar scroll para progreso
+        const scroller = document.getElementById('reader-scroller');
+        scroller.scrollTop = 0;
+        scroller.onscroll = throttle(() => {
+            if (scroller.scrollHeight > scroller.clientHeight) {
+                const pct = Math.round((scroller.scrollTop / (scroller.scrollHeight - scroller.clientHeight)) * 100);
+                book.progress = pct;
+                document.getElementById('page-counter').textContent = `Progreso: ${pct}%`;
+                saveToStorage();
+            }
+        }, 300);
     }
 
-    function openAddBookModal() {
-        document.getElementById("add-book-modal").classList.remove("hidden");
+    function formatBookContent(text) {
+        if (!text) return '<p class="text-slate-500 text-center text-xs">Este libro no contiene texto transcribible.</p>';
+        return text.split('\n\n').map(p => {
+            if (p.trim().startsWith('[') && p.trim().endsWith(']')) {
+                return `<h3 class="text-lg font-bold text-teal-400 mt-6 mb-3 font-serif tracking-tight anchor-chapter">${p.replace(/[\[\]]/g, '')}</h3>`;
+            }
+            return `<p class="mb-4 indent-4 text-justify leading-relaxed">${p}</p>`;
+        }).join('');
     }
 
-    function closeAddBookModal() {
-        document.getElementById("add-book-modal").classList.add("hidden");
-    }
+    function renderChapters(book) {
+        const select = document.getElementById("reader-chapter-select");
+        if (!select) return;
 
-    // --- STREAMING_CHUNK:Procesando e importando archivos reales (TXT, HTML, EPUB, PDF) ---
-    // --- IMPORTACIÓN Y DECODIFICACIÓN REAL DE ARCHIVOS ---
-    async function handleFileImport(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+        select.innerHTML = "";
+        const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+|\[.*?\])/gi;
+        const matches = [...book.content.matchAll(regex)];
 
-        const extension = file.name.split('.').pop().toLowerCase();
-        showToast("Procesando archivo... por favor espera", "success");
-
-        if (extension === 'txt' || extension === 'html' || extension === 'htm') {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                let content = e.target.result;
-                addBookToLibrary(file.name.replace(/\.[^/.]+$/, ""), "Autor Desconocido", extension.toUpperCase(), content);
-            };
-            reader.readAsText(file);
-        } else if (extension === 'epub') {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const arrayBuffer = e.target.result;
-                    const zip = await JSZip.loadAsync(arrayBuffer);
-                    
-                    let epubText = "";
-                    const files = Object.keys(zip.files).filter(name => name.endsWith('.xhtml') || name.endsWith('.html') || name.endsWith('.htm'));
-                    files.sort((a, b) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'}));
-                    
-                    for (const filename of files) {
-                        const fileContent = await zip.files[filename].async("text");
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(fileContent, "text/html");
-                        
-                        let heading = doc.querySelector('h1, h2, h3, h4')?.textContent?.trim() || "";
-                        let text = doc.body ? doc.body.innerText : doc.documentElement.innerText;
-                        
-                        text = text.replace(/\n\s*\n/g, '\n\n').trim();
-                        
-                        if (text.length > 30) {
-                            if (heading) {
-                                epubText += `[Capítulo: ${heading}]\n\n${text}\n\n`;
-                            } else {
-                                const filenameClean = filename.split('/').pop().replace(/\.[^/.]+$/, "");
-                                epubText += `[Capítulo: ${filenameClean}]\n\n${text}\n\n`;
-                            }
-                        }
-                    }
-                    
-                    if (!epubText) {
-                        throw new Error("No se pudo extraer texto del EPUB.");
-                    }
-                    
-                    addBookToLibrary(file.name.replace(/\.[^/.]+$/, ""), "Autor Desconocido", "EPUB", epubText);
-                } catch (err) {
-                    console.error(err);
-                    showToast("Error al decodificar el archivo EPUB de forma nativa.", "error");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        } else if (extension === 'pdf') {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const arrayBuffer = e.target.result;
-                    const typedarray = new Uint8Array(arrayBuffer);
-                    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
-                    
-                    let pdfText = "";
-                    const totalPages = pdf.numPages;
-                    
-                    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-                        const page = await pdf.getPage(pageNum);
-                        const textContent = await page.getTextContent();
-                        const pageItems = textContent.items.map(item => item.str).join(" ");
-                        
-                        pdfText += `[Capítulo: Página ${pageNum}]\n\n${pageItems}\n\n`;
-                    }
-                    
-                    if (!pdfText.trim()) {
-                        throw new Error("El PDF no contiene texto extraíble.");
-                    }
-                    
-                    addBookToLibrary(file.name.replace(/\.[^/.]+$/, ""), "Autor Desconocido", "PDF", pdfText);
-                } catch (err) {
-                    console.error(err);
-                    showToast("Error al extraer el texto real de tu PDF. Posiblemente esté encriptado o sea una imagen.", "error");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            showToast("Formato de archivo no soportado. Usa TXT, HTML, EPUB o PDF.", "error");
-        }
-    }
-
-    function addBookToLibrary(title, author, format, content) {
-        const newBook = {
-            id: `book-${Date.now()}`,
-            title: title,
-            author: author,
-            shelf: "Favoritos",
-            color: getRandomHexColor(),
-            format: format,
-            progress: 0,
-            content: content
-        };
-
-        library.push(newBook);
-        saveToStorage();
-        renderBooks();
-        closeAddBookModal();
-        showToast(`"${title}" importado con éxito. ¡Ya puedes leerlo!`);
-    }
-
-    function saveManualBook() {
-        const title = document.getElementById("manual-title").value.trim();
-        const author = document.getElementById("manual-author").value.trim() || "Autor Anónimo";
-        const shelf = document.getElementById("manual-shelf").value;
-        const color = document.getElementById("manual-color").value;
-        const content = document.getElementById("manual-content").value.trim();
-
-        if (!title || !content) {
-            showToast("Completa al menos el título y el contenido del material.", "error");
+        if (matches.length === 0) {
+            select.innerHTML = `<option>Contenido Único</option>`;
             return;
         }
 
-        const newBook = {
-            id: `book-${Date.now()}`,
-            title: title,
-            author: author,
-            shelf: shelf,
-            color: color,
-            format: "TXT",
-            progress: 0,
-            content: content
-        };
-
-        library.push(newBook);
-        saveToStorage();
-        renderBooks();
-        closeAddBookModal();
-        showToast(`"${title}" guardado exitosamente en tu estante.`);
-        
-        document.getElementById("manual-title").value = "";
-        document.getElementById("manual-author").value = "";
-        document.getElementById("manual-content").value = "";
-    }
-
-    function getRandomHexColor() {
-        const colors = ["#14b8a6", "#10b981", "#3b82f6", "#06b6d4", "#8b5cf6", "#ec4899"];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-
-    // --- STREAMING_CHUNK:Cargando el libro en el visor e indexando capítulos reales ---
-    // --- VISUALIZACIÓN DE LECTURA REAL DE LIBRO (AUTÉNTICA PRIORIDAD) ---
-
-        function loadBookToReader(id) {
-            const book = library.find(b => b.id === id);
-            if (!book) return;
-
-    activeBookId = id;
-    localStorage.setItem("or_last_active_book", id);
-
-    switchView("reader");
-
-    renderReaderContent(book);
-
-    requestAnimationFrame(() => {
-        renderChapters(book); // 🔥 AQUÍ (no antes)
-
-        const scroller = document.getElementById("reader-scroller");
-        if (scroller) {
-            scroller.scrollTop = 0;
-            scroller.scrollLeft = 0;
-        }
-
-                ensureReaderStartsAtTop();
-            });
-        }
-            
-            // Analizar capítulos reales en base a marcas del libro cargado
-            
-            const isChapter = /^(\[?Cap[íi]tulo|^\[?Chapter|^Cap[íi]tulo|^\[Part|^\[Página)/i.test(cleanText);
-            if (isChapter) {
-                chapterOptions.push({
-                    title: cleanText.substring(0, 32).replace(/[\[\]]/g, '') + (cleanText.length > 32 ? "..." : ""),
-                    pIndex: idx
-                });
-            }
-        });
-        
-        if (chapterOptions.length === 0) {
-            paragraphs.forEach((pText, idx) => {
-                if (idx % 8 === 0) {
-                    chapterOptions.push({
-                        title: `Sección ${Math.floor(idx / 8) + 1}`,
-                        pIndex: idx
-                    });
-                }
-            });
-        }
-        
-        chapterOptions.forEach(opt => {
-            const optEl = document.createElement("option");
-            optEl.value = opt.pIndex;
-            optEl.textContent = opt.title;
-            select.appendChild(optEl);
+        matches.forEach((m, idx) => {
+            const opt = document.createElement("option");
+            opt.value = idx;
+            opt.textContent = m[0].replace(/[\[\]]/g, '');
+            select.appendChild(opt);
         });
     }
 
     function handleChapterSelect() {
         const select = document.getElementById("reader-chapter-select");
-        const pIndex = parseInt(select.value);
-        jumpToChapter(pIndex);
-    }
-
-    function jumpToChapter(pIndex) {
-        const pEl = document.querySelector(`[data-p-index="${pIndex}"]`);
-        if (!pEl) return;
-        
-        const isMobile = window.innerWidth < 768;
-        const scroller = document.getElementById("reader-scroller");
-        
-        if (isMobile || readerConfig.pcViewMode === 'vertical') {
-            pEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            const offsetLeft = pEl.offsetLeft;
-            const pageLength = scroller.clientWidth;
-            const pageIndex = Math.floor(offsetLeft / pageLength);
-            
-            readerConfig.currentPage = pageIndex;
-            scroller.scrollTo({
-                left: pageIndex * pageLength,
-                behavior: 'smooth'
-            });
-            setTimeout(updatePageIndicator, 320);
-            saveReadingPosition();
+        const headers = document.querySelectorAll("#reader-text-container h3.anchor-chapter");
+        if (headers[select.value]) {
+            headers[select.value].scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
-    // --- STREAMING_CHUNK:Renderizando los párrafos y estructurando el visor de lectura ---
-    
-    function renderReaderContent() {
-        const book = library.find(b => b.id === activeBookId);
-        if (!book) return;
-
-        const container = document.getElementById("reader-text-container");
-        container.innerHTML = "";
-
-        // Extrayendo y formateando el texto original real del recurso
-        const paragraphs = book.content.split("\n\n").filter(p => p.trim() !== "");
-        
-        paragraphs.forEach((pText, idx) => {
-            const p = document.createElement("p");
-            p.className = "mb-4 text-justify paragraph-node relative select-text transition-all duration-200";
-            p.setAttribute("data-p-index", idx);
-            p.innerHTML = applySavedHighlights(idx, pText);
-            container.appendChild(p);
-
-            renderSavedNotes(idx, container);
-        });
-
-        applyReadingLayout();
-    }
-
-    function applyReadingLayout() {
-        const container = document.getElementById("reader-text-container");
-        const scroller = document.getElementById("reader-scroller");
-        if (!container || !scroller) return;
-
-        const isMobile = window.innerWidth < 768;
-        const pageNav = document.getElementById("page-navigation-controls");
-
-        if (isMobile || readerConfig.pcViewMode === 'vertical') {
-            container.classList.remove("book-columns");
-            container.classList.add("max-w-4xl"); 
-            container.style.height = "auto";
-            container.style.width = "auto";
-            if (pageNav) pageNav.classList.add("hidden");
-            scroller.style.overflowY = "auto";
-            scroller.style.overflowX = "hidden";
-        } else {
-            container.classList.add("book-columns");
-            container.classList.remove("max-w-4xl"); 
-            container.style.width = "100%";
-            if (pageNav) pageNav.classList.remove("hidden");
-
-            scroller.style.overflowY = "hidden";
-            scroller.style.overflowX = "hidden";
-
-            const computedStyle = window.getComputedStyle(scroller);
-            const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
-            const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
-            const availableHeight = scroller.clientHeight - paddingTop - paddingBottom;
-            
-            container.style.height = `${availableHeight}px`;
-
-            paginateBookColumns();
-        }
-        
-        updatePageIndicator();
-    }
-
-    function paginateBookColumns() {
-        const scroller = document.getElementById("reader-scroller");
-        if (!scroller) return;
-        const pageLength = scroller.clientWidth; 
-        scroller.scrollLeft = readerConfig.currentPage * pageLength;
-    }
-
-    function nextPage() {
-        const scroller = document.getElementById("reader-scroller");
-        const container = document.getElementById("reader-text-container");
-        const isMobile = window.innerWidth < 768;
-
-        if (!scroller || !container) return;
-        if (isMobile || readerConfig.pcViewMode === 'vertical') return;
-
-        const pageLength = scroller.clientWidth;
-        const totalPages = Math.max(1, Math.ceil(container.scrollWidth / pageLength));
-
-        if (readerConfig.currentPage < totalPages - 1) {
-            readerConfig.currentPage++;
-            scroller.scrollTo({
-                left: readerConfig.currentPage * pageLength,
-                behavior: 'smooth'
-            });
-            setTimeout(updatePageIndicator, 320);
-            saveReadingPosition();
-        }
-    }
-
-    function prevPage() {
-        const scroller = document.getElementById("reader-scroller");
-        const isMobile = window.innerWidth < 768;
-
-        if (!scroller) return;
-        if (isMobile || readerConfig.pcViewMode === 'vertical') return;
-
-        const pageLength = scroller.clientWidth;
-
-        if (readerConfig.currentPage > 0) {
-            readerConfig.currentPage--;
-            scroller.scrollTo({
-                left: readerConfig.currentPage * pageLength,
-                behavior: 'smooth'
-            });
-            setTimeout(updatePageIndicator, 320);
-            saveReadingPosition();
-        }
-    }
-
-    function updatePageIndicator() {
-        const scroller = document.getElementById("reader-scroller");
-        const container = document.getElementById("reader-text-container");
-        if (!container || !scroller) return;
-
-        const pageLength = scroller.clientWidth;
-        const totalPages = Math.max(1, Math.ceil(container.scrollWidth / pageLength));
-        
-        if (readerConfig.currentPage >= totalPages) {
-            readerConfig.currentPage = Math.max(0, totalPages - 1);
-        }
-
-        const pageCounter = document.getElementById("page-counter");
-        if (pageCounter) pageCounter.textContent = `Página ${readerConfig.currentPage + 1} de ${totalPages}`;
-        
-        const progressPct = Math.min(100, Math.round(((readerConfig.currentPage + 1) / totalPages) * 100));
-        const progressEl = document.getElementById("reader-progress-percent");
-        if (progressEl) progressEl.textContent = `Pág: ${readerConfig.currentPage + 1} / ${totalPages} (${progressPct}%)`;
-
-        if (activeBookId) {
-            const book = library.find(b => b.id === activeBookId);
-            if (book) {
-                book.progress = progressPct;
-                saveToStorage();
-            }
-        }
-
-        updateChapterSelectFromScroll();
-    }
-
-    function updateChapterSelectFromScroll() {
-        const scroller = document.getElementById("reader-scroller");
-        const paragraphs = document.querySelectorAll(".paragraph-node");
-        const select = document.getElementById("reader-chapter-select");
-        if (paragraphs.length === 0 || !select) return;
-
-        const isMobile = window.innerWidth < 768;
-        let currentVisiblePIndex = 0;
-
-        if (isMobile || readerConfig.pcViewMode === 'vertical') {
-            const scrollerTop = scroller.scrollTop;
-            for (let i = 0; i < paragraphs.length; i++) {
-                const p = paragraphs[i];
-                if (p.offsetTop >= scrollerTop - 20) {
-                    currentVisiblePIndex = parseInt(p.getAttribute("data-p-index"));
-                    break;
-                }
-            }
-        } else {
-            const scrollLeft = scroller.scrollLeft;
-            for (let i = 0; i < paragraphs.length; i++) {
-                const p = paragraphs[i];
-                if (p.offsetLeft >= scrollLeft - 40) {
-                    currentVisiblePIndex = parseInt(p.getAttribute("data-p-index"));
-                    break;
-                }
-            }
-        }
-
-        let bestMatchValue = "0";
-        for (let i = 0; i < select.options.length; i++) {
-            const optVal = parseInt(select.options[i].value);
-            if (optVal <= currentVisiblePIndex) {
-                bestMatchValue = select.options[i].value;
-            } else {
-                break;
-            }
-        }
-        select.value = bestMatchValue;
-    }
-
-    function saveReadingPosition() {
-        if (activeBookId) {
-            localStorage.setItem(`or_pos_${activeBookId}`, readerConfig.currentPage);
-        }
-    }
-
-    setTimeout(() => {
-  ensureReaderStartsAtTop();
-  const savedMode = localStorage.getItem('reader-mode') || 'vertical';
-  setReaderMode(savedMode);
-  syncReaderFloatingChrome();
-}, 0);
-
-    // --- STREAMING_CHUNK:Estructurando la lógica cognitiva adaptativa de GennIA ---
-    // --- COMPAÑERO INTELECTUAL "GennIA" (Adaptativo y contextual) ---
-    let currentGennIAPreset = "estándar";
-
-    function detectComplexity(book) {
-        const keywordsForSimple = ["manga", "infantil", "niño", "frieren", "fantasía", "aventura", "animemanga", "recreativo", "cómics"];
-        const keywordsForAdvanced = ["académico", "soledad", "marquez", "filosófico", "ensayo", "clásico", "historia", "nobel", "enciclopedia", "pdf"];
-        
-        const textToCheck = (book.title + " " + book.shelf + " " + book.content.substring(0, 1000)).toLowerCase();
-        const badge = document.getElementById("gennia-complexity-badge");
-
-        let isSimple = keywordsForSimple.some(word => textToCheck.includes(word));
-        let isAdvanced = keywordsForAdvanced.some(word => textToCheck.includes(word));
-
-        if (!badge) return;
-        if (isAdvanced) {
-            currentGennIAPreset = "avanzado";
-            badge.textContent = "Académico / Profundo 🧠";
-            badge.className = "px-2 py-0.5 rounded bg-teal-900/40 text-teal-300 font-bold tracking-wide uppercase";
-        } else if (isSimple) {
-            currentGennIAPreset = "simple";
-            badge.textContent = "Simple / Ligero 🧸";
-            badge.className = "px-2 py-0.5 rounded bg-emerald-950/40 text-emerald-300 font-bold tracking-wide uppercase";
-        } else {
-            currentGennIAPreset = "estándar";
-            badge.textContent = "Estándar 📖";
-            badge.className = "px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 font-bold tracking-wide uppercase";
-        }
-    }
-
-    function ensureReaderPriority() {
-        const ai = document.getElementById('reader-ai-sidebar');
-        if (ai) ai.classList.add('hidden');
-    }
-
-    function toggleAISidebar() {
-        const sidebar = document.getElementById("reader-ai-sidebar");
-        if (!sidebar) return;
-        sidebar.classList.toggle("hidden");
-        applyReadingLayout();
-    }
-
-    function handleAIChatKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendCustomAIQuery();
-        }
-    }
-
-    // --- STREAMING_CHUNK:Lógica para procesar preguntas del usuario y enviarlas a Gemini ---
-    async function sendCustomAIQuery() {
-        const input = document.getElementById("ai-chat-input");
-        const queryText = input.value.trim();
-        if (!queryText) return;
-
-        input.value = "";
-        appendAIMessage("user", queryText);
-
-        const book = library.find(b => b.id === activeBookId);
-        const bookContext = book ? `Libro activo: "${book.title}" de ${book.author}.\nContenido real del libro en pantalla:\n${book.content.substring(0, 1500)}...` : "Ningún libro cargado.";
-
-        let instruction = "Actúas como GennIA, el copiloto inteligente del lector. NO inventes hechos que no estén en la obra. Si la pregunta no se relaciona con la obra, acláralo de manera honesta.";
-        if (currentGennIAPreset === "simple") {
-            instruction += " El material que lee el usuario es infantil o recreativo básico. Responde con un vocabulario sumamente amigable, sencillo y didáctico.";
-        } else if (currentGennIAPreset === "avanzado") {
-            instruction += " El material que lee el usuario es académico, técnico o un clásico literario. Responde con un lenguaje riguroso, analítico, exhaustivo e intelectual.";
-        }
-
-        const finalPrompt = `Contexto del libro actual:\n${bookContext}\n\nPregunta del lector: ${queryText}`;
-        appendAIMessage("assistant", "Pensando en tu lectura...");
-
-        try {
-            const result = await fetchGemini(finalPrompt, instruction);
-            const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No obtuve una respuesta clara.";
-            removeLastAIMessage();
-            appendAIMessage("assistant", responseText);
-        } catch (error) {
-            removeLastAIMessage();
-            appendAIMessage("assistant", "⚠️ Error de conexión con GennIA. Asegúrate de ingresar tu Gemini API Key en el panel lateral.");
-        }
-    }
-
-    async function askAIAssistant(mode) {
-        const sidebar = document.getElementById("reader-ai-sidebar");
-        if (sidebar.classList.contains("hidden")) {
-            toggleAISidebar();
-        }
-
-        const book = library.find(b => b.id === activeBookId);
-        if (!book && mode !== 'explain-selection') {
-            appendAIMessage("assistant", "⚠️ Carga primero un recurso en tu visor de lectura principal.");
-            return;
-        }
-
-        let userPrompt = "";
-        let instruction = "Eres GennIA, un asistente de lectura inteligente y preciso. No inventes historias ni detalles. Basa tus respuestas únicamente en el texto provisto.";
-        if (currentGennIAPreset === "simple") {
-            instruction += " Responde con tono simple, didáctico y divertido.";
-        } else if (currentGennIAPreset === "avanzado") {
-            instruction += " Responde con tono analítico, crítico y de alto nivel académico.";
-        }
-
-        if (mode === 'summarize') {
-            appendAIMessage("user", `Sintetizar obra actual: "${book.title}"`);
-            appendAIMessage("assistant", "Generando un análisis/resumen estructurado...");
-            userPrompt = `Genera un resumen opcional y preciso del siguiente fragmento real de "${book.title}" de ${book.author}:\n\n${book.content.substring(0, 4000)}`;
-        } else if (mode === 'explain-context') {
-            appendAIMessage("user", `Explicar el contexto socio-histórico de "${book.title}"`);
-            appendAIMessage("assistant", "Buscando datos históricos complementarios...");
-            userPrompt = `Explica brevemente el contexto socio-histórico real de la obra "${book.title}" de ${book.author} de manera verídica y documentada.`;
-        } else if (mode === 'explain-selection') {
-            if (!selectedTextMetadata) {
-                showToast("Por favor selecciona primero un fragmento de texto en el lector.", "error");
-                return;
-            }
-            appendAIMessage("user", `Explicar fragmento seleccionado: "${selectedTextMetadata.text.substring(0, 30)}..."`);
-            appendAIMessage("assistant", "GennIA analizando el fragmento seleccionado...");
-            userPrompt = `Explica, define o traduce el siguiente fragmento exacto que he seleccionado en la lectura:\n\n"${selectedTextMetadata.text}"`;
-            document.getElementById("selection-popup").classList.add("hidden");
-            window.getSelection().removeAllRanges();
-        }
-
-        try {
-            const result = await fetchGemini(userPrompt, instruction);
-            const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar el análisis.";
-            removeLastAIMessage();
-            appendAIMessage("assistant", responseText);
-        } catch (error) {
-            removeLastAIMessage();
-            appendAIMessage("assistant", "⚠️ GennIA no pudo conectarse con el servidor de IA. Asegúrate de configurar tu API Key.");
-        }
-    }
-
-    function appendAIMessage(sender, text) {
-        const chat = document.getElementById("ai-chat-history");
-        const msgDiv = document.createElement("div");
-        if (sender === "user") {
-            msgDiv.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-slate-300 self-end ml-4";
-            msgDiv.innerHTML = `<span class="font-bold text-slate-400">Tú:</span> <p class="mt-0.5">${text}</p>`;
-        } else {
-            msgDiv.className = "bg-teal-950/20 border border-teal-900/20 p-2.5 rounded-lg text-teal-200 mr-4 ai-msg-node";
-            msgDiv.innerHTML = `<span class="font-bold text-teal-400">GennIA ✨:</span> <div class="mt-1 leading-relaxed whitespace-pre-line">${text}</div>`;
-        }
-        chat.appendChild(msgDiv);
-        chat.scrollTop = chat.scrollHeight;
-    }
-
-    function removeLastAIMessage() {
-        const chat = document.getElementById("ai-chat-history");
-        const nodes = chat.getElementsByClassName("ai-msg-node");
-        if (nodes.length > 0) {
-            nodes[nodes.length - 1].remove();
-        }
-    }
-
-<script>
-/* =========================================================
-   ESTADO GLOBAL
-========================================================= */
-
-window.shelves = ["Favoritos", "Por Leer", "Manga", "Pendientes"];
-window.library = [];
-window.highlights = [];
-window.notes = [];
-
-window.currentShelf = "all";
-window.activeBookId = null;
-window.viewMode = "library";
-
-window.selectedTextMetadata = null;
-
-window.touchStartX = 0;
-window.touchEndX = 0;
-
-window.readerConfig = {
-    theme: "dark",
-    grade: 0.8,
-    fontSize: 18,
-    margin: 32,
-    fontFamily: "serif",
-    readingMode: "vertical",
-    pcViewMode: "vertical",
-    maximized: false
-};
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function getActiveBook() {
-    return library.find(b => b.id === activeBookId);
-}
-
-function getReaderScroller() {
-    return document.getElementById("reader-scroller");
-}
-
-function showToast(message, type = "success") {
-    console.log(`[${type}] ${message}`);
-}
-
-function customConfirm(title, message, callback) {
-    const ok = confirm(`${title}\n\n${message}`);
-    if (ok) callback();
-}
-
-function syncReaderFloatingChrome() {}
-
-function nextPage() {}
-function prevPage() {}
-function applyReadingLayout() {}
-function renderRecoverButton() {}
-function renderShelves() {}
-function fetchGemini() {}
-function setReaderMode() {}
-
-/* =========================================================
-   RENDER LIBROS
-========================================================= */
-
-function renderBooks() {
-    const container = document.getElementById("library-grid");
-
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    let filtered = library;
-
-    if (currentShelf !== "all") {
-        filtered = library.filter(book => book.shelf === currentShelf);
-    }
-
-    if (filtered.length === 0) {
-        container.innerHTML = `
-            <div class="col-span-full text-center py-10 text-slate-500">
-                No hay libros en esta estantería.
-            </div>
-        `;
-        return;
-    }
-
-    filtered.forEach(book => {
-        const card = document.createElement("div");
-
-        card.className =
-            "bg-slate-950 border border-slate-800/80 p-4 rounded-xl flex flex-col justify-between hover:border-teal-500/40 transition-all shadow-lg group relative overflow-hidden";
-
-        card.innerHTML = `
-            <div 
-                class="absolute top-0 left-0 w-2 h-full"
-                style="background-color: ${book.color || "#14b8a6"}">
-            </div>
-
-            <div class="pl-4 space-y-3">
-
-                <div class="flex justify-between items-start">
-
-                    <div>
-                        <span class="text-[9px] uppercase font-black text-teal-400 bg-teal-950/60 border border-teal-900/30 px-2 py-0.5 rounded tracking-wider">
-                            ${book.format || "Texto"}
-                        </span>
-
-                        <h4 
-                            class="text-sm font-bold text-slate-100 mt-1.5 line-clamp-1"
-                            title="${book.title}">
-                            ${book.title}
-                        </h4>
-
-                        <p class="text-[11px] text-slate-400">
-                            Por ${book.author}
-                        </p>
-                    </div>
-
-                    <button
-                        onclick="triggerDeleteBook('${book.id}')"
-                        class="text-slate-600 hover:text-red-400 transition-colors text-xs p-1"
-                        title="Eliminar Libro">
-                        🗑️
-                    </button>
-
-                </div>
-
-                <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-slate-500">
-                    <span>
-                        Progreso: ${book.progress || 0}%
-                    </span>
-
-                    <span class="bg-slate-900 px-2 py-1 rounded border border-slate-800">
-                        Estante: ${book.shelf}
-                    </span>
-                </div>
-
-                <div class="flex gap-2">
-
-                    <button
-                        onclick="loadBookToReader('${book.id}')"
-                        class="flex-1 py-2 bg-teal-500/10 hover:bg-teal-500 hover:text-slate-950 text-teal-300 text-xs font-bold rounded-lg transition-all text-center">
-                        📖 Leer ahora
-                    </button>
-
-                </div>
-
-            </div>
-        `;
-
-        container.appendChild(card);
-    });
-}
-
-/* =========================================================
-   ELIMINAR LIBRO
-========================================================= */
-
-function triggerDeleteBook(bookId) {
-    customConfirm(
-        "Eliminar Libro",
-        "¿Deseas eliminar este libro?",
-        () => {
-            library = library.filter(b => b.id !== bookId);
-
-            saveToStorage();
-            renderBooks();
-
-            showToast("Libro eliminado.");
-        }
-    );
-}
-
-/* =========================================================
-   CARGAR LIBRO AL LECTOR
-========================================================= */
-
-function loadBookToReader(bookId) {
-    activeBookId = bookId;
-
-    localStorage.setItem("or_last_active_book", bookId);
-
-    const book = getActiveBook();
-
-    if (!book) return;
-
-    const titleEl = document.getElementById("reader-book-title");
-
-    if (titleEl) {
-        titleEl.textContent = `${book.title} - ${book.author}`;
-    }
-
-    renderReaderContent();
-
-    switchView("reader");
-}
-
-/* =========================================================
-   RENDER CONTENIDO LECTOR
-========================================================= */
-
-function renderReaderContent() {
-    const container = document.getElementById("reader-text-container");
-
-    if (!container) return;
-
-    const book = getActiveBook();
-
-    if (!book) {
-        container.innerHTML = "";
-        return;
-    }
-
-    const paragraphs = book.content.split("\n\n");
-
-    container.innerHTML = "";
-
-    paragraphs.forEach((paragraphText, pIdx) => {
-        const wrapper = document.createElement("div");
-
-        wrapper.className = "mb-6 paragraph-node";
-        wrapper.setAttribute("data-p-index", pIdx);
-
-        const formatted = applySavedHighlights(pIdx, paragraphText);
-
-        wrapper.innerHTML = `
-            <p class="leading-8 text-sm md:text-base selection:bg-teal-500/30">
-                ${formatted}
-            </p>
-        `;
-
-        renderSavedNotes(pIdx, wrapper);
-
-        container.appendChild(wrapper);
-    });
-
-    container.removeEventListener("mouseup", handleTextSelection);
-    container.addEventListener("mouseup", handleTextSelection);
-
-    renderChapters(book);
-}
-
-/* =========================================================
-   SELECCIÓN DE TEXTO
-========================================================= */
-
-function handleTextSelection(event) {
-    const selection = window.getSelection();
-
-    const text = selection.toString().trim();
-
-    if (text.length > 0) {
-        const range = selection.getRangeAt(0);
-
-        let containerNode = range.commonAncestorContainer;
-
-        if (containerNode.nodeType === Node.TEXT_NODE) {
-            containerNode = containerNode.parentNode;
-        }
-
-        const paragraph = containerNode.closest(".paragraph-node");
-
-        if (paragraph) {
-            const pIdx = parseInt(
-                paragraph.getAttribute("data-p-index")
-            );
-
-            selectedTextMetadata = {
-                paragraphIndex: pIdx,
-                text: text,
-                fullText: paragraph.innerText
-            };
-
-            const popup = document.getElementById("selection-popup");
-
-            if (popup) {
-                popup.style.top = `${event.pageY + 12}px`;
-                popup.style.left = `${event.pageX - 60}px`;
-
-                popup.classList.remove("hidden");
-            }
-        }
-    } else {
-        document
-            .getElementById("selection-popup")
-            ?.classList.add("hidden");
-    }
-}
-
-/* =========================================================
-   RESALTADOS
-========================================================= */
-
-function applyHighlight(colorStyle) {
-    if (!selectedTextMetadata) return;
-
-    highlights = highlights.filter(h => {
-        return !(
-            h.bookId === activeBookId &&
-            h.paragraphIndex === selectedTextMetadata.paragraphIndex &&
-            h.text === selectedTextMetadata.text
-        );
-    });
-
-    highlights.push({
-        bookId: activeBookId,
-        paragraphIndex: selectedTextMetadata.paragraphIndex,
-        text: selectedTextMetadata.text,
-        type: colorStyle === "underline"
-            ? "underline"
-            : "highlight",
-        color: colorStyle,
-        timestamp: Date.now()
-    });
-
-    saveToStorage();
-
-    renderReaderContent();
-
-    document
-        .getElementById("selection-popup")
-        ?.classList.add("hidden");
-
-    window.getSelection().removeAllRanges();
-
-    showToast("Texto resaltado.");
-}
-
-function clearSelectionHighlight() {
-    if (!selectedTextMetadata) return;
-
-    highlights = highlights.filter(h => {
-        return !(
-            h.bookId === activeBookId &&
-            h.paragraphIndex === selectedTextMetadata.paragraphIndex &&
-            h.text === selectedTextMetadata.text
-        );
-    });
-
-    saveToStorage();
-
-    renderReaderContent();
-
-    document
-        .getElementById("selection-popup")
-        ?.classList.add("hidden");
-
-    window.getSelection().removeAllRanges();
-
-    showToast("Se limpió la selección.");
-}
-
-/* =========================================================
-   NOTAS
-========================================================= */
-
-function addNoteToSelection() {
-    if (!selectedTextMetadata) return;
-
-    const noteText = prompt(
-        "Escribe tu nota para esta selección:"
-    );
-
-    if (noteText === null) return;
-
-    notes.push({
-        id: `note-${Date.now()}`,
-        bookId: activeBookId,
-        paragraphIndex: selectedTextMetadata.paragraphIndex,
-        text: selectedTextMetadata.text,
-        noteText: noteText,
-        color: "teal",
-        collapsed: false
-    });
-
-    saveToStorage();
-
-    renderReaderContent();
-
-    document
-        .getElementById("selection-popup")
-        ?.classList.add("hidden");
-
-    window.getSelection().removeAllRanges();
-
-    showToast("Nota agregada.");
-}
-
-function renderSavedNotes(pIdx, container) {
-    const pNotes = notes.filter(n => {
-        return (
-            n.bookId === activeBookId &&
-            n.paragraphIndex === pIdx
-        );
-    });
-
-    pNotes.forEach(note => {
-        const noteDiv = document.createElement("div");
-
-        noteDiv.className =
-            "my-2 p-3 bg-white text-slate-900 border-l-4 border-teal-500 rounded-r-lg shadow-md";
-
-        noteDiv.id = note.id;
-
-        noteDiv.innerHTML = `
-            <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold mb-1">
-
-                <span>
-                    📝 NOTA SOBRE:
-                    "${note.text.substring(0, 30)}..."
-                </span>
-
-                <div class="flex gap-2">
-
-                    <button
-                        onclick="toggleCollapseNote('${note.id}')"
-                        class="hover:text-teal-600">
-                        Minimizar
-                    </button>
-
-                    <button
-                        onclick="triggerDeleteNote('${note.id}')"
-                        class="hover:text-red-600">
-                        Eliminar
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="note-content text-xs text-slate-700 font-medium ${note.collapsed ? "hidden" : ""}">
-                ${note.noteText}
-            </div>
-        `;
-
-        container.appendChild(noteDiv);
-    });
-}
-
-function toggleCollapseNote(noteId) {
-    const note = notes.find(n => n.id === noteId);
-
-    if (!note) return;
-
-    note.collapsed = !note.collapsed;
-
-    saveToStorage();
-
-    renderReaderContent();
-}
-
-function triggerDeleteNote(noteId) {
-    customConfirm(
-        "Eliminar Nota",
-        "¿Deseas eliminar esta nota?",
-        () => {
-            notes = notes.filter(n => n.id !== noteId);
-
-            saveToStorage();
-
-            renderReaderContent();
-
-            showToast("Nota eliminada.");
-        }
-    );
-}
-
-/* =========================================================
-   APLICAR RESALTADOS
-========================================================= */
-
-function applySavedHighlights(pIdx, rawText) {
-    const pMarks = highlights.filter(h => {
-        return (
-            h.bookId === activeBookId &&
-            h.paragraphIndex === pIdx
-        );
-    });
-
-    if (pMarks.length === 0) {
-        return rawText;
-    }
-
-    let formatted = rawText;
-
-    pMarks.forEach(mark => {
-        const escapedText = mark.text.replace(
-            /[-\/\\^$*+?.()|[\]{}]/g,
-            "\\$&"
-        );
-
-        const regex = new RegExp(
-            `(${escapedText})`,
-            "g"
-        );
-
-        if (mark.type === "underline") {
-            formatted = formatted.replace(
-                regex,
-                `<span class="underline-text font-bold">$1</span>`
-            );
-        } else {
-            formatted = formatted.replace(
-                regex,
-                `<span class="hl-${mark.color}">$1</span>`
-            );
-        }
-    });
-
-    return formatted;
-}
-
-/* =========================================================
-   CONFIG VISUAL
-========================================================= */
-
-function setReaderTheme(themeName) {
-    readerConfig.theme = themeName;
-
-    applyConfigToUI();
-
-    saveToStorage();
-}
-
-function applyConfigToUI() {
-    const wrapper = document.getElementById("reader-wrapper");
-
-    const textContainer = document.getElementById(
-        "reader-text-container"
-    );
-
-    if (!wrapper || !textContainer) return;
-
-    let background = "#020617";
-    let textColor = "#f1f5f9";
-
-    if (readerConfig.theme === "light") {
-        background = "#ffffff";
-        textColor = "#111827";
-    }
-
-    if (readerConfig.theme === "sepia") {
-        background = "#f4ecd8";
-        textColor = "#4a3728";
-    }
-
-    wrapper.style.backgroundColor = background;
-
-    textContainer.style.color = textColor;
-
-    textContainer.style.fontSize =
-        `${readerConfig.fontSize}px`;
-
-    textContainer.style.paddingLeft =
-        `${readerConfig.margin}px`;
-
-    textContainer.style.paddingRight =
-        `${readerConfig.margin}px`;
-
-    if (readerConfig.fontFamily === "serif") {
-        textContainer.style.fontFamily = "Georgia, serif";
-    }
-
-    if (readerConfig.fontFamily === "sans") {
-        textContainer.style.fontFamily = "Inter, sans-serif";
-    }
-
-    if (readerConfig.fontFamily === "mono") {
-        textContainer.style.fontFamily =
-            "'Fira Code', monospace";
-    }
-}
-
-function adjustFontSize(delta) {
-    readerConfig.fontSize = Math.min(
-        32,
-        Math.max(
-            12,
-            readerConfig.fontSize + delta
-        )
-    );
-
-    applyConfigToUI();
-
-    saveToStorage();
-}
-
-function adjustMargin(delta) {
-    readerConfig.margin = Math.min(
-        80,
-        Math.max(
-            8,
-            readerConfig.margin + delta
-        )
-    );
-
-    applyConfigToUI();
-
-    saveToStorage();
-}
-
-function changeFontFamily() {
-    const select = document.getElementById("font-select");
-
-    if (!select) return;
-
-    readerConfig.fontFamily = select.value;
-
-    applyConfigToUI();
-
-    saveToStorage();
-}
-
-/* =========================================================
-   AUDIOBOOK
-========================================================= */
-
-let synth = window.speechSynthesis;
-let ttsUtterance = null;
-let readingRate = 1;
-
-function toggleAudiobook() {
-    const playBtn = document.getElementById(
-        "audio-play-btn"
-    );
-
-    if (synth.speaking) {
-        if (synth.paused) {
-            synth.resume();
-
-            if (playBtn) {
-                playBtn.textContent = "⏸ Pausar";
-            }
-        } else {
-            synth.pause();
-
-            if (playBtn) {
-                playBtn.textContent = "▶ Seguir";
-            }
-        }
-
-        return;
-    }
-
-    const container = document.getElementById(
-        "reader-text-container"
-    );
-
-    if (!container) return;
-
-    const textToRead = container.innerText;
-
-    if (!textToRead) {
-        showToast(
-            "No hay texto para leer.",
-            "error"
-        );
-
-        return;
-    }
-
-    ttsUtterance = new SpeechSynthesisUtterance(
-        textToRead
-    );
-
-    ttsUtterance.lang = "es-ES";
-    ttsUtterance.rate = readingRate;
-
-    ttsUtterance.onstart = () => {
-        if (playBtn) {
-            playBtn.textContent = "⏸ Pausar";
-        }
-    };
-
-    ttsUtterance.onend = () => {
-        if (playBtn) {
-            playBtn.textContent = "▶ Reproducir";
-        }
-    };
-
-    synth.speak(ttsUtterance);
-}
-
-function stopAudiobook() {
-    if (synth.speaking) {
-        synth.cancel();
-    }
-
-    const playBtn = document.getElementById(
-        "audio-play-btn"
-    );
-
-    if (playBtn) {
-        playBtn.textContent = "▶ Reproducir";
-    }
-}
-
-function adjustVoiceSpeed() {
-    const select = document.getElementById(
-        "voice-speed"
-    );
-
-    if (!select) return;
-
-    readingRate = parseFloat(select.value);
-
-    if (synth.speaking) {
+    function exitReader() {
         stopAudiobook();
-        toggleAudiobook();
-    }
-}
-
-/* =========================================================
-   STORAGE
-========================================================= */
-
-function saveToStorage() {
-    try {
-        localStorage.setItem(
-            "or_library",
-            JSON.stringify(library)
-        );
-
-        localStorage.setItem(
-            "or_shelves",
-            JSON.stringify(shelves)
-        );
-
-        localStorage.setItem(
-            "or_reader_config",
-            JSON.stringify(readerConfig)
-        );
-
-        localStorage.setItem(
-            "or_highlights",
-            JSON.stringify(highlights)
-        );
-
-        localStorage.setItem(
-            "or_notes",
-            JSON.stringify(notes)
-        );
-    } catch (err) {
-        console.error(err);
-
-        showToast(
-            "Error guardando datos.",
-            "error"
-        );
-    }
-}
-
-function loadFromStorage() {
-    try {
-        const savedLibrary =
-            localStorage.getItem("or_library");
-
-        const savedShelves =
-            localStorage.getItem("or_shelves");
-
-        const savedReader =
-            localStorage.getItem("or_reader_config");
-
-        const savedHighlights =
-            localStorage.getItem("or_highlights");
-
-        const savedNotes =
-            localStorage.getItem("or_notes");
-
-        if (savedLibrary) {
-            library = JSON.parse(savedLibrary);
-        }
-
-        if (savedShelves) {
-            shelves = JSON.parse(savedShelves);
-        }
-
-        if (savedReader) {
-            readerConfig = {
-                ...readerConfig,
-                ...JSON.parse(savedReader)
-            };
-        }
-
-        if (savedHighlights) {
-            highlights = JSON.parse(savedHighlights);
-        }
-
-        if (savedNotes) {
-            notes = JSON.parse(savedNotes);
-        }
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-/* =========================================================
-   SWITCH VISTAS
-========================================================= */
-
-function switchView(viewId) {
-    viewMode = viewId;
-
-    const views = [
-        "library",
-        "reader",
-        "search"
-    ];
-
-    views.forEach(v => {
-        document
-            .getElementById(`view-${v}`)
-            ?.classList.add("hidden");
-
-        const nav = document.getElementById(
-            `nav-${v}`
-        );
-
-        if (nav) {
-            nav.className =
-                "px-4 py-2 rounded-lg text-xs font-semibold text-slate-400";
-        }
-    });
-
-    document
-        .getElementById(`view-${viewId}`)
-        ?.classList.remove("hidden");
-
-    const activeNav = document.getElementById(
-        `nav-${viewId}`
-    );
-
-    if (activeNav) {
-        activeNav.className =
-            "px-4 py-2 rounded-lg text-xs font-bold bg-teal-500 text-slate-950";
+        switchView('library');
+        renderBooks();
     }
 
-    if (viewId === "reader") {
-        applyReadingLayout();
+    // --- Configuraciones de Diseño & Visor ---
+    function setReaderTheme(theme) {
+        readerConfig.theme = theme;
         applyConfigToUI();
-    }
-}
-
-/* =========================================================
-   CAPÍTULOS
-========================================================= */
-
-function extractChaptersFromText(text) {
-    const regex =
-        /(cap[ií]tulo\s+\d+|chapter\s+\d+)/gi;
-
-    const matches = [...text.matchAll(regex)];
-
-    return matches.map(m => ({
-        title: m[0],
-        index: m.index
-    }));
-}
-
-function renderChapters(book) {
-    const select = document.getElementById(
-        "reader-chapter-select"
-    );
-
-    if (!select) return;
-
-    select.innerHTML = "";
-
-    if (!book || !book.content) {
-        select.innerHTML =
-            `<option>Sin contenido</option>`;
-
-        return;
-    }
-
-    const chapters = extractChaptersFromText(
-        book.content
-    );
-
-    if (chapters.length === 0) {
-        select.innerHTML =
-            `<option>Sin capítulos detectados</option>`;
-
-        return;
-    }
-
-    chapters.forEach((ch, i) => {
-        const opt = document.createElement("option");
-
-        opt.value = i;
-        opt.textContent = ch.title;
-
-        select.appendChild(opt);
-    });
-}
-
-/* =========================================================
-   INIT
-========================================================= */
-
-function initSystem() {
-    loadFromStorage();
-
-    if (library.length === 0) {
-        library = [
-            {
-                id: "init-1",
-                title: "Cien años de soledad",
-                author: "Gabriel García Márquez",
-                shelf: "Favoritos",
-                color: "#7c2d12",
-                format: "TXT",
-                progress: 0,
-                content:
-                    "[Capítulo 1]\nMuchos años después..."
-            }
-        ];
-
         saveToStorage();
     }
 
-    renderShelves();
-    renderBooks();
-    renderRecoverButton();
-
-    applyConfigToUI();
-
-    const lastBookId = localStorage.getItem(
-        "or_last_active_book"
-    );
-
-    if (lastBookId) {
-        const exists = library.some(
-            b => b.id === lastBookId
-        );
-
-        if (exists) {
-            activeBookId = lastBookId;
-        }
-    }
-}
-
-/* =========================================================
-   EVENTOS
-========================================================= */
-
-window.addEventListener("keydown", e => {
-    if (
-        viewMode === "reader" &&
-        readerConfig.pcViewMode === "pages" &&
-        window.innerWidth >= 768
-    ) {
-        if (e.key === "ArrowRight") {
-            nextPage();
-        }
-
-        if (e.key === "ArrowLeft") {
-            prevPage();
-        }
-    }
-});
-
-window.addEventListener("resize", () => {
-    if (viewMode === "reader") {
-        applyReadingLayout();
+    function adjustFontSize(dir) {
+        readerConfig.fontSize = Math.max(12, Math.min(32, readerConfig.fontSize + dir * 2));
         applyConfigToUI();
+        saveToStorage();
     }
-});
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-        initSystem();
+    function changeFontFamily() {
+        readerConfig.fontFamily = document.getElementById('font-select').value;
+        applyConfigToUI();
+        saveToStorage();
     }
-        );
-        </script>
-    </body>
+
+    function setPCViewMode(mode) {
+        readerConfig.pcViewMode = mode;
+        applyConfigToUI();
+        saveToStorage();
+    }
+
+    function toggleMaximizeReader() {
+        readerConfig.maximized = !readerConfig.maximized;
+        const readerSec = document.getElementById('view-reader');
+        readerSec.classList.toggle('reader-maximized', readerConfig.maximized);
+        document.getElementById('reader-float-controls').classList.toggle('hidden', !readerConfig.maximized);
+        document.getElementById('btn-maximize-main').textContent = readerConfig.maximized ? "🗗 Restaurar" : "🔲 Maximizar";
+    }
+
+    function applyConfigToUI() {
+        const container = document.getElementById('reader-text-container');
+        const scroller = document.getElementById('reader-scroller');
+        if (!container) return;
+
+        // Clases de Tema
+        scroller.className = "flex-1 p-6 md:p-12 overflow-y-auto transition-all-300 ";
+        if (readerConfig.theme === 'light') {
+            scroller.style.backgroundColor = '#f8fafc';
+            container.style.color = '#0f172a';
+        } else if (readerConfig.theme === 'sepia') {
+            scroller.style.backgroundColor = '#f4ecd8';
+            container.style.color = '#433422';
+        } else {
+            scroller.style.backgroundColor = '#0b0f19';
+            container.style.color = '#f1f5f9';
+        }
+
+        // Estilos de Fuente y Tamaño
+        container.style.fontSize = `${readerConfig.fontSize}px`;
+        document.getElementById('font-size-display').textContent = `${readerConfig.fontSize}px`;
+        document.getElementById('font-select').value = readerConfig.fontFamily;
+
+        if (readerConfig.fontFamily === 'serif') container.style.fontFamily = 'Times New Roman, serif';
+        else if (readerConfig.fontFamily === 'mono') container.style.fontFamily = 'Fira Code, monospace';
+        else if (readerConfig.fontFamily === 'playfair') container.style.fontFamily = 'Playfair Display, serif';
+        else container.style.fontFamily = 'Inter, sans-serif';
+
+        // Modos de Columnas en PC
+        if (readerConfig.pcViewMode === 'pages' && window.innerWidth >= 768) {
+            container.classList.add('book-columns');
+        } else {
+            container.classList.remove('book-columns');
+        }
+    }
+
+    // --- Funcionalidad de Audio (Lectura TTS) ---
+    function toggleAudiobook() {
+        if (isSpeaking) {
+            synth.pause();
+            isSpeaking = false;
+            document.getElementById('audio-play-btn').textContent = "▶ Reanudar";
+        } else {
+            if (synth.paused) {
+                synth.resume();
+                isSpeaking = true;
+                document.getElementById('audio-play-btn').textContent = "⏸ Pausar";
+            } else {
+                startAudioText();
+            }
+        }
+    }
+
+    function startAudioText() {
+        const text = document.getElementById('reader-text-container').innerText;
+        if (!text) return;
+
+        synth.cancel();
+        utterance = new SpeechSynthesisUtterance(text.substring(0, 4000)); // Límite seguro estándar
+        utterance.lang = 'es-ES';
+        
+        utterance.onend = () => {
+            isSpeaking = false;
+            document.getElementById('audio-play-btn').textContent = "▶ Escuchar";
+        };
+
+        synth.speak(utterance);
+        isSpeaking = true;
+        document.getElementById('audio-play-btn').textContent = "⏸ Pausar";
+    }
+
+    function stopAudiobook() {
+        synth.cancel();
+        isSpeaking = false;
+        document.getElementById('audio-play-btn').textContent = "▶ Escuchar";
+    }
+
+    // --- Ventanas Modales e Importación ---
+    function openAddBookModal() { document.getElementById('add-book-modal').classList.remove('hidden'); }
+    function closeAddBookModal() { document.getElementById('add-book-modal').classList.add('hidden'); }
+
+    function saveManualBook() {
+        const title = document.getElementById('manual-title').value.trim();
+        const author = document.getElementById('manual-author').value.trim();
+        const content = document.getElementById('manual-content').value.trim();
+        const shelf = document.getElementById('manual-shelf').value;
+
+        if (!title || !content) {
+            alert("El título y el contenido son campos requeridos.");
+            return;
+        }
+
+        const colors = ["#0d9488", "#1e3a8a", "#5b21b6", "#7c2d12", "#065f46"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        const newBook = {
+            id: 'book-' + Date.now(),
+            title,
+            author: author || "Autor Desconocido",
+            content,
+            shelf,
+            color: randomColor,
+            format: "TXT",
+            progress: 0
+        };
+
+        library.push(newBook);
+        saveToStorage();
+        renderBooks();
+        closeAddBookModal();
+        
+        // Limpiar inputs
+        document.getElementById('manual-title').value = '';
+        document.getElementById('manual-author').value = '';
+        document.getElementById('manual-content').value = '';
+        showToast("Libro guardado con éxito.");
+    }
+
+    function handleFileImport(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        const extension = file.name.split('.').pop().toLowerCase();
+
+        if (extension === 'txt') {
+            reader.onload = function(evt) {
+                createBookFromImport(file.name.replace('.txt',''), "Local", evt.target.result, "TXT");
+            };
+            reader.readAsText(file);
+        } else if (extension === 'pdf') {
+            reader.onload = async function(evt) {
+                const typedarray = new Uint8Array(evt.target.result);
+                try {
+                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                    let fullText = "";
+                    for(let i=1; i<=Math.min(pdf.numPages, 50); i++) { // Límite de control para fluidez local
+                        const page = await pdf.getPage(i);
+                        const txtContent = await page.getTextContent();
+                        fullText += txtContent.items.map(item => item.str).join(" ") + "\n\n";
+                    }
+                    createBookFromImport(file.name.replace('.pdf',''), "Local", fullText || "Documento PDF sin texto seleccionable", "PDF");
+                } catch(err) {
+                    alert("Error procesando el PDF local.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            alert("Formato no soportado en esta versión estable directa (Soporta TXT o PDF).");
+        }
+    }
+
+    function createBookFromImport(title, author, content, format) {
+        const colors = ["#0284c7", "#b45309", "#4d7c0f", "#6d28d9", "#be123c"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        const newBook = {
+            id: 'import-' + Date.now(),
+            title,
+            author,
+            content,
+            shelf: shelves[0],
+            color: randomColor,
+            format,
+            progress: 0
+        };
+
+        library.push(newBook);
+        saveToStorage();
+        renderBooks();
+        closeAddBookModal();
+        showToast(`Documento ${format} indexado con éxito.`);
+    }
+
+    function deleteBook(id) {
+        if(confirm("¿Eliminar este libro permanentemente de la biblioteca?")) {
+            library = library.filter(b => b.id !== id);
+            saveToStorage();
+            renderBooks();
+            showToast("Libro removido.");
+        }
+    }
+
+    // --- Panel Lateral GennIA & Chat Dummy Inteligente ---
+    function toggleAISidebar() {
+        document.getElementById('reader-ai-sidebar').classList.toggle('hidden');
+    }
+
+    function handleAIChatKeyPress(e) {
+        if(e.key === 'Enter') {
+            const input = document.getElementById('ai-chat-input');
+            const prompt = input.value.trim();
+            if(!prompt) return;
+
+            appendChatMessage('user', prompt);
+            input.value = '';
+
+            setTimeout(() => {
+                appendChatMessage('ia', "Procesando de manera simulada local: La obra presenta dinámicas complejas y subtexto estilístico avanzado.");
+            }, 800);
+        }
+    }
+
+    function appendChatMessage(sender, msg) {
+        const container = document.getElementById('ai-chat-history');
+        const div = document.createElement('div');
+        div.className = `p-2 rounded-xl text-[11px] leading-tight ${sender === 'user' ? 'bg-teal-950/40 text-teal-300 ml-4 border border-teal-900/20' : 'bg-slate-900 text-slate-300 mr-4 border border-slate-800'}`;
+        div.textContent = `${sender === 'user' ? 'Tú' : 'GennIA'}: ${msg}`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // --- Rankings Independientes ---
+    const mockRankings = [
+        { title: "Sousou no Frieren", score: "9.39", cat: "AnimeManga", details: "Calificación consolidada. Obra magistral sobre el viaje del héroe y la inmortalidad." },
+        { title: "Cien años de soledad", score: "9.60", cat: "Libros", details: "Realismo mágico clásico indiscutible en la literatura hispana." },
+        { title: "Dune", score: "9.10", cat: "LibrosPeliculas", details: "Ópera espacial de primer nivel con una de las adaptaciones de cine más exitosas." },
+        { title: "Chainsaw Man", score: "8.75", cat: "AnimeManga", details: "Narrativa disruptiva e impacto global masivo." }
+    ];
+
+    function executeGlobalSearch() {
+        const query = document.getElementById('global-search-input').value.toLowerCase().trim();
+        const container = document.getElementById('search-results-container');
+        if(!container) return;
+
+        let filtered = mockRankings;
+        if(query) {
+            filtered = mockRankings.filter(r => r.title.toLowerCase().includes(query));
+        }
+
+        container.innerHTML = filtered.map(r => `
+            <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <h4 class="text-sm font-bold text-slate-200">${r.title}</h4>
+                        <span class="bg-teal-950 text-teal-400 font-mono text-xs px-2 py-0.5 rounded-lg border border-teal-900/50 font-bold">${r.score}</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">${r.details}</p>
+                </div>
+                <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-4 block">Sección: ${r.cat}</span>
+            </div>
+        `).join('');
+    }
+
+    // --- Herramientas de Selección y Resaltado Contextual ---
+    let selectedTextRange = null;
+
+    function setupSelectionPopup() {
+        document.addEventListener('selectionchange', () => {
+            const selection = window.getSelection();
+            const text = selection.toString().trim();
+            const popup = document.getElementById('selection-popup');
+
+            if (text && viewMode === 'reader' && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                
+                selectedTextRange = range.cloneRange();
+                
+                popup.style.top = `${window.scrollY + rect.top - 40}px`;
+                popup.style.left = `${window.scrollX + rect.left}px`;
+                popup.classList.remove('hidden');
+            } else {
+                setTimeout(() => {
+                    if (!window.getSelection().toString().trim()) {
+                        popup.classList.add('hidden');
+                    }
+                }, 200);
+            }
+        });
+    }
+
+    function applyHighlight(colorClass) {
+        if (!selectedTextRange) return;
+        const span = document.createElement('span');
+        span.className = `hl-${colorClass} rounded-sm px-0.5`;
+        
+        try {
+            selectedTextRange.surroundContents(span);
+            window.getSelection().removeAllRanges();
+            showToast("Texto resaltado.");
+        } catch(e) {
+            showToast("Selección demasiado compleja para resaltar de forma directa.");
+        }
+    }
+
+    function clearSelectionHighlight() {
+        if (!selectedTextRange) return;
+        showToast("Limpio.");
+        window.getSelection().removeAllRanges();
+    }
+
+    // --- Utilidades ---
+    function showToast(msg) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const div = document.createElement('div');
+        div.className = "p-3 bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-xl shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0 flex items-center gap-2 select-none pointer-events-auto";
+        div.innerHTML = `<span>⚡</span> <p class="font-medium">${msg}</p>`;
+        
+        container.appendChild(div);
+        setTimeout(() => { div.classList.remove('opacity-0', 'translate-y-2'); }, 10);
+        setTimeout(() => {
+            div.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => div.remove(), 300);
+        }, 3000);
+    }
+
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        }
+    }
+</script>
+</body>
 </html>
