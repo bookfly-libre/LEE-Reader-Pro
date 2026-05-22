@@ -20,8 +20,8 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #0f172a;
@@ -35,7 +35,7 @@
         }
         .book-columns {
             column-count: 2;
-            column-gap: 3rem;
+            column-gap: 4rem;
             column-rule: 1px inset rgba(255, 255, 255, 0.08);
             width: 100%;
         }
@@ -48,15 +48,17 @@
             font-weight: 900;
             letter-spacing: 0.06em;
         }
-        /* Efectos de Subrayado y Resaltado */
-        .hl-yellow { background-color: rgba(254, 240, 138, 0.6); color: #000; }
-        .hl-mint { background-color: rgba(167, 243, 208, 0.6); color: #000; }
-        .hl-sky { background-color: rgba(186, 230, 253, 0.6); color: #000; }
-        .hl-blue { background-color: rgba(191, 219, 254, 0.6); color: #000; }
-        .hl-pink { background-color: rgba(254, 205, 211, 0.65); color: #000; }
-        .hl-lavender { background-color: rgba(233, 213, 255, 0.65); color: #000; }
-        .hl-teal { background-color: rgba(153, 246, 228, 0.6); color: #000; }
-        .underline-text { border-bottom: 2px dashed currentColor; }
+        .hl-yellow { background-color: rgba(254, 240, 138, 0.55); color: #000; }
+        .hl-mint { background-color: rgba(167, 243, 208, 0.55); color: #000; }
+        .hl-sky { background-color: rgba(186, 230, 253, 0.55); color: #000; }
+        .hl-blue { background-color: rgba(191, 219, 254, 0.55); color: #000; }
+        .hl-pink { background-color: rgba(254, 205, 211, 0.6); color: #000; }
+        .hl-lavender { background-color: rgba(233, 213, 255, 0.6); color: #000; }
+        .hl-teal { background-color: rgba(153, 246, 228, 0.55); color: #000; }
+        
+        .underline-text {
+            border-bottom: 2px dashed currentColor;
+        }
 
         .reader-config-sticky {
             position: sticky;
@@ -65,6 +67,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+
         .reader-secondary-sticky {
             position: sticky;
             top: 72px;
@@ -72,76 +75,30 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
-        .reader-maximized {
-            position: fixed !important;
-            inset: 0 !important;
-            z-index: 50 !important;
-            background: #0b0f19;
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-        }
-        #reader-float-controls {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            z-index: 60;
-            display: flex;
-            gap: 0.35rem;
-            padding: 0.35rem;
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            border-radius: 9999px;
-        }
-        #reader-float-controls button {
-            width: 32px;
-            height: 32px;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 12px;
-            color: #f1f5f9;
-            background: rgba(30, 41, 59, 0.8);
-            transition: all 0.2s;
-        }
-        #reader-float-controls button:hover {
-            background: #14b8a6;
-            color: #0f172a;
-        }
-        .reader-vertical { overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
-        .reader-horizontal {
-            overflow-y: hidden;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            scroll-snap-type: x mandatory;
-            display: flex;
-            align-items: stretch;
-        }
-        .reader-horizontal-content {
-            min-width: 100%;
-            width: 100%;
-            scroll-snap-align: start;
-            column-count: auto !important;
-            column-width: 100% !important;
-        }
-        .reader-vertical-content { min-width: 0; width: 100%; }
 
+        .reader-vertical {
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .reader-vertical-content {
+            min-width: 0;
+            width: 100%;
+        }
+        
         @media (max-width: 768px) {
-            .reader-secondary-sticky { top: 110px; }
-            .book-columns { column-count: 1; }
+            .reader-config-sticky { top: 0; }
+            .reader-secondary-sticky { top: 64px; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden bg-slate-950 text-slate-100">
+<body class="min-h-screen flex flex-col overflow-x-hidden">
 
 <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row gap-4 justify-between items-center">
         <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg shadow-teal-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
             </div>
@@ -152,102 +109,103 @@
         </div>
 
         <nav class="flex space-x-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 w-full md:w-auto justify-center">
-            <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm flex items-center gap-2">🏛️ Mi Biblioteca</button>
-            <button onclick="switchView('reader')" id="nav-reader" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">📖 Visor E-Reader</button>
-            <button onclick="switchView('search')" id="nav-search" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">🏆 Rankings</button>
+            <button onclick="switchView('library')" id="nav-library" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-teal-500 text-slate-950 shadow-sm shadow-teal-500/20 flex items-center gap-2">
+                🏛️ Mi Biblioteca
+            </button>
+            <button onclick="switchView('reader')" id="nav-reader" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">
+                📖 Visor E-Reader
+            </button>
+            <button onclick="switchView('search')" id="nav-search" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center gap-2">
+                🏆 Buscador Rankings
+            </button>
         </nav>
     </div>
 </header>
 
 <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
+<div id="confirm-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
+        <h4 id="confirm-title" class="text-base font-bold text-slate-100">Confirmación</h4>
+        <p id="confirm-msg" class="text-xs text-slate-400"></p>
+        <div class="flex justify-end gap-2 pt-2">
+            <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300 transition-all">Cancelar</button>
+            <button id="confirm-ok-btn" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-xs font-bold rounded-xl text-white transition-all">Aceptar</button>
+        </div>
+    </div>
+</div>
+
 <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col">
+
     <section id="view-library" class="space-y-6">
         <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-teal-950/10 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-slate-200">Mi Estantería de Libros</h2>
-                    <p class="text-xs text-slate-400">Sube tus lecturas en múltiples formatos y organízalas libremente.</p>
+                    <p class="text-xs text-slate-400">Personaliza tus estantes, sube tus lecturas en múltiples formatos o elimina estanterías que ya no uses.</p>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="openAddBookModal()" class="px-4 py-2 bg-teal-500 text-slate-950 hover:bg-teal-400 text-xs font-bold rounded-xl transition-all shadow-md">➕ Añadir Libro</button>
-                    <button onclick="resetLibrary()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300 transition-all">🔄 Resetear Biblioteca</button>
+                    <button id="btn-add-book" onclick="openAddBookModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold rounded-xl transition-all shadow-md">
+                        ➕ Añadir Libro (EPUB/PDF/TXT)
+                    </button>
                 </div>
-            </div>
-            <div class="relative w-full">
-                <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                <input type="text" id="library-search-input" oninput="handleLibrarySearch()" placeholder="Buscar por título, autor o formato..." class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 focus:border-teal-500 rounded-xl outline-none text-sm transition-all text-slate-200">
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="md:col-span-1 bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-4">
                 <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Mis Estantes</h3>
-                <div class="flex flex-col gap-1.5" id="shelves-list"></div>
+                <div class="flex flex-col gap-1.5" id="shelves-list">
+                    </div>
                 <div class="pt-4 border-t border-slate-800/80">
-                    <input type="text" id="new-shelf-input" placeholder="Nombre de estante..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-teal-500 mb-2">
-                    <button onclick="createNewShelf()" class="w-full py-1.5 bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-900/40 text-xs font-bold rounded-lg transition-all">🔨 Crear Estante</button>
+                    <input type="text" id="new-shelf-input" placeholder="Nombre de estante..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none focus:border-teal-500 mb-2 text-slate-200">
+                    <button onclick="createNewShelf()" class="w-full py-1.5 bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-900/40 text-xs font-bold rounded-lg transition-all">
+                        🔨 Crear Estante
+                    </button>
                 </div>
             </div>
 
             <div class="md:col-span-3 space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 flex items-center gap-2" id="current-shelf-title">📂 Todos los Recursos</h3>
+                    <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 flex items-center gap-2" id="current-shelf-title">
+                        📂 Todos los Recursos
+                    </h3>
                     <span id="library-count" class="text-xs text-teal-400 font-bold bg-teal-950/40 border border-teal-900/30 px-2.5 py-1 rounded-lg font-mono">0 libros</span>
                 </div>
-                <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    </div>
             </div>
         </div>
     </section>
 
     <section id="view-reader" class="hidden flex-1 flex flex-col">
-        <div id="reader-float-controls" class="hidden">
-            <button onclick="toggleMaximizeReader()" title="Restaurar">🗗</button>
-            <button onclick="exitReader()" title="Cerrar">✕</button>
-        </div>
-
         <div id="reader-config-bar" class="reader-config-sticky bg-slate-950 p-3 md:p-4 border-b border-slate-800 flex flex-wrap gap-3 items-center justify-between text-xs text-slate-300">
             <div class="flex flex-wrap items-center gap-2">
-                <span class="text-[11px] text-slate-400 font-bold">Tema</span>
+                <span class="text-[10px] text-slate-400 font-bold">Tema</span>
                 <div class="flex gap-1">
-                    <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md font-bold border border-slate-200">Claro</button>
-                    <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md font-bold border border-slate-700">Oscuro</button>
-                    <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md font-bold border border-[#ebdcb9]">Sepia</button>
-                </div>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2">
-                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                    <button onclick="adjustFontSize(-1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded font-bold">A-</button>
-                    <span id="font-size-display" class="text-10px font-mono px-1">16px</span>
-                    <button onclick="adjustFontSize(1)" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded font-bold">A+</button>
-                </div>
-                <select id="font-select" onchange="changeFontFamily()" class="bg-slate-900 border border-slate-800 px-2 py-1 rounded-md text-slate-300 outline-none">
-                    <option value="sans">Inter Sans-Serif</option>
-                    <option value="serif">Times New Roman Serif</option>
-                    <option value="mono">Fira Code Monospace</option>
-                    <option value="playfair">Playfair Display</option>
-                </select>
-                <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                    <button onclick="toggleAudiobook()" id="audio-play-btn" class="px-2 py-0.5 bg-teal-500 hover:bg-teal-400 rounded text-slate-950 font-bold">▶ Escuchar</button>
+                    <button onclick="setReaderTheme('light')" class="px-2 py-1 bg-white text-slate-900 rounded-md text-[10px] font-bold">Claro</button>
+                    <button onclick="setReaderTheme('dark')" class="px-2 py-1 bg-slate-900 text-white rounded-md text-[10px] font-bold border border-slate-700">Oscuro</button>
+                    <button onclick="setReaderTheme('sepia')" class="px-2 py-1 bg-[#f4ecd8] text-[#5b4636] rounded-md text-[10px] font-bold">Sepia</button>
                 </div>
             </div>
 
             <div class="flex items-center gap-1.5">
-                <div class="hidden md:flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
-                    <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded font-bold">📖 2 Páginas</button>
-                    <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded font-bold">📜 Vertical</button>
+                <div class="flex gap-1 bg-slate-900 p-1 rounded-md border border-slate-800">
+                    <button onclick="setPCViewMode('pages')" id="btn-view-pages" class="px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold">📖 2 Páginas</button>
+                    <button onclick="setPCViewMode('vertical')" id="btn-view-vertical" class="px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold">📜 Vertical</button>
                 </div>
-                <button onclick="toggleMaximizeReader()" id="btn-maximize-main" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md font-bold">🔲 Maximizar</button>
-                <button onclick="exitReader()" class="px-2.5 py-1 bg-red-950 hover:bg-red-800 text-red-200 rounded-md font-bold">✕ Salir</button>
+                <button onclick="toggleMaximizeReader()" id="btn-maximize-main" class="px-3 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-md text-[10px] font-bold text-teal-400 flex items-center gap-1">
+                    🔲 Maximizar
+                </button>
+                <button onclick="exitReader()" class="px-3 py-1 bg-red-950 hover:bg-red-900 border border-red-900/40 text-red-200 rounded-md text-[10px] font-bold flex items-center gap-1">
+                    ✕ Salir
+                </button>
             </div>
         </div>
         
-        <div id="reader-info-bar" class="reader-secondary-sticky bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between text-[11px] text-slate-300">
+        <div id="reader-info-bar" class="reader-secondary-sticky bg-slate-950/80 border-b border-slate-800 px-4 py-2 flex items-center justify-between text-[10px] text-slate-300">
             <div class="flex items-center gap-2">
-                <span id="reader-book-title" class="font-bold text-slate-100 truncate max-w-[200px]">Ningún libro cargado</span>
-                <select id="reader-chapter-select" onchange="handleChapterSelect()" class="bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-slate-300 outline-none"></select>
-                <button onclick="toggleAISidebar()" class="px-2 py-0.5 bg-slate-800 text-teal-400 rounded font-bold hover:bg-slate-700">✨ GennIA</button>
+                <span id="reader-book-title" class="font-bold text-slate-100 truncate max-w-xs">Ningún libro cargado</span>
             </div>
             <div class="flex items-center gap-2">
                 <span id="page-counter" class="text-slate-500 font-mono"></span>
@@ -255,688 +213,366 @@
         </div>
 
         <div id="reader-wrapper" class="flex-1 flex relative">
-            <div id="reader-scroller" class="reader-vertical flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden min-h-[60vh]">
-                <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed text-justify select-text focus:outline-none"></div>
-            </div>
-
-            <div id="reader-ai-sidebar" class="hidden w-80 border-l border-slate-800 bg-slate-950 flex flex-col z-30 absolute right-0 top-0 bottom-0 md:relative">
-                <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-900">
-                    <span class="text-xs font-bold text-teal-400">✨ Asistente GennIA</span>
-                    <button onclick="toggleAISidebar()" class="text-slate-400 hover:text-white">✕</button>
-                </div>
-                <div id="ai-chat-history" class="flex-1 overflow-y-auto p-3 space-y-2 text-xs"></div>
-                <div class="p-3 border-t border-slate-800 bg-slate-900">
-                    <input type="text" id="ai-chat-input" onkeypress="handleAIChatKeyPress(event)" placeholder="Pregunta sobre la obra..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none text-slate-200">
-                </div>
+            <div id="reader-scroller" class="reader-vertical flex-1 p-6 md:p-12 overflow-y-auto">
+                <div id="reader-text-container" class="reader-vertical-content max-w-4xl mx-auto leading-relaxed text-justify select-text text-base"></div>
             </div>
         </div>
     </section>
 
-    <section id="view-search" class="hidden space-y-6">
-        <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
-            <h2 class="text-xl font-bold text-slate-200 flex items-center gap-2">🏆 Catálogo & Rankings Literarios</h2>
-            <div class="relative w-full">
-                <span class="absolute left-3.5 top-3.5 text-slate-500">🔍</span>
-                <input type="text" id="global-search-input" oninput="executeGlobalSearch()" placeholder="Buscar obras populares..." class="w-full pl-10 pr-4 py-3 bg-slate-900 border border-slate-800 rounded-xl outline-none text-sm text-slate-200">
-            </div>
-        </div>
-        <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <section id="view-search" class="hidden p-4 bg-slate-900 border border-slate-800 rounded-xl">
+        <h2 class="text-slate-200 font-bold">🏆 Rankings de Lectura</h2>
+        <p class="text-xs text-slate-400">Panel independiente de calificaciones literarias.</p>
     </section>
+
 </main>
 
-<div id="selection-popup" class="fixed z-50 hidden bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 flex gap-1">
-    <button onclick="applyHighlight('yellow')" class="w-5 h-5 rounded-full bg-yellow-300 border border-yellow-400"></button>
-    <button onclick="applyHighlight('mint')" class="w-5 h-5 rounded-full bg-emerald-300 border border-emerald-400"></button>
-    <button onclick="applyHighlight('sky')" class="w-5 h-5 rounded-full bg-sky-300 border border-sky-400"></button>
-    <button onclick="clearSelectionHighlight()" class="px-1.5 h-5 rounded bg-red-900 text-[9px] font-bold text-red-200">✕</button>
-</div>
-
 <div id="add-book-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         <div class="p-5 border-b border-slate-800 bg-slate-950 flex justify-between items-center">
-            <h3 class="text-base font-bold text-slate-200">➕ Añadir Nuevo Recurso</h3>
+            <h3 class="text-base font-bold text-slate-200">Añadir Nuevo Libro</h3>
             <button onclick="closeAddBookModal()" class="text-slate-400 hover:text-white">✕</button>
         </div>
-        <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div class="p-6 space-y-4">
             <div class="border-2 border-dashed border-slate-700 hover:border-teal-500 p-6 rounded-xl text-center bg-slate-950/60 cursor-pointer relative">
-                <input type="file" id="file-uploader" accept=".txt,.epub,.pdf" onchange="handleFileImport(event)" class="absolute inset-0 opacity-0 cursor-pointer">
+                <input type="file" id="file-uploader" accept=".txt,.html,.epub,.pdf" onchange="handleFileImport(event)" class="absolute inset-0 opacity-0 cursor-pointer">
                 <span class="text-3xl block mb-2">📂</span>
-                <p class="text-xs font-bold text-slate-300">Cargar archivo (TXT o PDF)</p>
+                <p class="text-xs font-bold text-slate-300">Cargar archivo local (TXT, HTML, EPUB o PDF)</p>
             </div>
-            <div class="space-y-3">
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Título</label>
-                    <input type="text" id="manual-title" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none">
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Autor</label>
-                    <input type="text" id="manual-author" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none">
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">Contenido Manual</label>
-                    <textarea id="manual-content" rows="4" placeholder="Si no cargas un archivo, puedes escribir o pegar texto aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs outline-none font-mono"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-end gap-2">
-            <button onclick="closeAddBookModal()" class="px-4 py-2 bg-slate-800 text-xs font-bold rounded-xl">Cancelar</button>
-            <button onclick="saveManualBook()" class="px-5 py-2 bg-teal-500 text-slate-950 font-bold rounded-xl text-xs">Guardar Libro</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- Configuración y Estado Global ---
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    // Configuración Inicial de Datos y Estados en Memoria Local (LocalStorage)
+    let library = JSON.parse(localStorage.getItem("or_library_books")) || [
+        { id: "b1", title: "Cien años de soledad", author: "Gabriel García Márquez", shelf: "Favoritos", color: "#7c2d12", format: "TXT", content: "[Capítulo 1]\nMuchos años después frente al pelotón de fusilamiento..." },
+        { id: "b2", title: "Don Quijote de la Mancha", author: "Miguel de Cervantes", shelf: "Lecturas Clásicas", color: "#115e59", format: "TXT", content: "[Capítulo 1]\nEn un lugar de la Mancha, de cuyo nombre no quiero acordarme..." }
+    ];
 
-    let library = [];
-    let shelves = ["Favoritos", "Lecturas Diarias", "Por Leer", "Historial"];
+    let shelves = JSON.parse(localStorage.getItem("or_library_shelves")) || ["Favoritos", "Lecturas Clásicas"];
     let currentShelf = "Todos";
-    let activeBookId = null;
-    let viewMode = 'library';
+    let activeBook = null;
+    let readerConfig = { theme: 'dark', viewMode: 'vertical', fontSize: 16, maximized: false };
 
-    let readerConfig = {
-        theme: 'dark',
-        fontSize: 16,
-        fontFamily: 'sans',
-        pcViewMode: 'pages',
-        maximized: false,
-        readingMode: 'vertical'
-    };
-
-    let synth = window.speechSynthesis;
-    let utterance = null;
-    let isSpeaking = false;
-
-    // --- Inicialización ---
-    window.addEventListener('DOMContentLoaded', () => {
-        loadFromStorage();
-        initDefaultBooks();
+    // Inicializar Aplicación al Cargar
+    window.addEventListener("DOMContentLoaded", () => {
         renderShelves();
         renderBooks();
-        setupSelectionPopup();
+        switchView('library');
     });
 
-    function loadFromStorage() {
-        const storedLibrary = localStorage.getItem('or_library_books');
-        const storedShelves = localStorage.getItem('or_library_shelves');
-        const storedConfig = localStorage.getItem('or_reader_config');
-        
-        if (storedLibrary) library = JSON.parse(storedLibrary);
-        if (storedShelves) shelves = JSON.parse(storedShelves);
-        if (storedConfig) readerConfig = JSON.parse(storedConfig);
+    function saveState() {
+        localStorage.setItem("or_library_books", JSON.stringify(library));
+        localStorage.setItem("or_library_shelves", JSON.stringify(shelves));
     }
 
-    function saveToStorage() {
-        localStorage.setItem('or_library_books', JSON.stringify(library));
-        localStorage.setItem('or_library_shelves', JSON.stringify(shelves));
-        localStorage.setItem('or_reader_config', JSON.stringify(readerConfig));
+    function showToast(msg) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "bg-slate-900 border border-teal-500/40 text-teal-300 px-4 py-2.5 rounded-xl text-xs font-bold shadow-xl transition-all duration-300";
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
     }
 
-    function initDefaultBooks() {
-        if (library.length === 0) {
-            library = [
-                {
-                    id: "default-1",
-                    title: "Cien años de soledad",
-                    author: "Gabriel García Márquez",
-                    shelf: "Favoritos",
-                    color: "#7c2d12",
-                    format: "TXT",
-                    progress: 0,
-                    content: "[Capítulo 1]\nMuchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota en que su padre lo llevó a conocer el hielo. Macondo era entonces una aldea de veinte casas de barro y cañabrava construidas a la orilla de un río de aguas diáfanas que se precipitaban por un lecho de piedras pulidas, blancas y enormes como huevos prehistóricos. El mundo era tan reciente, que muchas cosas carecían de nombre, y para mencionarlas había que señalaras con el dedo.\n\n[Capítulo 2]\nEstratón era un hombre de ciencias..."
-                }
-            ];
-            saveToStorage();
-        }
-    }
-
-    // --- Navegación de Vistas ---
+    // Vistas
     function switchView(view) {
-        viewMode = view;
         document.getElementById('view-library').classList.toggle('hidden', view !== 'library');
         document.getElementById('view-reader').classList.toggle('hidden', view !== 'reader');
         document.getElementById('view-search').classList.toggle('hidden', view !== 'search');
-
-        document.getElementById('nav-library').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 'library' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'}`;
-        document.getElementById('nav-reader').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 'reader' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'}`;
-        document.getElementById('nav-search').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 'search' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'}`;
     }
 
-    // --- Gestión de la Biblioteca ---
+    // GESTIÓN DE ESTANTES (CON OPCIÓN DE ELIMINACIÓN)
     function renderShelves() {
-        const container = document.getElementById('shelves-list');
+        const container = document.getElementById("shelves-list");
         if (!container) return;
 
-        let html = `<button onclick="selectShelf('Todos')" class="w-full text-left text-xs px-3 py-2 rounded-xl transition-all font-medium ${currentShelf === 'Todos' ? 'bg-teal-950/60 text-teal-400 border border-teal-900/50' : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'}">📂 Todos los Recursos</button>`;
-        
+        let html = `
+            <button onclick="selectShelf('Todos')" class="w-full text-left text-xs px-3 py-2 rounded-xl font-bold flex justify-between items-center ${currentShelf === 'Todos' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:bg-slate-800/50'}">
+                <span>📂 Todos los Recursos</span>
+            </button>
+        `;
+
         shelves.forEach(shelf => {
-            html += `<button onclick="selectShelf('${shelf}')" class="w-full text-left text-xs px-3 py-2 rounded-xl transition-all font-medium truncate ${currentShelf === shelf ? 'bg-teal-950/60 text-teal-400 border border-teal-900/50' : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'}">📁 ${shelf}</button>`;
+            const isSelected = currentShelf === shelf;
+            html += `
+                <div class="group flex items-center justify-between w-full rounded-xl px-1 ${isSelected ? 'bg-teal-950/40 border border-teal-500/30 text-teal-300' : 'hover:bg-slate-800/40 text-slate-400'}">
+                    <button onclick="selectShelf('${shelf}')" class="flex-1 text-left text-xs px-2 py-2 truncate font-medium">
+                        📖 ${shelf}
+                    </button>
+                    <button onclick="deleteShelf('${shelf}')" class="px-2 py-2 text-slate-500 hover:text-red-400 transition-colors text-xs font-bold" title="Eliminar este estante">
+                        ✕
+                    </button>
+                </div>
+            `;
         });
         container.innerHTML = html;
+    }
 
-        // Actualizar select del modal
-        const mShelf = document.getElementById('manual-shelf');
-        if (mShelf) {
-            mShelf.innerHTML = shelves.map(s => `<option value="${s}">${s}</option>`).join('');
+    function createNewShelf() {
+        const input = document.getElementById("new-shelf-input");
+        const name = input.value.trim();
+        if (!name) return;
+        if (shelves.includes(name) || name === "Todos") {
+            showToast("El estante ya existe.");
+            return;
         }
+        shelves.push(name);
+        input.value = "";
+        saveState();
+        renderShelves();
+        showToast(`Estante "${name}" creado.`);
+    }
+
+    function deleteShelf(shelfName) {
+        const modal = document.getElementById("confirm-modal");
+        document.getElementById("confirm-title").textContent = "Eliminar Estante";
+        document.getElementById("confirm-msg").textContent = `¿Estás seguro de que deseas eliminar el estante "${shelfName}"? Los libros que contiene no se borrarán, volverán a la vista general.`;
+        
+        modal.classList.remove("hidden");
+
+        document.getElementById("confirm-ok-btn").onclick = () => {
+            // Reasignar libros del estante eliminado a un estado vacío o general
+            library.forEach(book => {
+                if(book.shelf === shelfName) book.shelf = "";
+            });
+            shelves = shelves.filter(s => s !== shelfName);
+            if (currentShelf === shelfName) currentShelf = "Todos";
+            saveState();
+            renderShelves();
+            renderBooks();
+            modal.classList.add("hidden");
+            showToast("Estante eliminado correctamente.");
+        };
+
+        document.getElementById("confirm-cancel-btn").onclick = () => {
+            modal.classList.add("hidden");
+        };
     }
 
     function selectShelf(shelf) {
         currentShelf = shelf;
-        document.getElementById('current-shelf-title').textContent = shelf === 'Todos' ? '📂 Todos los Recursos' : `📁 Estante: ${shelf}`;
+        document.getElementById("current-shelf-title").textContent = shelf === 'Todos' ? "📂 Todos los Recursos" : `📂 Estante: ${shelf}`;
         renderShelves();
         renderBooks();
     }
 
-    function createNewShelf() {
-        const input = document.getElementById('new-shelf-input');
-        const val = input.value.trim();
-        if (val && !shelves.includes(val)) {
-            shelves.push(val);
-            saveToStorage();
-            renderShelves();
-            input.value = '';
-            showToast(`Estante "${val}" creado exitosamente.`);
-        }
-    }
-
-    function renderBooks(filteredBooks = null) {
-        const grid = document.getElementById('books-grid');
+    // RENDERIZAR LIBROS
+    function renderBooks() {
+        const grid = document.getElementById("books-grid");
+        const counter = document.getElementById("library-count");
         if (!grid) return;
 
-        let targetBooks = filteredBooks || library;
-        if (currentShelf !== 'Todos' && !filteredBooks) {
-            targetBooks = library.filter(b => b.shelf === currentShelf);
-        }
+        let filtered = library.filter(b => currentShelf === "Todos" || b.shelf === currentShelf);
+        counter.textContent = `${filtered.length} libro(s)`;
 
-        document.getElementById('library-count').textContent = `${targetBooks.length} libro(s)`;
-
-        if (targetBooks.length === 0) {
-            grid.innerHTML = `<div class="col-span-full py-12 text-center text-xs text-slate-500">Este estante se encuentra vacío.</div>`;
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="col-span-full text-slate-500 text-xs py-8 text-center">Este estante está vacío. Carga un archivo para comenzar.</div>`;
             return;
         }
 
-        grid.innerHTML = targetBooks.map(book => `
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition-all shadow-md group">
-                <div class="flex gap-4 items-start">
-                    <div class="w-14 h-20 rounded-lg shrink-0 flex flex-col justify-between p-1.5 text-[8px] font-bold text-white shadow-md relative overflow-hidden" style="background-color: ${book.color || '#0d9488'}">
-                        <div class="line-clamp-3 leading-tight">${book.title}</div>
-                        <span class="bg-black/40 px-1 py-0.5 rounded self-start font-mono text-[6px]">${book.format}</span>
+        grid.innerHTML = filtered.map(book => `
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between hover:border-teal-500/50 transition-all">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-14 rounded shadow-md flex items-center justify-center text-[10px] font-bold text-white shrink-0" style="background-color: ${book.color || '#1e293b'}">
+                        ${book.format}
                     </div>
-                    <div class="min-w-0 flex-1">
-                        <h4 class="text-sm font-bold text-slate-200 truncate group-hover:text-teal-400 transition-colors cursor-pointer" onclick="openBook('${book.id}')">${book.title}</h4>
-                        <p class="text-xs text-slate-400 truncate">${book.author || 'Autor Desconocido'}</p>
-                        <span class="inline-block mt-2 text-[9px] bg-slate-950 px-2 py-0.5 rounded-md text-slate-500 border border-slate-800/60 font-medium">${book.shelf}</span>
+                    <div class="overflow-hidden">
+                        <h4 class="text-xs font-bold text-slate-200 truncate">${book.title}</h4>
+                        <p class="text-[11px] text-slate-400 truncate">${book.author || "Autor Desconocido"}</p>
+                        <span class="text-[9px] bg-slate-950 px-1.5 py-0.5 rounded text-teal-400 font-mono mt-1 inline-block">${book.format}</span>
                     </div>
                 </div>
-                <div class="mt-4 pt-3 border-t border-slate-800/60 flex justify-between items-center text-[11px]">
-                    <span class="text-slate-500 font-mono">Progreso: ${book.progress || 0}%</span>
-                    <div class="flex gap-1">
-                        <button onclick="openBook('${book.id}')" class="px-2.5 py-1 bg-teal-950 text-teal-400 hover:bg-teal-900 rounded-lg font-bold border border-teal-900/30 transition-colors">Leer</button>
-                        <button onclick="deleteBook('${book.id}')" class="px-2 py-1 bg-slate-950 text-slate-500 hover:text-red-400 hover:bg-red-950/20 rounded-lg transition-colors">✕</button>
-                    </div>
+                <div class="mt-4 flex gap-2">
+                    <button onclick="readBook('${book.id}')" class="flex-1 py-1.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-lg transition-all">
+                        Leer
+                    </button>
+                    <button onclick="deleteBook('${book.id}')" class="px-2 py-1.5 bg-slate-950 hover:bg-red-950 text-slate-400 hover:text-red-400 border border-slate-800 rounded-lg transition-all text-xs">
+                        🗑️
+                    </button>
                 </div>
             </div>
-        `).join('');
-    }
-
-    function handleLibrarySearch() {
-        const query = document.getElementById('library-search-input').value.toLowerCase().trim();
-        if (!query) {
-            renderBooks();
-            return;
-        }
-        const filtered = library.filter(b => 
-            b.title.toLowerCase().includes(query) || 
-            b.author.toLowerCase().includes(query) ||
-            b.format.toLowerCase().includes(query)
-        );
-        renderBooks(filtered);
-    }
-
-    function resetLibrary() {
-        if (confirm("¿Estás seguro de que deseas restablecer la biblioteca de fábrica? Perderás tus libros cargados.")) {
-            localStorage.clear();
-            library = [];
-            shelves = ["Favoritos", "Lecturas Diarias", "Por Leer", "Historial"];
-            currentShelf = "Todos";
-            initDefaultBooks();
-            renderShelves();
-            renderBooks();
-            showToast("Biblioteca restaurada de fábrica.");
-        }
-    }
-
-    // --- Apertura y Gestión del E-Reader ---
-    function openBook(id) {
-        const book = library.find(b => b.id === id);
-        if (!book) return;
-
-        activeBookId = id;
-        document.getElementById('reader-book-title').textContent = book.title;
-
-        // Extraer e indexar capítulos
-        renderChapters(book);
-
-        const container = document.getElementById('reader-text-container');
-        container.innerHTML = formatBookContent(book.content);
-
-        applyConfigToUI();
-        switchView('reader');
-        
-        // Registrar scroll para progreso
-        const scroller = document.getElementById('reader-scroller');
-        scroller.scrollTop = 0;
-        scroller.onscroll = throttle(() => {
-            if (scroller.scrollHeight > scroller.clientHeight) {
-                const pct = Math.round((scroller.scrollTop / (scroller.scrollHeight - scroller.clientHeight)) * 100);
-                book.progress = pct;
-                document.getElementById('page-counter').textContent = `Progreso: ${pct}%`;
-                saveToStorage();
-            }
-        }, 300);
-    }
-
-    function formatBookContent(text) {
-        if (!text) return '<p class="text-slate-500 text-center text-xs">Este libro no contiene texto transcribible.</p>';
-        return text.split('\n\n').map(p => {
-            if (p.trim().startsWith('[') && p.trim().endsWith(']')) {
-                return `<h3 class="text-lg font-bold text-teal-400 mt-6 mb-3 font-serif tracking-tight anchor-chapter">${p.replace(/[\[\]]/g, '')}</h3>`;
-            }
-            return `<p class="mb-4 indent-4 text-justify leading-relaxed">${p}</p>`;
-        }).join('');
-    }
-
-    function renderChapters(book) {
-        const select = document.getElementById("reader-chapter-select");
-        if (!select) return;
-
-        select.innerHTML = "";
-        const regex = /(cap[ií]tulo\s+\d+|chapter\s+\d+|\[.*?\])/gi;
-        const matches = [...book.content.matchAll(regex)];
-
-        if (matches.length === 0) {
-            select.innerHTML = `<option>Contenido Único</option>`;
-            return;
-        }
-
-        matches.forEach((m, idx) => {
-            const opt = document.createElement("option");
-            opt.value = idx;
-            opt.textContent = m[0].replace(/[\[\]]/g, '');
-            select.appendChild(opt);
-        });
-    }
-
-    function handleChapterSelect() {
-        const select = document.getElementById("reader-chapter-select");
-        const headers = document.querySelectorAll("#reader-text-container h3.anchor-chapter");
-        if (headers[select.value]) {
-            headers[select.value].scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
-
-    function exitReader() {
-        stopAudiobook();
-        switchView('library');
-        renderBooks();
-    }
-
-    // --- Configuraciones de Diseño & Visor ---
-    function setReaderTheme(theme) {
-        readerConfig.theme = theme;
-        applyConfigToUI();
-        saveToStorage();
-    }
-
-    function adjustFontSize(dir) {
-        readerConfig.fontSize = Math.max(12, Math.min(32, readerConfig.fontSize + dir * 2));
-        applyConfigToUI();
-        saveToStorage();
-    }
-
-    function changeFontFamily() {
-        readerConfig.fontFamily = document.getElementById('font-select').value;
-        applyConfigToUI();
-        saveToStorage();
-    }
-
-    function setPCViewMode(mode) {
-        readerConfig.pcViewMode = mode;
-        applyConfigToUI();
-        saveToStorage();
-    }
-
-    function toggleMaximizeReader() {
-        readerConfig.maximized = !readerConfig.maximized;
-        const readerSec = document.getElementById('view-reader');
-        readerSec.classList.toggle('reader-maximized', readerConfig.maximized);
-        document.getElementById('reader-float-controls').classList.toggle('hidden', !readerConfig.maximized);
-        document.getElementById('btn-maximize-main').textContent = readerConfig.maximized ? "🗗 Restaurar" : "🔲 Maximizar";
-    }
-
-    function applyConfigToUI() {
-        const container = document.getElementById('reader-text-container');
-        const scroller = document.getElementById('reader-scroller');
-        if (!container) return;
-
-        // Clases de Tema
-        scroller.className = "flex-1 p-6 md:p-12 overflow-y-auto transition-all-300 ";
-        if (readerConfig.theme === 'light') {
-            scroller.style.backgroundColor = '#f8fafc';
-            container.style.color = '#0f172a';
-        } else if (readerConfig.theme === 'sepia') {
-            scroller.style.backgroundColor = '#f4ecd8';
-            container.style.color = '#433422';
-        } else {
-            scroller.style.backgroundColor = '#0b0f19';
-            container.style.color = '#f1f5f9';
-        }
-
-        // Estilos de Fuente y Tamaño
-        container.style.fontSize = `${readerConfig.fontSize}px`;
-        document.getElementById('font-size-display').textContent = `${readerConfig.fontSize}px`;
-        document.getElementById('font-select').value = readerConfig.fontFamily;
-
-        if (readerConfig.fontFamily === 'serif') container.style.fontFamily = 'Times New Roman, serif';
-        else if (readerConfig.fontFamily === 'mono') container.style.fontFamily = 'Fira Code, monospace';
-        else if (readerConfig.fontFamily === 'playfair') container.style.fontFamily = 'Playfair Display, serif';
-        else container.style.fontFamily = 'Inter, sans-serif';
-
-        // Modos de Columnas en PC
-        if (readerConfig.pcViewMode === 'pages' && window.innerWidth >= 768) {
-            container.classList.add('book-columns');
-        } else {
-            container.classList.remove('book-columns');
-        }
-    }
-
-    // --- Funcionalidad de Audio (Lectura TTS) ---
-    function toggleAudiobook() {
-        if (isSpeaking) {
-            synth.pause();
-            isSpeaking = false;
-            document.getElementById('audio-play-btn').textContent = "▶ Reanudar";
-        } else {
-            if (synth.paused) {
-                synth.resume();
-                isSpeaking = true;
-                document.getElementById('audio-play-btn').textContent = "⏸ Pausar";
-            } else {
-                startAudioText();
-            }
-        }
-    }
-
-    function startAudioText() {
-        const text = document.getElementById('reader-text-container').innerText;
-        if (!text) return;
-
-        synth.cancel();
-        utterance = new SpeechSynthesisUtterance(text.substring(0, 4000)); // Límite seguro estándar
-        utterance.lang = 'es-ES';
-        
-        utterance.onend = () => {
-            isSpeaking = false;
-            document.getElementById('audio-play-btn').textContent = "▶ Escuchar";
-        };
-
-        synth.speak(utterance);
-        isSpeaking = true;
-        document.getElementById('audio-play-btn').textContent = "⏸ Pausar";
-    }
-
-    function stopAudiobook() {
-        synth.cancel();
-        isSpeaking = false;
-        document.getElementById('audio-play-btn').textContent = "▶ Escuchar";
-    }
-
-    // --- Ventanas Modales e Importación ---
-    function openAddBookModal() { document.getElementById('add-book-modal').classList.remove('hidden'); }
-    function closeAddBookModal() { document.getElementById('add-book-modal').classList.add('hidden'); }
-
-    function saveManualBook() {
-        const title = document.getElementById('manual-title').value.trim();
-        const author = document.getElementById('manual-author').value.trim();
-        const content = document.getElementById('manual-content').value.trim();
-        const shelf = document.getElementById('manual-shelf').value;
-
-        if (!title || !content) {
-            alert("El título y el contenido son campos requeridos.");
-            return;
-        }
-
-        const colors = ["#0d9488", "#1e3a8a", "#5b21b6", "#7c2d12", "#065f46"];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-        const newBook = {
-            id: 'book-' + Date.now(),
-            title,
-            author: author || "Autor Desconocido",
-            content,
-            shelf,
-            color: randomColor,
-            format: "TXT",
-            progress: 0
-        };
-
-        library.push(newBook);
-        saveToStorage();
-        renderBooks();
-        closeAddBookModal();
-        
-        // Limpiar inputs
-        document.getElementById('manual-title').value = '';
-        document.getElementById('manual-author').value = '';
-        document.getElementById('manual-content').value = '';
-        showToast("Libro guardado con éxito.");
-    }
-
-    function handleFileImport(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        const extension = file.name.split('.').pop().toLowerCase();
-
-        if (extension === 'txt') {
-            reader.onload = function(evt) {
-                createBookFromImport(file.name.replace('.txt',''), "Local", evt.target.result, "TXT");
-            };
-            reader.readAsText(file);
-        } else if (extension === 'pdf') {
-            reader.onload = async function(evt) {
-                const typedarray = new Uint8Array(evt.target.result);
-                try {
-                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                    let fullText = "";
-                    for(let i=1; i<=Math.min(pdf.numPages, 50); i++) { // Límite de control para fluidez local
-                        const page = await pdf.getPage(i);
-                        const txtContent = await page.getTextContent();
-                        fullText += txtContent.items.map(item => item.str).join(" ") + "\n\n";
-                    }
-                    createBookFromImport(file.name.replace('.pdf',''), "Local", fullText || "Documento PDF sin texto seleccionable", "PDF");
-                } catch(err) {
-                    alert("Error procesando el PDF local.");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            alert("Formato no soportado en esta versión estable directa (Soporta TXT o PDF).");
-        }
-    }
-
-    function createBookFromImport(title, author, content, format) {
-        const colors = ["#0284c7", "#b45309", "#4d7c0f", "#6d28d9", "#be123c"];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-        const newBook = {
-            id: 'import-' + Date.now(),
-            title,
-            author,
-            content,
-            shelf: shelves[0],
-            color: randomColor,
-            format,
-            progress: 0
-        };
-
-        library.push(newBook);
-        saveToStorage();
-        renderBooks();
-        closeAddBookModal();
-        showToast(`Documento ${format} indexado con éxito.`);
+        `).join("");
     }
 
     function deleteBook(id) {
-        if(confirm("¿Eliminar este libro permanentemente de la biblioteca?")) {
-            library = library.filter(b => b.id !== id);
-            saveToStorage();
-            renderBooks();
-            showToast("Libro removido.");
-        }
+        library = library.filter(b => b.id !== id);
+        saveState();
+        renderBooks();
+        showToast("Libro eliminado.");
     }
 
-    // --- Panel Lateral GennIA & Chat Dummy Inteligente ---
-    function toggleAISidebar() {
-        document.getElementById('reader-ai-sidebar').classList.toggle('hidden');
-    }
+    // MODAL DE IMPORTACIÓN
+    function openAddBookModal() { document.getElementById("add-book-modal").classList.remove("hidden"); }
+    function closeAddBookModal() { document.getElementById("add-book-modal").classList.add("hidden"); }
 
-    function handleAIChatKeyPress(e) {
-        if(e.key === 'Enter') {
-            const input = document.getElementById('ai-chat-input');
-            const prompt = input.value.trim();
-            if(!prompt) return;
+    // DECODIFICADOR Y SOPORTE DE ARCHIVOS (INCLUIDO E-PUB REAL)
+    async function handleFileImport(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-            appendChatMessage('user', prompt);
-            input.value = '';
+        const ext = file.name.split('.').pop().toLowerCase();
+        let title = file.name.replace(/\.[^/.]+$/, "");
+        let content = "";
+        let format = ext.toUpperCase();
 
-            setTimeout(() => {
-                appendChatMessage('ia', "Procesando de manera simulada local: La obra presenta dinámicas complejas y subtexto estilístico avanzado.");
-            }, 800);
-        }
-    }
+        showToast("Procesando y decodificando archivo...");
 
-    function appendChatMessage(sender, msg) {
-        const container = document.getElementById('ai-chat-history');
-        const div = document.createElement('div');
-        div.className = `p-2 rounded-xl text-[11px] leading-tight ${sender === 'user' ? 'bg-teal-950/40 text-teal-300 ml-4 border border-teal-900/20' : 'bg-slate-900 text-slate-300 mr-4 border border-slate-800'}`;
-        div.textContent = `${sender === 'user' ? 'Tú' : 'GennIA'}: ${msg}`;
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // --- Rankings Independientes ---
-    const mockRankings = [
-        { title: "Sousou no Frieren", score: "9.39", cat: "AnimeManga", details: "Calificación consolidada. Obra magistral sobre el viaje del héroe y la inmortalidad." },
-        { title: "Cien años de soledad", score: "9.60", cat: "Libros", details: "Realismo mágico clásico indiscutible en la literatura hispana." },
-        { title: "Dune", score: "9.10", cat: "LibrosPeliculas", details: "Ópera espacial de primer nivel con una de las adaptaciones de cine más exitosas." },
-        { title: "Chainsaw Man", score: "8.75", cat: "AnimeManga", details: "Narrativa disruptiva e impacto global masivo." }
-    ];
-
-    function executeGlobalSearch() {
-        const query = document.getElementById('global-search-input').value.toLowerCase().trim();
-        const container = document.getElementById('search-results-container');
-        if(!container) return;
-
-        let filtered = mockRankings;
-        if(query) {
-            filtered = mockRankings.filter(r => r.title.toLowerCase().includes(query));
-        }
-
-        container.innerHTML = filtered.map(r => `
-            <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <h4 class="text-sm font-bold text-slate-200">${r.title}</h4>
-                        <span class="bg-teal-950 text-teal-400 font-mono text-xs px-2 py-0.5 rounded-lg border border-teal-900/50 font-bold">${r.score}</span>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">${r.details}</p>
-                </div>
-                <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-4 block">Sección: ${r.cat}</span>
-            </div>
-        `).join('');
-    }
-
-    // --- Herramientas de Selección y Resaltado Contextual ---
-    let selectedTextRange = null;
-
-    function setupSelectionPopup() {
-        document.addEventListener('selectionchange', () => {
-            const selection = window.getSelection();
-            const text = selection.toString().trim();
-            const popup = document.getElementById('selection-popup');
-
-            if (text && viewMode === 'reader' && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-                
-                selectedTextRange = range.cloneRange();
-                
-                popup.style.top = `${window.scrollY + rect.top - 40}px`;
-                popup.style.left = `${window.scrollX + rect.left}px`;
-                popup.classList.remove('hidden');
-            } else {
-                setTimeout(() => {
-                    if (!window.getSelection().toString().trim()) {
-                        popup.classList.add('hidden');
-                    }
-                }, 200);
-            }
-        });
-    }
-
-    function applyHighlight(colorClass) {
-        if (!selectedTextRange) return;
-        const span = document.createElement('span');
-        span.className = `hl-${colorClass} rounded-sm px-0.5`;
-        
         try {
-            selectedTextRange.surroundContents(span);
-            window.getSelection().removeAllRanges();
-            showToast("Texto resaltado.");
-        } catch(e) {
-            showToast("Selección demasiado compleja para resaltar de forma directa.");
-        }
-    }
+            if (ext === 'txt') {
+                content = await file.text();
+            } 
+            else if (ext === 'html' || ext === 'htm') {
+                const rawHtml = await file.text();
+                const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+                content = doc.body.innerText || doc.body.textContent;
+            } 
+            else if (ext === 'pdf') {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let text = "";
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const contentObj = await page.getTextContent();
+                    text += contentObj.items.map(item => item.str).join(" ") + "\n\n";
+                }
+                content = text;
+            } 
+            // LÓGICA DE PROCESAMIENTO E-PUB REAL CON JSZIP
+            else if (ext === 'epub') {
+                const arrayBuffer = await file.arrayBuffer();
+                const zip = await JSZip.loadAsync(arrayBuffer);
+                
+                // Buscar archivos de texto con extensión html/xhtml dentro del contenedor epub
+                const textFiles = Object.keys(zip.files).filter(path => 
+                    path.endsWith('.xhtml') || path.endsWith('.html') || path.endsWith('.htm')
+                ).sort();
 
-    function clearSelectionHighlight() {
-        if (!selectedTextRange) return;
-        showToast("Limpio.");
-        window.getSelection().removeAllRanges();
-    }
+                if(textFiles.length === 0) {
+                    throw new Error("No se encontraron secciones de texto HTML legibles dentro del EPUB.");
+                }
 
-    // --- Utilidades ---
-    function showToast(msg) {
-        const container = document.getElementById('toast-container');
-        if (!container) return;
-
-        const div = document.createElement('div');
-        div.className = "p-3 bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-xl shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0 flex items-center gap-2 select-none pointer-events-auto";
-        div.innerHTML = `<span>⚡</span> <p class="font-medium">${msg}</p>`;
-        
-        container.appendChild(div);
-        setTimeout(() => { div.classList.remove('opacity-0', 'translate-y-2'); }, 10);
-        setTimeout(() => {
-            div.classList.add('opacity-0', 'translate-y-2');
-            setTimeout(() => div.remove(), 300);
-        }, 3000);
-    }
-
-    function throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
+                let fullEpubText = "";
+                for (const filePath of textFiles) {
+                    const htmlContent = await zip.files[filePath].async("text");
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlContent, 'text/html');
+                    // Remover scripts o estilos que arruinen la lectura pura
+                    doc.querySelectorAll('script, style').forEach(el => el.remove());
+                    const sectionText = doc.body.innerText || doc.body.textContent || "";
+                    if(sectionText.trim().length > 0) {
+                        fullEpubText += sectionText + "\n\n";
+                    }
+                }
+                content = fullEpubText;
+            } 
+            else {
+                showToast("Formato no soportado.");
+                return;
             }
+
+            if (!content || content.trim().length === 0) {
+                throw new Error("El archivo no contiene texto legible.");
+            }
+
+            // Guardar en la biblioteca local
+            const colors = ["#7c2d12", "#115e59", "#1e3a8a", "#581c87", "#881337"];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            library.push({
+                id: "b_" + Date.now(),
+                title: title,
+                author: "Importado Local",
+                shelf: currentShelf !== "Todos" ? currentShelf : "",
+                color: randomColor,
+                format: format,
+                content: content
+            });
+
+            saveState();
+            renderBooks();
+            closeAddBookModal();
+            showToast(`¡"${title}" cargado con éxito!`);
+
+        } catch (err) {
+            console.error(err);
+            showToast("Error al decodificar: " + err.message);
         }
+    }
+
+    // VISOR E-READER MEJORADO (SIN MARCOS EXTRAÑOS NI BOTONES DUPLICADOS)
+    function readBook(id) {
+        activeBook = library.find(b => b.id === id);
+        if (!activeBook) return;
+
+        document.getElementById("reader-book-title").textContent = activeBook.title;
+        
+        // Renderizar el texto puro e inteligente
+        const container = document.getElementById("reader-text-container");
+        container.innerHTML = activeBook.content.replace(/\n/g, '<br>');
+
+        applyReaderSettings();
+        switchView('reader');
+    }
+
+    function applyReaderSettings() {
+        const scroller = document.getElementById("reader-scroller");
+        const container = document.getElementById("reader-text-container");
+        
+        // Temas de Fondo
+        if (readerConfig.theme === 'light') {
+            scroller.className = "reader-vertical flex-1 p-6 md:p-12 bg-white text-slate-900";
+        } else if (readerConfig.theme === 'sepia') {
+            scroller.className = "reader-vertical flex-1 p-6 md:p-12 bg-[#f4ecd8] text-[#5b4636]";
+        } else {
+            scroller.className = "reader-vertical flex-1 p-6 md:p-12 bg-slate-950 text-slate-200";
+        }
+
+        // Modo Columnas (2 Páginas) vs Vertical
+        if (readerConfig.viewMode === 'pages' && window.innerWidth >= 768) {
+            container.className = "book-columns max-w-6xl mx-auto leading-relaxed text-justify text-base";
+        } else {
+            container.className = "reader-vertical-content max-w-4xl mx-auto leading-relaxed text-justify text-base";
+        }
+    }
+
+    function setPCViewMode(mode) {
+        readerConfig.viewMode = mode;
+        document.getElementById("btn-view-pages").className = mode === 'pages' ? "px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold" : "px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold";
+        document.getElementById("btn-view-vertical").className = mode === 'vertical' ? "px-2 py-0.5 bg-teal-500 text-slate-950 rounded text-[10px] font-bold" : "px-2 py-0.5 text-slate-400 rounded text-[10px] font-bold";
+        applyReaderSettings();
+    }
+
+    function setReaderTheme(theme) {
+        readerConfig.theme = theme;
+        applyReaderSettings();
+    }
+
+    // Maximizar sin desordenar la interfaz superior homogénea
+    function toggleMaximizeReader() {
+        readerConfig.maximized = !readerConfig.maximized;
+        const mainSection = document.getElementById("view-reader");
+        const btn = document.getElementById("btn-maximize-main");
+
+        if (readerConfig.maximized) {
+            mainSection.classList.add("fixed", "inset-0", "z-50", "bg-slate-950");
+            btn.innerHTML = "🔳 Restaurar";
+            btn.classList.replace("text-teal-400", "text-amber-400");
+        } else {
+            mainSection.classList.remove("fixed", "inset-0", "z-50", "bg-slate-950");
+            btn.innerHTML = "🔲 Maximizar";
+            btn.classList.replace("text-amber-400", "text-teal-400");
+        }
+        applyReaderSettings();
+    }
+
+    function exitReader() {
+        if (readerConfig.maximized) {
+            toggleMaximizeReader();
+        }
+        switchView('library');
     }
 </script>
+
 </body>
 </html>
