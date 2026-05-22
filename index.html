@@ -593,21 +593,43 @@
 
     // Maximizar sin desordenar la interfaz superior homogénea
     function toggleMaximizeReader() {
-        readerConfig.maximized = !readerConfig.maximized;
-        const mainSection = document.getElementById("view-reader");
-        const btn = document.getElementById("btn-maximize-main");
 
-        if (readerConfig.maximized) {
-            mainSection.classList.add("fixed", "inset-0", "z-50", "bg-slate-950");
-            btn.innerHTML = "🔳 Restaurar";
-            btn.classList.replace("text-teal-400", "text-amber-400");
-        } else {
-            mainSection.classList.remove("fixed", "inset-0", "z-50", "bg-slate-950");
-            btn.innerHTML = "🔲 Maximizar";
-            btn.classList.replace("text-amber-400", "text-teal-400");
+    readerConfig.maximized = !readerConfig.maximized;
+
+    const mainSection = document.getElementById("view-reader");
+    const btn = document.getElementById("btn-maximize-main");
+
+    // BOTÓN SALIR
+    const exitBtn = document.querySelector('button[onclick="exitReader()"]');
+
+    if (readerConfig.maximized) {
+
+        // ACTIVAR MODO PANTALLA COMPLETA
+        mainSection.classList.add( "fixed", "inset-0", "z-50", "bg-slate-950" );
+
+        // BOTÓN MODERNO
+        btn.innerHTML = "← Regresar"; btn.classList.remove("text-teal-400"); btn.classList.add("text-amber-400");
+
+        // OCULTAR BOTÓN SALIR
+        if (exitBtn) { exitBtn.style.display = "none";
         }
-        applyReaderSettings();
+    } else {
+
+        // DESACTIVAR PANTALLA COMPLETA
+        mainSection.classList.remove( "fixed", "inset-0", "z-50", "bg-slate-950" );
+
+        // RESTAURAR BOTÓN
+        btn.innerHTML = "🔲 Maximizar";
+        btn.classList.remove("text-amber-400");
+        btn.classList.add("text-teal-400");
+
+        // MOSTRAR BOTÓN SALIR
+        if (exitBtn) {exitBtn.style.display = "flex";
+        }
     }
+
+    applyReaderSettings();
+}
 
     function exitReader() {
         if (readerConfig.maximized) {
