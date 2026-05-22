@@ -256,7 +256,7 @@
     let shelves = JSON.parse(localStorage.getItem("or_library_shelves")) || ["Favoritos", "Lecturas Clásicas"];
     let currentShelf = "Todos";
     let activeBook = null;
-    let readerConfig = { theme: 'dark', viewMode: 'vertical', fontSize: 16, maximized: false };
+    let readerConfig = { theme: 'dark', viewMode: 'vertical', fontSize: 18, fontFamily: 'Inter', contrast: 100, maximized: false };
 
     // Inicializar Aplicación al Cargar
     window.addEventListener("DOMContentLoaded", () => {
